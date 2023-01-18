@@ -1,5 +1,4 @@
 #include "Player.h"
-#include <iostream>
 
 template<typename T>
 void Player::Swap(T&& obj) noexcept
@@ -20,7 +19,7 @@ Player::Player(RenderWindow* window, const std::vector<std::vector<int>> level, 
 {
     this->window = window;
     this->level = level;
-    this->speed = speed;
+    this->speed = speed > size ? size : speed;
 
     offset1 = (Width - level[0].size() * size) / 2;
     offset2 = (Height - level.size() * size) / 2;
@@ -105,6 +104,11 @@ size_t Player::checkPosition(const int& xPos, const int& yPos)
     return level[(yPos - offset2) / size][(xPos - offset1) / size];
 }
 
+size_t Player::checkPosition(const Vector2i& vec)
+{
+    return level[(vec.y - offset2) / size][(vec.x - offset1) / size];
+}
+
 std::pair<int, int>* Player::checkBoxes(const int& first, const int& second)
 {
     for(const auto& box : boxes)
@@ -115,110 +119,78 @@ std::pair<int, int>* Player::checkBoxes(const int& first, const int& second)
     return nullptr;
 }
 
+std::pair<int, int>* Player::checkBoxes(const Vector2i& vec)
+{
+    for(const auto& box : boxes)
+    {
+        if (box.first == vec.x && (box.second < vec.y && vec.y < box.second + size) || box.second == vec.y && (box.first < vec.x && vec.x < box.first + size))
+            return const_cast<std::pair<int, int>*>(&box);
+    }
+    return nullptr;
+}
+
 void Player::movement(const int& pressed_key)
-{      
-    // std::cout << "pressed!\n";
+{    
+    int dist, destination = 1, *ptr, *coord;
+    Vector2i nextPos, behindNextPos;
+    std::pair<int, int>* it;
+
     switch(pressed_key)
     {
         case Keyboard::W: case Keyboard::Up:
-        {
-            int dist = (y - offset2) % size;
-            if (checkPosition(x, y - speed) != 1) // check if the next (up) cell is a wall
-            {
-                auto it = checkBoxes(x, y - speed); // check if the next (up) cell is a box
-                if (it)
-                {
-                    if (checkPosition(x, y - size - speed) != 1 && !checkBoxes(x, y - size - speed)) // check if the cell behind next one (up) is not a wall or a box
-                    {
-                        (*it).second -= speed;
-                        y -= speed;
-                    }
-                    else // if the previous check has failed player and box should be moved up by the vlue of "dist" 
-                    {
-                        y -= dist && dist <= speed ? dist : 0;
-                        (*it).second = y - size;
-                    }
-                }
-                else y -= speed; // if the next (up) cell is not a wall or a box player should be moved right by the value of "speed"
-            }
-            else if (size - dist) y -= dist; // if the next (up) cell is a wall player should be moved right by the value of the difference between it's current "y"-position - size and the position of the next (up) cell
+            dist = (y - offset2) % size;
+            nextPos = Vector2i(x, y - speed);
+            behindNextPos = Vector2i(x, y - size - speed);
+            ptr = &y; destination = -1;
+            it = checkBoxes(nextPos);
+            coord = &(it->second);
             break;
-        }
+
         case Keyboard::A: case Keyboard::Left:
-        {
-            int dist = (x - offset1) % size;
-            if (checkPosition(x - speed, y) != 1)
-            {
-                auto it = checkBoxes(x - speed, y);
-                if (it)
-                {
-                    if (checkPosition(x - size - speed, y) != 1 && !checkBoxes(x - size - speed, y))
-                    {
-                        (*it).first -= speed;
-                        x -= speed;
-                    }
-                    else
-                    {
-                        x -= dist && dist <= speed ? dist : 0;
-                        (*it).first = x - size;
-                    }
-                }
-                else x -= speed;
-            }
-            else if (size - dist) x -= dist;
+            dist = (x - offset1) % size;
+            nextPos = Vector2i(x - speed, y);
+            behindNextPos = Vector2i(x - size - speed, y);
+            ptr = &x; destination = -1;
+            it = checkBoxes(nextPos);
+            coord = &(it->first);
             break;
-        }
+
         case Keyboard::S: case Keyboard::Down:
-        {
-            int dist = size - (y - offset2) % size;
-            if (checkPosition(x, y + size + speed) != 1)
-            {
-                auto it = checkBoxes(x, y + size + speed);
-                if (it)
-                {
-                    if (checkPosition(x, y + 2 * size + speed) != 1 && !checkBoxes(x, y + 2 * size + speed))
-                    {
-                        (*it).second += speed;
-                        y += speed;
-                    }
-                    else
-                    {
-                        y += dist && dist <= speed ? dist : 0;
-                        (*it).second = y + size;
-                    }
-                }
-                else y += speed;
-            }
-            else if (size - dist) y += dist;
+            dist = size - (y - offset2) % size;
+            nextPos = Vector2i(x, y + size + speed);
+            behindNextPos = Vector2i(x, y + 2 * size + speed);
+            ptr = &y; it = checkBoxes(nextPos);
+            coord = &(it->second);
             break;
-        }
+
         case Keyboard::D: case Keyboard::Right:
-        {
-            int dist = size - (x - offset1) % size;
-            if (checkPosition(x + size + speed, y) != 1) 
-            {
-                auto it = checkBoxes(x + size + speed, y); 
-                if (it) 
-                {
-                    if (checkPosition(x + 2 * size + speed, y) != 1 && !checkBoxes(x + 2 * size + speed, y)) 
-                    {
-                        (*it).first += speed;
-                        x += speed;
-                    }
-                    else
-                    {
-                        x += dist && dist <= speed ? dist : 0;
-                        (*it).first = x + size;
-                    }
-                        
-                }
-                else x += speed;
-            }
-            else if (size - dist) x += dist;
+            dist = size - (x - offset1) % size;
+            nextPos = Vector2i(x + size + speed, y);
+            behindNextPos = Vector2i(x + 2 * size + speed, y);
+            ptr = &x; it = checkBoxes(nextPos);
+            coord = &(it->first);
             break;
-        }
     }
-    
+
+    if (checkPosition(nextPos) != 1)
+    {
+        if (it)
+        {
+            if (checkPosition(behindNextPos) != 1 && !checkBoxes(behindNextPos))
+            {
+                (*ptr) += destination * speed;
+                (*coord) += destination * speed;
+            }
+            else
+            {
+                (*ptr) += dist && dist <= speed ? destination * dist : 0;
+                (*coord) = (*ptr) + destination * size;
+            }
+        }
+        else (*ptr) += destination * speed;
+    }
+    else if (size - dist) (*ptr) += destination * dist;
+
     img["player"].second.setPosition(x, y);
 }
 
@@ -234,15 +206,29 @@ void Player::alignPlayer(const int& released_key, const int& param) // player an
             case Keyboard::A: case Keyboard::Left:
                 x -= size / 2;
                 break;
-            case Keyboard::S: case Keyboard::Down:  
-                y += size / 2; 
+            case Keyboard::S: case Keyboard::Down:
+                if (checkPosition(x, y + 1.5 * size) != 1) 
+                {
+                    auto it = checkBoxes(x, y + 1.5 * size);
+                    if (it)
+                    {
+                        if (checkPosition(x, y + 2.5 * size) != 1 && !checkBoxes(x, y + 2.5 * size)) y += size / 2;
+                    }
+                    else y += size / 2; 
+                }
                 break;
             case Keyboard::D: case Keyboard::Right:
-                x += size / 2;
+                if (checkPosition(x + 1.5 * size, y) != 1) 
+                {
+                    auto it = checkBoxes(x + 1.5 * size, y);
+                    if (it)
+                    {
+                        if (checkPosition(x + 2.5 * size, y) != 1 && !checkBoxes(x + 2.5 * size, y)) x += size / 2;
+                    }
+                    else x += size / 2;
+                }
                 break;
         }
-        img["player"].second.setPosition(x, y);
-        window->draw(img["player"].second);
     }
 
     switch(released_key)
@@ -283,12 +269,6 @@ void Player::alignPlayer(const int& released_key, const int& param) // player an
     }
 
     img["player"].second.setPosition(x, y);
-}
-
-void Player::jumpPlayer(const int& param)
-{
-    std::cout << "yes\n";
-    
 }
 
 bool Player::drawPlayer()

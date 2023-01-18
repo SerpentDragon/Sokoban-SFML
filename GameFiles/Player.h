@@ -41,14 +41,16 @@ public:
     ~Player();
 
     size_t checkPosition(const int& xPos, const int& yPos);
+
+    size_t checkPosition(const Vector2i& vec);
     
     std::pair<int, int>* checkBoxes(const int& first, const int& second);
+
+    std::pair<int, int>* checkBoxes(const Vector2i& vec);
 
     void movement(const int& pressed_key);
 
     void alignPlayer(const int& released_key, const int& param); // player and boxes must be aligned by cells
-
-    void jumpPlayer(const int& released_key);
 
     bool drawPlayer();
 

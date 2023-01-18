@@ -159,7 +159,7 @@ bool Drawing::drawWorld(const int& level_num)
 
     Event event;
 
-    int flag = 0, count_pressed = 0;
+    int flag = 0, count_pressed = 0; // count_pressed is used to catch single press
     bool move_up = false, move_down = false, move_right = false, move_left = false;
 
     while(window->isOpen())
@@ -172,28 +172,25 @@ bool Drawing::drawWorld(const int& level_num)
                         if (showWarning(window, L"Вы уверены, что хотите выйти?")) window->close();
                     break;
                 case Event::KeyPressed:
+                    count_pressed++;
                     switch(event.key.code)
                     {
                         case Keyboard::Escape:
                             if (showWarning(window, L"Вы уверены, что хотите выйти?")) window->close();
                             break;
                         case Keyboard::W: case Keyboard::Up:
-                            count_pressed++;
                             if (!move_down && !move_right && !move_left) move_up = true; 
                             else event.key.code = Keyboard::Key::Unknown; 
                             break;
                         case Keyboard::A: case Keyboard::Left:
-                            count_pressed++;
                             if (!move_down && !move_up && !move_right) move_left = true;
                             else event.key.code = Keyboard::Key::Unknown;
                             break;
                         case Keyboard::S: case Keyboard::Down:
-                            count_pressed++;
                             if (!move_up && !move_right && !move_left) move_down = true;
                             else event.key.code = Keyboard::Key::Unknown;
                             break;
                         case Keyboard::D: case Keyboard::Right:
-                            count_pressed++;
                             if (!move_down && !move_up && !move_left) move_right = true; 
                             else event.key.code = Keyboard::Key::Unknown;
                             break;
@@ -201,8 +198,6 @@ bool Drawing::drawWorld(const int& level_num)
                     player.movement(event.key.code);
                     break;
                 case Event::KeyReleased:
-                    
-                    
                     switch(event.key.code)
                     {
                         case Keyboard::W: case Keyboard::Up: 
@@ -218,10 +213,6 @@ bool Drawing::drawWorld(const int& level_num)
                             move_right = false;
                             break;
                     }
-                    //if (count_pressed != 1) player.alignPlayer(event.key.code);
-                    //else player.jumpPlayer(event.key.code);
-                    //count_pressed = 0;
-                    // std::cout << count_pressed << std::endl;
                     player.alignPlayer(event.key.code, count_pressed);
                     count_pressed = 0;
                     break;
