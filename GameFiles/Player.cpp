@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <iostream>
 
 template<typename T>
 void Player::Swap(T&& obj) noexcept
@@ -116,6 +117,7 @@ std::pair<int, int>* Player::checkBoxes(const int& first, const int& second)
 
 void Player::movement(const int& pressed_key)
 {      
+    // std::cout << "pressed!\n";
     switch(pressed_key)
     {
         case Keyboard::W: case Keyboard::Up:
@@ -220,8 +222,29 @@ void Player::movement(const int& pressed_key)
     img["player"].second.setPosition(x, y);
 }
 
-void Player::alignPlayer(const int& released_key) // player and boxes must be aligned by cells
+void Player::alignPlayer(const int& released_key, const int& param) // player and boxes must be aligned by cells
 {
+    if (param == 1)
+    {
+        switch(released_key)
+        {
+            case Keyboard::W: case Keyboard::Up:
+                y -= size / 2;
+                break;
+            case Keyboard::A: case Keyboard::Left:
+                x -= size / 2;
+                break;
+            case Keyboard::S: case Keyboard::Down:  
+                y += size / 2; 
+                break;
+            case Keyboard::D: case Keyboard::Right:
+                x += size / 2;
+                break;
+        }
+        img["player"].second.setPosition(x, y);
+        window->draw(img["player"].second);
+    }
+
     switch(released_key)
     {
         case Keyboard::W: case Keyboard::Up:
@@ -260,6 +283,12 @@ void Player::alignPlayer(const int& released_key) // player and boxes must be al
     }
 
     img["player"].second.setPosition(x, y);
+}
+
+void Player::jumpPlayer(const int& param)
+{
+    std::cout << "yes\n";
+    
 }
 
 bool Player::drawPlayer()

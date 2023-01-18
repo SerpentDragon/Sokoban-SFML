@@ -28,7 +28,7 @@ class Player
     void Swap(T&& obj) noexcept;
 
 public:
-    Player(RenderWindow* window, const std::vector<std::vector<int>> level, const int& speed = size / 5);
+    Player(RenderWindow* window, const std::vector<std::vector<int>> level, const int& speed = size / 7);
 
     Player(const Player& obj);
 
@@ -46,7 +46,9 @@ public:
 
     void movement(const int& pressed_key);
 
-    void alignPlayer(const int& released_key); // player and boxes must be aligned by cells
+    void alignPlayer(const int& released_key, const int& param); // player and boxes must be aligned by cells
+
+    void jumpPlayer(const int& released_key);
 
     bool drawPlayer();
 
