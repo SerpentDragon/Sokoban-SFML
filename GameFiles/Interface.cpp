@@ -1,5 +1,4 @@
 #include "Interface.h"
-#include <iostream>
 
 template<typename T>
 void Interface::Swap(T&& obj) noexcept
@@ -9,6 +8,7 @@ void Interface::Swap(T&& obj) noexcept
     currentMode = obj.currentMode;
     currentLevel = obj.currentLevel;
     passedLevel = obj.passedLevel;
+    coins = obj.coins;
 }
 
 Interface::Interface(RenderWindow* window)
@@ -31,8 +31,7 @@ Interface::Interface(RenderWindow* window)
     img["levels_back"].second.setTexture(&img["levels_back"].first);
 
     currentMode = MainMenuMode;
-    currentLevel = 0;
-    passedLevel = 0;   
+    currentLevel = passedLevel = coins = 0;
 }
 
 Interface::Interface(const Interface& obj)
@@ -45,7 +44,7 @@ Interface::Interface(Interface&& obj) noexcept
     Swap(obj);
 
     obj.window = nullptr;
-    currentMode = passedLevel = currentLevel = 0;
+    currentMode = passedLevel = currentLevel = coins = 0;
 }
 
 Interface& Interface::operator=(const Interface& obj)
@@ -64,7 +63,7 @@ Interface& Interface::operator=(Interface&& obj) noexcept
         Swap(obj);
         
         obj.window = nullptr;
-        currentMode = passedLevel = currentLevel = 0;
+        currentMode = passedLevel = currentLevel = coins = 0;
     }
     return *this;
 }
@@ -178,6 +177,7 @@ void Interface::chooseLevel()
                             currentMode = MainMenuMode;
                             break;
                         default:
+                            draw.setCoins(getCoins());
                             if (draw.drawWorld(i + 1)) 
                             {
                                 currentMode = ChooseAction;
@@ -219,8 +219,6 @@ void Interface::chooseFurtherAction()
 
     int button_width = 0.16666 * Width;
     int button_height = 0.08125 * Height;
-
-    std::cout << passedLevel << std::endl;
 
     Button levelsButton(window, Text(L"уровни", font, 0.025 * Width), 0.241666 * Width, 0.5325 * Height, button_width, button_height, GREEN, BLUE);
     Button repeatButton(window, Text(L"повтор", font, 0.025 * Width), 0.416666 * Width, 0.5325 * Height, button_width, button_height, GREEN, BLUE);
@@ -273,10 +271,10 @@ void Interface::exitGame()
 
 int Interface::readFile()
 {
-    int currentLevel;
-    std::fstream file("data/records.ltx", std::ios_base::in | std::ios_base::binary);
+    std::fstream recordFile("data/records.ltx", std::ios_base::in | std::ios_base::binary);
+    std::fstream coinsFile("data/coins.ltx", std::ios_base::in | std::ios_base::binary);
     
-    if (!file)
+    if (!recordFile)
     {
         std::filesystem::create_directory("data");
         std::fstream tmp("data/records.ltx", std::ios_base::out | std::ios_base::binary);
@@ -287,7 +285,7 @@ int Interface::readFile()
     else
     {
         std::string str;
-        file >> str;
+        recordFile >> str;
         try
         {
             currentLevel = stoi(str);
@@ -296,24 +294,55 @@ int Interface::readFile()
         {
             currentLevel = 0;
             remove("data/records.ltx");
-            std::filesystem::create_directory("data");
         }
 
-        if (currentLevel < 0 || currentLevel > 15) currentLevel = 0;
-
-       
-        file.close();
+        if (currentLevel < 0 || currentLevel > 15) currentLevel = 0;      
     }
+
+    if (!coinsFile)
+    {
+        std::fstream tmp("data/records.ltx", std::ios_base::out | std::ios_base::binary);
+        tmp << 50;
+        tmp.close();
+        coins = 50;
+    }
+    else
+    {
+        std::string str;
+        coinsFile >> str;
+        try
+        {
+            coins = stoi(str);
+        }
+        catch(const std::exception& e)
+        {
+            coins = 50;
+            remove("data/records.ltx");
+        }
+
+        if (coins < 0) coins = 50;  
+    }
+
+    recordFile.close();
+    coinsFile.close();
 
     return currentLevel;
 }
 
 void Interface::writeFile()
 {
-    std::fstream file("data/records.ltx", std::ios_base::out | std::ios_base::binary);
-    file << currentLevel;
-    file.close();
+    std::fstream recordFile("data/records.ltx", std::ios_base::out | std::ios_base::binary);
+    recordFile << currentLevel;
+    recordFile.close();
+
+    std::fstream coinsFile("data/coins.ltx", std::ios_base::out | std::ios_base::binary);
+    coinsFile << coins;
+    coinsFile.close();
 }
+
+void Interface::setCoins(const int& coins_num) { coins = coins_num; }
+
+const int Interface::getCoins() const { return coins; }
 
 const size_t Interface::getCurrentMode() const { return currentMode; }
 

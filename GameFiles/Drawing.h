@@ -20,6 +20,8 @@ class Drawing
 
     std::map<std::string, std::pair<Texture, RectangleShape>> world;
 
+    int coins;
+
 public: 
     Drawing(RenderWindow* window);
 
@@ -34,4 +36,12 @@ public:
     ~Drawing();
 
     bool drawWorld(const int& level_num);
+
+    void setCoins(const int& coins_num);
+
+    const int getCoins() const;
+
+    void increaseCoins(const int& amount);
+
+    void decreaseCoins(const int& amount);
 };

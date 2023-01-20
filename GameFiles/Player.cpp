@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <iostream>
 
 template<typename T>
 void Player::Swap(T&& obj) noexcept
@@ -7,6 +8,7 @@ void Player::Swap(T&& obj) noexcept
     level = obj.level;
     boxes = obj.boxes;
     aims = obj.aims;
+    playerMoves = obj.playerMoves;
     offset1 = obj.offset1;
     offset2 = obj.offset2;
     img = obj.img;
@@ -35,10 +37,13 @@ Player::Player(RenderWindow* window, const std::vector<std::vector<int>> level, 
                     break;
                 case 4:
                     boxes.emplace_back(std::pair(j * size + offset1, i * size + offset2));
+                    // boxesplayerMoves.push(std::pair(j, i));
+                    // std::cout << "here " << j << " " << i << std::endl;
                     break;
                 case 5:
                     x = j * size + offset1;
                     y = i * size + offset2;
+                    // playerMoves.push(std::pair(j, i));
                     break;
             }
         }
@@ -46,7 +51,7 @@ Player::Player(RenderWindow* window, const std::vector<std::vector<int>> level, 
 
     Texture texture;
 
-    texture.loadFromFile("images/player/man.png");
+    texture.loadFromFile("images/player/player.png");
     img["player"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
     img["player"].second.setTexture(&img["player"].first);
     img["player"].second.setPosition(x, y);
@@ -135,6 +140,16 @@ void Player::movement(const int& pressed_key)
     Vector2i nextPos, behindNextPos;
     std::pair<int, int>* it;
 
+    // variabels to keep previous and current player positions
+    static int prevX = 0, prevY = 0;
+    int currX = (x - offset1) / size, currY = (y - offset2) / size;
+    bool checkBoxesAround = false;
+
+    // vectors to keep previous and current boxes positions
+    static std::vector<std::pair<int, int>> prevPos(boxes.size(), std::pair(0, 0));
+    std::vector<std::pair<int, int>> currPos;
+    for(const auto& box : boxes) currPos.emplace_back(std::pair((box.first - offset1) / size, (box.second - offset2) / size));
+
     switch(pressed_key)
     {
         case Keyboard::W: case Keyboard::Up:
@@ -170,12 +185,15 @@ void Player::movement(const int& pressed_key)
             ptr = &x; it = checkBoxes(nextPos);
             coord = &(it->first);
             break;
+
+        default: return;
     }
 
     if (checkPosition(nextPos) != 1)
     {
         if (it)
         {
+            checkBoxesAround = true;
             if (checkPosition(behindNextPos) != 1 && !checkBoxes(behindNextPos))
             {
                 (*ptr) += destination * speed;
@@ -190,6 +208,29 @@ void Player::movement(const int& pressed_key)
         else (*ptr) += destination * speed;
     }
     else if (size - dist) (*ptr) += destination * dist;
+
+    if (currX != prevX || currY != prevY) playerMoves.push(std::tuple(currX, currY, checkBoxesAround));
+
+    for(size_t i = 0; i < currPos.size(); i++)
+    {
+        if (currPos[i].first != prevPos[i].first || currPos[i].second != prevPos[i].second)
+        {
+            for(const auto& el : currPos) 
+            {
+                boxesMoves.push(el);
+                // std::cout << el.first << " " << el.second << std::endl;
+            }
+            // std::cout << "SIZE: " << boxesplayerMoves.size() << std::endl << std::endl;
+            break;
+        }
+    }
+
+    prevX = currX; prevY = currY;
+    prevPos = currPos;
+
+    std::cout << currX << " " << currY << std::endl;
+    for(const auto& el : currPos) std::cout << el.first << " : " << el.second << "\t";
+    std::cout << std::endl << std::endl;
 
     img["player"].second.setPosition(x, y);
 }
@@ -228,6 +269,7 @@ void Player::alignPlayer(const int& released_key, const int& param) // player an
                     else x += size / 2;
                 }
                 break;
+            default: return;
         }
     }
 
@@ -266,6 +308,8 @@ void Player::alignPlayer(const int& released_key, const int& param) // player an
 
             break;
         }
+
+        default: return;
     }
 
     img["player"].second.setPosition(x, y);
@@ -319,5 +363,39 @@ void Player::restartLevel()
         }
     }
 
+    while(!playerMoves.empty()) playerMoves.pop();
+    while(!boxesMoves.empty()) boxesMoves.pop();
+
     img["player"].second.setPosition(x, y);
+}
+
+bool Player::moveBack()
+{
+    if (!playerMoves.empty())
+    {
+        x = std::get<0>(playerMoves.top()) * size + offset1;
+        y = std::get<1>(playerMoves.top()) * size + offset2;
+        
+        img["player"].second.setPosition(x, y);
+        window->draw(img["player"].second);
+
+        // if (!boxesMoves.empty() && std::get<2>(playerMoves.top()))
+        // {
+        //     for(int i = boxes.size() - 1; i >= 0; i--)
+        //     {
+        //         boxes[i].first = boxesMoves.top().first * size + offset1;
+        //         boxes[i].second = boxesMoves.top().second * size + offset2;
+        //         boxesMoves.pop();
+
+        //         img["box"].second.setPosition(boxes[i].first, boxes[i].second);
+        //         window->draw(img["box"].second);
+        //     }
+        // }
+
+        playerMoves.pop();
+
+        return true;
+    }
+    
+    return false; 
 }

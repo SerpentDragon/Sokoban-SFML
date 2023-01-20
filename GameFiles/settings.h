@@ -15,3 +15,4 @@ static Color GREEN(0, 128, 0);
 static Color BLUE(66, 170, 255);
 static Color DARK_BLUE(0, 39, 174);
 static Color GREY(128, 128, 128);
+static Color GOLD(255, 215, 0);

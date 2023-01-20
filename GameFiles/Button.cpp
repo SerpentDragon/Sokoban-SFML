@@ -48,7 +48,7 @@ Button::Button(RenderWindow *window, const int& x, const int& y, const int& b_wi
     height = b_height;
     color = colorOn = Color(0, 0, 0, 255);
     text = Text();
-    this->texture = new Texture(*texture);
+    this->texture = texture ? new Texture(*texture) : new Texture();
 
     button = RectangleShape(Vector2f(width, height));
     button.setPosition(x, y);

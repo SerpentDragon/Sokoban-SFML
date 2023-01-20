@@ -1,6 +1,9 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <stack>
+#include <vector>
+#include <tuple>
 #include "settings.h"
 
 using namespace sf;
@@ -12,6 +15,9 @@ class Player
     std::vector<std::vector<int>> level; // info about level structure 
     std::vector<std::pair<int, int>> boxes; // info about boxes locations
     std::vector<std::pair<int, int>> aims; // info about positions where boxes should be placed 
+
+    std::stack<std::tuple<int, int, int>> playerMoves; // stack to keep movements of player
+    std::stack<std::pair<int, int>> boxesMoves; // stack to keep movement of boxes
     
     // the values by which position of level map was moved relative to the point (0, 0)
     int offset1; 
@@ -55,4 +61,6 @@ public:
     bool drawPlayer();
 
     void restartLevel();
+
+    bool moveBack();
 };

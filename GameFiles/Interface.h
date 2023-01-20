@@ -20,6 +20,7 @@ class Interface
     size_t currentMode;
     size_t currentLevel;
     size_t passedLevel;
+    int coins;
 
     template<typename T>
     void Swap(T&& obj) noexcept;
@@ -48,6 +49,10 @@ public:
     int readFile();
 
     void writeFile();
+
+    void setCoins(const int& coins_num);
+
+    const int getCoins() const;
 
     const size_t getCurrentMode() const;
 
