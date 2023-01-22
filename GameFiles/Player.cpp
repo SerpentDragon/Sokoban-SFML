@@ -346,7 +346,7 @@ void Player::alignPlayer(const int& released_key, const int& param) // player an
 
             dxLeft < dxRight ? x -= dxLeft : (x += dxRight, flag = true);
 
-            std::cout << dxRight << std::endl;
+            // std::cout << dxRight << std::endl;
 
             if ((released_key == Keyboard::D || released_key == Keyboard::Right) && flag) 
             {
