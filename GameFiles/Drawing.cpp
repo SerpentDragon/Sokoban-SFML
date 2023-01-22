@@ -284,7 +284,7 @@ bool Drawing::drawWorld(const int& level_num)
         {
             if (coins - 10 >= 0) 
             {
-                if (player.moveBack()) 
+                if (player.cancelMove()) 
                 {
                     coins -= 10;
                     coinsText.setString(std::to_string(coins));

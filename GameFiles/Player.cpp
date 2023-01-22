@@ -1,8 +1,4 @@
 #include "Player.h"
-#include <iostream>
-
-// std::vector<std::tuple<int, int, bool>> PV;
-// std::vector<std::pair<int, int>> BV;
 
 template<typename T>
 void Player::Swap(T&& obj) noexcept
@@ -140,11 +136,11 @@ void Player::movement(const int& pressed_key)
     Vector2i nextPos, behindNextPos;
     std::pair<int, int>* it;
 
-    // static int prevX = 0, prevY = 0;
-    // int currX = (x - offset1) / size, currY = (y - offset2) / size; // here we calculate player current poition
-    // int currX = (x - offset1) / size + 1, currY = (y - offset2) / size + 1; для A и W
     int prevX = (x - offset1) / size, prevY = (y - offset2) / size;
     int currX, currY;
+
+    std::vector<std::pair<int, int>> prevBoxesPos;
+    for(const auto& box : boxes) prevBoxesPos.emplace_back(std::pair((box.first - offset1) / size, (box.second - offset2) / size));
     
     switch(pressed_key)
     {
@@ -189,10 +185,6 @@ void Player::movement(const int& pressed_key)
         default: return;
     } 
 
-    // static std::vector<std::pair<int, int>> prevBoxesPos(boxes.size(), std::pair(0, 0));
-    // std::vector<std::pair<int, int>> currBoxesPos;
-    // for(const auto& box : boxes) currBoxesPos.emplace_back(std::pair((box.first - offset1) / size, (box.second - offset2) / size));
-
     int playerMoved = *ptr; // this variable keep info if player moved or not
     bool checkBoxesAround = false; // this variable keep info if there is a box next to the player
     
@@ -218,49 +210,11 @@ void Player::movement(const int& pressed_key)
 
     currX = (x - offset1) / size; currY = (y - offset2) / size;
 
-    // std::cout << "PREV: " << prevX << " " << prevY << std::endl;
-    // std::cout << "CURR: " << currX << " " << currY << std::endl;
-
     if (currX != prevX || currY != prevY)
     {
         playerMoves.push(std::tuple(prevX, prevY, checkBoxesAround));
-        // std::cout << prevX << " " << prevY << std::endl << std::endl;// << " " << checkBoxesAround << std::endl;
+        for(const auto& el : prevBoxesPos) boxesMoves.push(el);
     }
-
-    
-    // if (playerMoved != *ptr && (currX != prevX || currY != prevY))
-    // {
-        // std::cout << "entered!\n";
-        // std::cout << currX << " " << currY << std::endl;
-        // std::cout << (x - offset1) / size << " " << (y - offset2) / size << std::endl;
-        // if (currX != (x - offset1) / size && currY != (y - offset2) / size)
-        // if (pressed_key == Keyboard::W || pressed_key == Keyboard::Up) currY--;
-        // else if (pressed_key == Keyboard::A || pressed_key == Keyboard::Left) currX--;
-        // playerMoves.push(std::tuple(currX, currY, checkBoxesAround));
-        // std::cout << currX << " " << currY << std::endl << std::endl;// << " " << checkBoxesAround << std::endl;
-        // PV.insert(PV.begin(), std::tuple(currX, currY, checkBoxesAround));
-        // prevX = currX; prevY = currY;
-    // }
-
-    // if (checkBoxesAround)
-    // {
-    //     for(size_t i = 0; i < currBoxesPos.size(); i++)
-    //     {
-    //         // std::cout << "check: " << (currBoxesPos[i].first != prevBoxesPos[i].first) << " " << (currBoxesPos[i].second != prevBoxesPos[i].second) << std::endl;
-    //         if (currBoxesPos[i].first != prevBoxesPos[i].first || currBoxesPos[i].second != prevBoxesPos[i].second)
-    //         {
-    //             for(const auto& el : currBoxesPos)
-    //             {
-    //                 std::cout << el.first << " : " << el.second << "   ";
-    //                 boxesMoves.push(el);
-    //                 // BV.insert(BV.begin(), el);
-    //             }
-    //             std::cout << std::endl;
-    //             prevBoxesPos = currBoxesPos;
-    //             break;
-    //         }
-    //     }
-    // }
 
     img["player"].second.setPosition(x, y);
 }
@@ -268,6 +222,7 @@ void Player::movement(const int& pressed_key)
 void Player::alignPlayer(const int& released_key, const int& param) // player and boxes must be aligned by cells
 {
     bool flag = false;
+
     if (param == 1)
     {
         switch(released_key)
@@ -315,18 +270,20 @@ void Player::alignPlayer(const int& released_key, const int& param) // player an
             auto it1 = checkBoxes(x, y - speed);
             auto it2 = checkBoxes(x, y + size + speed);
 
-            // y += dyUp < dyDown ? -dyUp : dyDown; // align player by cells
             dyUp < dyDown ? y -= dyUp : (y += dyDown, flag = true);
 
-            if ((released_key == Keyboard::S || released_key == Keyboard::Down) && flag) 
+            if (flag)
             {
-                playerMoves.push(std::tuple((x - offset1) / size, (y - offset2) / size - 1, false));
-                // std::cout << "added: " << (x - offset1) / size << " " << (y - offset2) / size - 1 << std::endl;
-            }
-            else if ((released_key == Keyboard::W || released_key == Keyboard::Up) && flag && dyDown != size / 2)
-            {
-                // std::cout << "deleted: " << std::get<0>(playerMoves.top()) << " " << std::get<1>(playerMoves.top()) << std::endl;
-                playerMoves.pop();
+                if (released_key == Keyboard::S || released_key == Keyboard::Down) 
+                {
+                    playerMoves.push(std::tuple((x - offset1) / size, (y - offset2) / size - 1, false));
+                    for(const auto& box : boxes) boxesMoves.push(std::pair((box.first - offset1) / size, (box.second - offset2) / size));
+                }
+                else if ((released_key == Keyboard::W || released_key == Keyboard::Up) && dyDown != size / 2)
+                {
+                    playerMoves.pop();
+                    for(int i = 0; i < boxes.size(); i++) boxesMoves.pop();
+                }
             }
 
             if (it1) (*it1).second = y - size; // here we should check if there is a box above or beneath player. And if there is, we will align it too
@@ -346,18 +303,23 @@ void Player::alignPlayer(const int& released_key, const int& param) // player an
 
             dxLeft < dxRight ? x -= dxLeft : (x += dxRight, flag = true);
 
-            // std::cout << dxRight << std::endl;
-
-            if ((released_key == Keyboard::D || released_key == Keyboard::Right) && flag) 
+            if (flag)
             {
-                playerMoves.push(std::tuple((x - offset1) / size - 1, (y - offset2) / size, false));
-                // std::cout << "added: " << (x - offset1) / size - 1 << " " << (y - offset2) / size << std::endl << std::endl;
+                if (released_key == Keyboard::D || released_key == Keyboard::Right) 
+                {
+                    playerMoves.push(std::tuple((x - offset1) / size - 1, (y - offset2) / size, false));
+                    for(const auto& box : boxes) 
+                    {
+                        boxesMoves.push(std::pair((box.first - offset1) / size, (box.second - offset2) / size));
+                    }
+                }
+                else if ((released_key == Keyboard::A || released_key == Keyboard::Left) && dxRight != size / 2) 
+                {
+                    playerMoves.pop();
+                    for(int i = 0; i < boxes.size(); i++) boxesMoves.pop();
+                }
             }
-            else if ((released_key == Keyboard::A || released_key == Keyboard::Left) && flag && dxRight != size / 2) 
-            {
-                // std::cout << "deleted: " << std::get<0>(playerMoves.top()) << " " << std::get<1>(playerMoves.top()) << std::endl << std::endl;
-                playerMoves.pop();
-            }
+            
 
             if (it1) (*it1).first = x - size;
             if (it2) (*it2).first = x + size;
@@ -425,55 +387,26 @@ void Player::restartLevel()
     img["player"].second.setPosition(x, y);
 }
 
-bool Player::moveBack()
+bool Player::cancelMove()
 {
-    // std::cout << "here\n";
-    // std::cout << playerMoves.size() << std::endl;
     if (!playerMoves.empty())
     {
-        // int xPos = std::get<0>(playerMoves.top());
-        // int yPos = std::get<1>(playerMoves.top());
-        // if (xPos == (x - offset1) / size && yPos == (y - offset2) / size)
-        // {
-        //     std::cout << "deleted " << xPos << " " << yPos << std::endl;
-        //     if (std::get<2>(playerMoves.top()))
-        //     {
-        //         std::cout << "deleted ";
-        //         for(int i = 0; i < boxes.size(); i++) 
-        //         {
-        //             std::cout << boxesMoves.top().first << " : " << boxesMoves.top().second << "   ";
-        //             boxesMoves.pop();
-        //         }
-        //         std::cout << std::endl;
-        //     }
-        //     playerMoves.pop();
-        // }
-        // std::cout << "coo: " << std::get<0>(playerMoves.top()) << " " << std::get<1>(playerMoves.top()) << std::endl;
         x = std::get<0>(playerMoves.top()) * size + offset1;
         y = std::get<1>(playerMoves.top()) * size + offset2;
 
         img["player"].second.setPosition(x, y);
         window->draw(img["player"].second);
 
-        // if (std::get<2>(playerMoves.top()))
-        // {
-        //     // std::cout << "here\n";
-        //     // std::cout << "size: " << boxesMoves.size() << std::endl;
-        //     for(int i = boxes.size() - 1; i >= 0; i--)
-        //     {
-        //         // std::cout << i << std::endl;
-        //         std::cout << "pop: " << boxesMoves.top().first << " : " << boxesMoves.top().second << "   ";
-        //         boxes[i].first = boxesMoves.top().first * size + offset1;
-        //         boxes[i].second = boxesMoves.top().second * size + offset2;
-        //         // std::cout << boxes[i].first << " " << boxes[i].second << std::endl;
+        for(int i = boxes.size() - 1; i >= 0; i--)
+        {
+            boxes[i].first = boxesMoves.top().first * size + offset1;
+            boxes[i].second = boxesMoves.top().second * size + offset2;
 
-        //         img["box"].second.setPosition(boxes[i].first, boxes[i].second);
-        //         window->draw(img["box"].second);
+            img["box"].second.setPosition(boxes[i].first, boxes[i].second);
+            window->draw(img["box"].second);
 
-        //         boxesMoves.pop();
-        //     }
-        //     std::cout << std::endl;
-        // }
+            boxesMoves.pop();
+        }
 
         playerMoves.pop();
         return true;

@@ -64,5 +64,5 @@ public:
 
     void restartLevel();
 
-    bool moveBack();
+    bool cancelMove();
 };
