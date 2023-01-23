@@ -136,10 +136,10 @@ void Player::movement(const int& pressed_key)
     Vector2i nextPos, behindNextPos;
     std::pair<int, int>* it;
 
-    int prevX = (x - offset1) / size, prevY = (y - offset2) / size;
+    int prevX = (x - offset1) / size, prevY = (y - offset2) / size; // player position before and after move
     int currX, currY;
 
-    std::vector<std::pair<int, int>> prevBoxesPos;
+    std::vector<std::pair<int, int>> prevBoxesPos; // boxes positions before player's move
     for(const auto& box : boxes) prevBoxesPos.emplace_back(std::pair((box.first - offset1) / size, (box.second - offset2) / size));
     
     switch(pressed_key)
@@ -151,8 +151,6 @@ void Player::movement(const int& pressed_key)
             ptr = &y; destination = -1;
             it = checkBoxes(nextPos);
             coord = &(it->second);
-            // currX = (x + size - offset1) / size; currY = (y + size - offset2) / size;
-            // currY++; prevY++;
             break;
 
         case Keyboard::A: case Keyboard::Left:
@@ -162,8 +160,6 @@ void Player::movement(const int& pressed_key)
             ptr = &x; destination = -1;
             it = checkBoxes(nextPos);
             coord = &(it->first);
-            // currX = (x + size - offset1) / size; currY = (y + size - offset2) / size;
-            // currX++; prevX++;
             break;
 
         case Keyboard::S: case Keyboard::Down:
@@ -186,7 +182,6 @@ void Player::movement(const int& pressed_key)
     } 
 
     int playerMoved = *ptr; // this variable keep info if player moved or not
-    bool checkBoxesAround = false; // this variable keep info if there is a box next to the player
     
     if (checkPosition(nextPos) != 1)
     {
@@ -196,7 +191,6 @@ void Player::movement(const int& pressed_key)
             {
                 (*ptr) += destination * speed;
                 (*coord) += destination * speed;
-                checkBoxesAround = true;
             }
             else
             {
@@ -212,7 +206,7 @@ void Player::movement(const int& pressed_key)
 
     if (currX != prevX || currY != prevY)
     {
-        playerMoves.push(std::tuple(prevX, prevY, checkBoxesAround));
+        playerMoves.push(std::pair(prevX, prevY));
         for(const auto& el : prevBoxesPos) boxesMoves.push(el);
     }
 
@@ -276,7 +270,7 @@ void Player::alignPlayer(const int& released_key, const int& param) // player an
             {
                 if (released_key == Keyboard::S || released_key == Keyboard::Down) 
                 {
-                    playerMoves.push(std::tuple((x - offset1) / size, (y - offset2) / size - 1, false));
+                    playerMoves.push(std::pair((x - offset1) / size, (y - offset2) / size - 1));
                     for(const auto& box : boxes) boxesMoves.push(std::pair((box.first - offset1) / size, (box.second - offset2) / size));
                 }
                 else if ((released_key == Keyboard::W || released_key == Keyboard::Up) && dyDown != size / 2)
@@ -307,11 +301,8 @@ void Player::alignPlayer(const int& released_key, const int& param) // player an
             {
                 if (released_key == Keyboard::D || released_key == Keyboard::Right) 
                 {
-                    playerMoves.push(std::tuple((x - offset1) / size - 1, (y - offset2) / size, false));
-                    for(const auto& box : boxes) 
-                    {
-                        boxesMoves.push(std::pair((box.first - offset1) / size, (box.second - offset2) / size));
-                    }
+                    playerMoves.push(std::pair((x - offset1) / size - 1, (y - offset2) / size));
+                    for(const auto& box : boxes) boxesMoves.push(std::pair((box.first - offset1) / size, (box.second - offset2) / size));
                 }
                 else if ((released_key == Keyboard::A || released_key == Keyboard::Left) && dxRight != size / 2) 
                 {
@@ -391,8 +382,8 @@ bool Player::cancelMove()
 {
     if (!playerMoves.empty())
     {
-        x = std::get<0>(playerMoves.top()) * size + offset1;
-        y = std::get<1>(playerMoves.top()) * size + offset2;
+        x = playerMoves.top().first * size + offset1;
+        y = playerMoves.top().second * size + offset2;
 
         img["player"].second.setPosition(x, y);
         window->draw(img["player"].second);

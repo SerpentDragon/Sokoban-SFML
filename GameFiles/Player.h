@@ -16,10 +16,8 @@ class Player
     std::vector<std::pair<int, int>> boxes; // info about boxes locations
     std::vector<std::pair<int, int>> aims; // info about positions where boxes should be placed 
 
-    // std::stack<std::tuple<int, int, bool>> playerMoves; // stack to keep player movements
-    std::stack<std::tuple<int, int, bool>> playerMoves;
+    std::stack<std::pair<int, int>> playerMoves;
     std::stack<std::pair<int, int>> boxesMoves;
-    // std::stack<std::tuple<int, int, std::vector<std::pair<int, int>>>> parasha;
     
     // the values by which position of level map was moved relative to the point (0, 0)
     int offset1; 
