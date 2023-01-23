@@ -183,6 +183,7 @@ void Interface::chooseLevel()
                                 currentMode = ChooseAction;
                                 passedLevel = i + 1;
                             }
+                            coins = draw.getCoins();
                             break;
                     }
                 }
@@ -199,6 +200,43 @@ void Interface::chooseFurtherAction()
 {
     sleep(milliseconds(250));
 
+    Font font;
+    font.loadFromFile("fonts/arial_bold.ttf"); 
+
+    Text coinsText("", font, 0.045 * Width);
+    coinsText.setPosition(Width * 0.45, Height * 0.31);
+    coinsText.setFillColor(GOLD);
+
+    Texture coinsTexture;
+    coinsTexture.loadFromFile("images/player/coin.png");
+
+    RectangleShape coinsRect(Vector2f(size, size));
+    coinsRect.setTexture(&coinsTexture);
+    coinsRect.setPosition(Width * 0.53, Height * 0.325);
+    
+    switch(passedLevel)
+    {
+        case 1: case 2:
+            coins += 20;
+            coinsText.setString("+20");
+            break;
+        case 3: case 4: case 6:
+        case 7: case 8: case 9:
+        case 10: case 11:
+            coins += 30;
+            coinsText.setString("+30");
+            break;
+        case 5: case 12: case 13:
+        case 14: case 15:
+            coins += 40;
+            coinsText.setString("+40");
+            break;
+        case 16:
+            coins += 50;
+            coinsText.setString("+50");
+            break;
+    }
+
     if (passedLevel > currentLevel) currentLevel = passedLevel;
     std::string fileName = "images/levels/" + std::to_string(passedLevel) + "-2.png";
 
@@ -210,9 +248,6 @@ void Interface::chooseFurtherAction()
     RectangleShape rect(Vector2f(0.341666 * Width, 0.08125 * Height));
     rect.setPosition(0.33333 * Width, 0.4375 * Height);
     rect.setFillColor(BLUE);
-
-    Font font;
-    font.loadFromFile("fonts/arial_bold.ttf"); 
 
     Text text(L"Уровень пройден!", font, 0.03333 * Width);
     text.setPosition(Width / 3 + (rect.getGlobalBounds().width - text.getGlobalBounds().width) / 2, 0.43 * Height + (rect.getGlobalBounds().height - text.getGlobalBounds().height) / 2);     
@@ -233,6 +268,8 @@ void Interface::chooseFurtherAction()
 
         window->draw(rect);
         window->draw(text);
+        window->draw(coinsRect);
+        window->draw(coinsText);
 
         levelsButton.drawButton();
         repeatButton.drawButton();

@@ -164,6 +164,7 @@ bool Drawing::drawWorld(const int& level_num)
 
     int offset1 = (Width - mapWidth * size) / 2;
     int offset2 = (Height - mapHeight * size) / 2;
+    int tmpCoins = coins;
 
     Player player(window, levelsMap[level_num]);
 
@@ -267,20 +268,7 @@ bool Drawing::drawWorld(const int& level_num)
 
         bool res = player.drawPlayer();
 
-        if (flag++ % 100 == 0 && res) return true;
-
-        if (restartButton.isPressed()) 
-        {
-            // restore coins amount!
-            player.restartLevel();
-        }
-
-        else if (levelsButton.isPressed()) 
-        {
-            if (showWarning(window, L"Ваши результаты будут утеряны")) break;
-        }
-
-        else if (backButton.isPressed()) 
+        if (backButton.isPressed()) 
         {
             if (coins - 10 >= 0) 
             {
@@ -290,6 +278,20 @@ bool Drawing::drawWorld(const int& level_num)
                     coinsText.setString(std::to_string(coins));
                 }
             }
+        }
+
+        else if (flag++ % 100 == 0 && res) return true;
+
+        if (restartButton.isPressed()) 
+        {
+            coins = tmpCoins;
+            coinsText.setString(std::to_string(coins));
+            player.restartLevel();
+        }
+
+        else if (levelsButton.isPressed()) 
+        {
+            if (showWarning(window, L"Ваши результаты будут утеряны")) break;
         }
 
         window->display();
