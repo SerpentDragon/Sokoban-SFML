@@ -6,7 +6,7 @@ This app is a multilevel game Sokoban created using SFML graphic library
 
 Compilation and building are assembled using Makefile provided in this reposiroty
 
-# Правила игры
+# Rules
 
 The rules are quite simple. The player is in a maze inside which boxes are placed. Player should got through the maze and place all the boxes in marked positions. In this case, the level is successfuly completed. For each successfully completed level, player earns coins which can be used to pay on cancelling his wrong move.
 
