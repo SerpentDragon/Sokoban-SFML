@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <map>
 #include <vector>
 #include <string>
@@ -8,6 +10,8 @@
 #include "Button.h"
 #include "Drawing.h"
 #include "settings.h"
+
+using namespace sf;
 
 enum Mode{MainMenuMode, ChooseLevelMode, ExitMode, ChooseAction};
 

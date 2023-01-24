@@ -1,6 +1,7 @@
 #pragma once 
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <string>
 #include <map>
 #include "Button.h"
@@ -40,8 +41,4 @@ public:
     void setCoins(const int& coins_num);
 
     const int getCoins() const;
-
-    void increaseCoins(const int& amount);
-
-    void decreaseCoins(const int& amount);
 };

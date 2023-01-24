@@ -1,7 +1,5 @@
 #include "Drawing.h"
 
-#include <iostream>
-
 bool showWarning(RenderWindow *window, const String& str)
 {
     int button_width = 0.2083 * Width, button_height = Height / 8;
@@ -159,6 +157,10 @@ bool Drawing::drawWorld(const int& level_num)
     texture.loadFromFile(fileName);
     Sprite background(texture, Rect(0, 0, Width, Height)); 
 
+    SoundBuffer buf;
+    buf.loadFromFile("music/waste_money.wav");
+    Sound wasteCoins(buf);
+
     size_t mapHeight = levelsMap[level_num].size();
     size_t mapWidth = levelsMap[level_num][0].size();  
 
@@ -170,7 +172,6 @@ bool Drawing::drawWorld(const int& level_num)
 
     Event event;
 
-    int flag = 0; // is used to make a delay after the level is complete
     int count_pressed = 0; // is used to catch single press
     bool move_up = false, move_down = false, move_right = false, move_left = false;
 
@@ -266,7 +267,18 @@ bool Drawing::drawWorld(const int& level_num)
         levelsButton.drawButton();
         backButton.drawButton();
 
-        bool res = player.drawPlayer();
+        std::pair<int, int> res = player.drawPlayer();
+
+        window->display();
+
+        if (res.second)
+        {
+            SoundBuffer buf;
+            buf.loadFromFile("music/box_placed.wav");
+            Sound levelCompleteSound(buf);
+            levelCompleteSound.play();
+            sleep(milliseconds(500));
+        }
 
         if (backButton.isPressed()) 
         {
@@ -276,11 +288,13 @@ bool Drawing::drawWorld(const int& level_num)
                 {
                     coins -= 10;
                     coinsText.setString(std::to_string(coins));
+                    wasteCoins.play();
+                    sleep(milliseconds(500));
                 }
             }
         }
 
-        else if (flag++ % 100 == 0 && res) return true;
+        else if (res.first) return true;
 
         if (restartButton.isPressed()) 
         {
@@ -293,8 +307,6 @@ bool Drawing::drawWorld(const int& level_num)
         {
             if (showWarning(window, L"Ваши результаты будут утеряны")) break;
         }
-
-        window->display();
     }
 
     return false;
@@ -303,7 +315,3 @@ bool Drawing::drawWorld(const int& level_num)
 void Drawing::setCoins(const int& coins_num) { coins = coins_num; }
 
 const int Drawing::getCoins() const { return coins; }
-
-void Drawing::increaseCoins(const int& amount) { coins += amount; }
-
-void Drawing::decreaseCoins(const int& amount) { coins -= amount; }

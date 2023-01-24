@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <stack>
 #include <vector>
 #include <tuple>
@@ -58,7 +59,7 @@ public:
 
     void alignPlayer(const int& released_key, const int& param); // player and boxes must be aligned by cells
 
-    bool drawPlayer();
+    std::pair<bool, bool>  drawPlayer();
 
     void restartLevel();
 

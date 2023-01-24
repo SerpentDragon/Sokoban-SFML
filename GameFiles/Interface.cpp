@@ -200,6 +200,12 @@ void Interface::chooseFurtherAction()
 {
     sleep(milliseconds(250));
 
+    SoundBuffer buf;
+    buf.loadFromFile("music/level_complete.wav");
+
+    Sound levelCompleteSound(buf);
+    levelCompleteSound.play();
+
     Font font;
     font.loadFromFile("fonts/arial_bold.ttf"); 
 
@@ -284,15 +290,19 @@ void Interface::chooseFurtherAction()
         else if (repeatButton.isPressed())
         {
             Drawing draw(window);
+            draw.setCoins(getCoins());
             if (!draw.drawWorld(passedLevel)) currentMode = ChooseLevelMode;
+            coins = draw.getCoins();
             break;
         }
 
         else if (passedLevel != 16 && nextButton.isPressed())
         {
             Drawing draw(window);
+            draw.setCoins(getCoins());
             if (draw.drawWorld(passedLevel + 1)) passedLevel = passedLevel + 1;
             else currentMode = ChooseLevelMode;
+            coins = draw.getCoins();
             break;
         }
 
@@ -318,6 +328,7 @@ int Interface::readFile()
         tmp << 0;
         tmp.close();
         currentLevel = 0;
+        coins = 50;
     }
     else
     {

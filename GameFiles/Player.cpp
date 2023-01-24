@@ -313,7 +313,7 @@ void Player::alignPlayer(const int& released_key, const int& param) // player an
             
 
             if (it1) (*it1).first = x - size;
-            if (it2) (*it2).first = x + size;
+            else if (it2) (*it2).first = x + size;
 
             break;
         }
@@ -324,12 +324,13 @@ void Player::alignPlayer(const int& released_key, const int& param) // player an
     img["player"].second.setPosition(x, y);
 }
 
-bool Player::drawPlayer()
+std::pair<bool, bool> Player::drawPlayer()
 {
+    static int prev_goals_counter = 0;
     int goals_counter = 0;
 
     window->draw(img["player"].second);
-    for(auto& box : boxes)
+    for(const auto& box : boxes)
     {
         if (std::find(aims.begin(), aims.end(), box) == aims.end()) 
         {
@@ -344,7 +345,10 @@ bool Player::drawPlayer()
         }
     }
 
-    return goals_counter == aims.size(); // check if all the boxes are in their positions
+    bool result = goals_counter > prev_goals_counter;
+    prev_goals_counter = goals_counter;
+
+    return std::pair(goals_counter == aims.size(), result); // check if all the boxes are in their positions
 }   
 
 void Player::restartLevel()
