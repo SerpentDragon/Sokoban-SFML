@@ -34,6 +34,14 @@ class Player
     template<typename T>
     void Swap(T&& obj) noexcept;
 
+    size_t checkPosition(const int& xPos, const int& yPos);
+
+    size_t checkPosition(const Vector2i& vec);
+    
+    std::pair<int, int>* checkBoxes(const int& first, const int& second);
+
+    std::pair<int, int>* checkBoxes(const Vector2i& vec);
+
 public:
     Player(RenderWindow* window, const std::vector<std::vector<int>> level, const int& speed = size / 7);
 
@@ -46,14 +54,6 @@ public:
     Player& operator=(Player&& obj) noexcept;
 
     ~Player();
-
-    size_t checkPosition(const int& xPos, const int& yPos);
-
-    size_t checkPosition(const Vector2i& vec);
-    
-    std::pair<int, int>* checkBoxes(const int& first, const int& second);
-
-    std::pair<int, int>* checkBoxes(const Vector2i& vec);
 
     void movement(const int& pressed_key);
 
