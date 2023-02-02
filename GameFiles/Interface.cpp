@@ -44,7 +44,7 @@ Interface::Interface(Interface&& obj) noexcept
     Swap(obj);
 
     obj.window = nullptr;
-    currentMode = passedLevel = currentLevel = coins = 0;
+    obj.currentMode = obj.passedLevel = obj.currentLevel = obj.coins = 0;
 }
 
 Interface& Interface::operator=(const Interface& obj)
@@ -63,7 +63,7 @@ Interface& Interface::operator=(Interface&& obj) noexcept
         Swap(obj);
         
         obj.window = nullptr;
-        currentMode = passedLevel = currentLevel = coins = 0;
+        obj.currentMode = obj.passedLevel = obj.currentLevel = obj.coins = 0;
     }
     return *this;
 }
