@@ -78,9 +78,6 @@ void Interface::showMenu()
 {
     currentMode = MainMenuMode; 
 
-    Font font;
-    font.loadFromFile("fonts/arial_bold.ttf"); 
-
     int button_width = Width / 4.8, button_height = Height / 8;
     int xPos = (Width - button_width) / 2, yPos = (Height - 3 * button_height) / 4;
 
@@ -133,9 +130,6 @@ void Interface::showMenu()
 
 void Interface::chooseLevel()
 {
-    Font font;
-    font.loadFromFile("fonts/arial_bold.ttf"); 
-
     Text titleText(L"Уровни", font, 0.04 * Width);
     titleText.setFillColor(DARK_BLUE);
     titleText.setPosition(0.433 * Width, 0.0375 * Height);
@@ -205,9 +199,6 @@ void Interface::chooseFurtherAction()
 
     Sound levelCompleteSound(buf);
     levelCompleteSound.play();
-
-    Font font;
-    font.loadFromFile("fonts/arial_bold.ttf"); 
 
     Text coinsText("", font, 0.045 * Width);
     coinsText.setPosition(Width * 0.45, Height * 0.31);

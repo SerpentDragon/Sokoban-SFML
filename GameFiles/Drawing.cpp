@@ -8,8 +8,6 @@ bool showWarning(RenderWindow *window, const String& str)
     warningWindow.setFillColor(DARK_BLUE);
     warningWindow.setPosition(0.292 * Width, 0.375 * Height);
 
-    Font font;
-    font.loadFromFile("fonts/arial_bold.ttf");
     Text text(str + L"\n\t\t\t\tПродолжить?", font, 0.0216 * Width);
     text.setPosition(0.3291 * Width, 0.4 * Height);
 
@@ -134,8 +132,6 @@ bool Drawing::drawWorld(const int& level_num)
     std::string fileName = "images/levels/" + std::to_string(level_num) + "-1.png";
 
     Texture texture;
-    Font font;
-    font.loadFromFile("fonts/arial_bold.ttf");
 
     Text levelText(L"Уровень" + std::to_string(level_num), font, 0.025 * Width);
     levelText.setFillColor(DARK_BLUE);
