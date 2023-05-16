@@ -20,5 +20,5 @@ These keys are used to move the player:
 To exit this application you can press Esc key.
 
 ## Demo
-![Alt text]()
-![Alt text]()
+![Alt text](https://github.com/SerpentDragon/Sokoban-SFML/blob/master/Demo/demo1.png)
+![Alt text](https://github.com/SerpentDragon/Sokoban-SFML/blob/master/Demo/demo2.png)

@@ -21,5 +21,5 @@
 Для выхода из приложения можно нажать клавишу Esc.
 
 ## Демо
-![Alt text]()
-![Alt text]()
+![Alt text](https://github.com/SerpentDragon/Sokoban-SFML/blob/master/Demo/demo1.png)
+![Alt text](https://github.com/SerpentDragon/Sokoban-SFML/blob/master/Demo/demo2.png)
