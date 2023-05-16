@@ -18,3 +18,7 @@ These keys are used to move the player:
 * D (Right) - to move player right;
 
 To exit this application you can press Esc key.
+
+## Demo
+![Alt text]()
+![Alt text]()
