@@ -1,4 +1,4 @@
-#include "Drawing.h"
+#include "Drawing.hpp"
 
 bool showWarning(RenderWindow *window, const String& str)
 {
@@ -64,70 +64,36 @@ void pollEvents(RenderWindow *window)
 
 Drawing::Drawing(RenderWindow* window)
 {
-    this->window = window;
+    this->window_ = window;
 
     Texture texture;
 
     texture.loadFromFile("images/cell/wall.png");
-    world["wall"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
-    world["wall"].second.setTexture(&world["wall"].first);
+    world_["wall"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
+    world_["wall"].second.setTexture(&world_["wall"].first);
 
     texture.loadFromFile("images/cell/floor.png");
-    world["floor"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
-    world["floor"].second.setTexture(&world["floor"].first);
+    world_["floor"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
+    world_["floor"].second.setTexture(&world_["floor"].first);
 
     texture.loadFromFile("images/cell/cross.png");
-    world["cross"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
-    world["cross"].second.setTexture(&world["cross"].first);
+    world_["cross"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
+    world_["cross"].second.setTexture(&world_["cross"].first);
 
     texture.loadFromFile("images/player/coin.png");
-    world["coin"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
-    world["coin"].second.setTexture(&world["coin"].first);
-    world["coin"].second.setPosition(0.759 * Width, size / 2);
+    world_["coin"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
+    world_["coin"].second.setTexture(&world_["coin"].first);
+    world_["coin"].second.setPosition(0.759 * Width, size / 2);
 
-    coins = 0;
-}
-
-Drawing::Drawing(const Drawing& obj) : window(obj.window), world(obj.world), coins(obj.coins) {}
-
-Drawing::Drawing(Drawing&& obj) noexcept : window(obj.window), world(obj.world), coins(obj.coins)
-{
-    obj.window = nullptr;
-    obj.coins = 0;
-}
-
-Drawing& Drawing::operator=(const Drawing& obj)
-{
-    if (this != &obj)
-    {
-        window = obj.window;
-        world = obj.world;
-        coins = obj.coins;
-    }
-    return *this;
-}
-
-Drawing& Drawing::operator=(Drawing&& obj) noexcept
-{
-    if (this != &obj)
-    {
-        window = obj.window;
-        world = obj.world;
-        coins = obj.coins;
-
-        obj.window = nullptr;
-        obj.coins = 0;
-    }
-    
-    return *this;
+    coins_ = 0;
 }
 
 Drawing::~Drawing()
 {
-    window = nullptr;
+    window_ = nullptr;
 }
 
-bool Drawing::drawWorld(const int& level_num)
+bool Drawing::drawWorld(int level_num)
 {
     std::string fileName = "images/levels/" + std::to_string(level_num) + "-1.png";
 
@@ -137,18 +103,18 @@ bool Drawing::drawWorld(const int& level_num)
     levelText.setFillColor(DARK_BLUE);
     levelText.setPosition(0.041666 * Width, 0.03125 * Height);
 
-    Text coinsText(std::to_string(coins), font, 0.039 * Width);
+    Text coinsText(std::to_string(coins_), font, 0.039 * Width);
     coinsText.setFillColor(GOLD);
     coinsText.setPosition(0.68 * Width, size / 2.5);
 
     texture.loadFromFile("images/buttons/back.png");
-    Button backButton(window, 0.817 * Width, size / 2, size, size, &texture);
+    Button backButton(window_, 0.817 * Width, size / 2, size, size, &texture);
 
     texture.loadFromFile("images/buttons/restart.png");
-    Button restartButton(window, 0.875 * Width, size / 2, size, size, &texture);
+    Button restartButton(window_, 0.875 * Width, size / 2, size, size, &texture);
 
     texture.loadFromFile("images/buttons/levels.png");
-    Button levelsButton(window, 0.933 * Width, size / 2, size, size, &texture);
+    Button levelsButton(window_, 0.933 * Width, size / 2, size, size, &texture);
 
     texture.loadFromFile(fileName);
     Sprite background(texture, Rect(0, 0, Width, Height)); 
@@ -162,30 +128,32 @@ bool Drawing::drawWorld(const int& level_num)
 
     int offset1 = (Width - mapWidth * size) / 2;
     int offset2 = (Height - mapHeight * size) / 2;
-    int tmpCoins = coins;
+    int tmpCoins = coins_;
 
-    Player player(window, levelsMap[level_num]);
+    Player player(window_, levelsMap[level_num]);
 
     Event event;
 
     int count_pressed = 0; // is used to catch single press
     bool move_up = false, move_down = false, move_right = false, move_left = false;
 
-    while(window->isOpen())
+    while(window_->isOpen())
     {
-        while(window->pollEvent(event))
+        while(window_->pollEvent(event))
         {
             switch(event.type)
             {
                 case Event::Closed:
-                        if (showWarning(window, L"Вы уверены, что хотите выйти?")) window->close();
+                    if (showWarning(window_, L"Вы уверены, что хотите выйти?")) 
+                        window_->close();
                     break;
                 case Event::KeyPressed:
                     count_pressed++;
                     switch(event.key.code)
                     {
                         case Keyboard::Escape:
-                            if (showWarning(window, L"Вы уверены, что хотите выйти?")) window->close();
+                            if (showWarning(window_, L"Вы уверены, что хотите выйти?")) 
+                                window_->close();
                             break;
                         case Keyboard::W: case Keyboard::Up:
                             if (!move_down && !move_right && !move_left) move_up = true; 
@@ -228,12 +196,12 @@ bool Drawing::drawWorld(const int& level_num)
             }
         }
 
-        window->clear();
+        window_->clear();
 
-        window->draw(background); 
-        window->draw(levelText);
-        window->draw(coinsText);
-        window->draw(world["coin"].second);
+        window_->draw(background); 
+        window_->draw(levelText);
+        window_->draw(coinsText);
+        window_->draw(world_["coin"].second);
 
         for(size_t i = 0; i < mapHeight; i++)
         {
@@ -242,17 +210,17 @@ bool Drawing::drawWorld(const int& level_num)
                 switch(levelsMap[level_num][i][j])
                 {
                     case 1:
-                        world["wall"].second.setPosition(j * size + offset1, i * size + offset2);
-                        window->draw(world["wall"].second);
+                        world_["wall"].second.setPosition(j * size + offset1, i * size + offset2);
+                        window_->draw(world_["wall"].second);
                         break;
                     case 2: case 3: case 4: case 5:
-                        world["floor"].second.setPosition(j * size + offset1, i * size + offset2);
-                        window->draw(world["floor"].second);
+                        world_["floor"].second.setPosition(j * size + offset1, i * size + offset2);
+                        window_->draw(world_["floor"].second);
 
                         if (levelsMap[level_num][i][j] == 3)
                         {
-                            world["cross"].second.setPosition(j * size + offset1, i * size + offset2);
-                            window->draw(world["cross"].second);
+                            world_["cross"].second.setPosition(j * size + offset1, i * size + offset2);
+                            window_->draw(world_["cross"].second);
                         }
                         break;
                 }
@@ -265,7 +233,7 @@ bool Drawing::drawWorld(const int& level_num)
 
         std::pair<int, int> res = player.drawPlayer();
 
-        window->display();
+        window_->display();
 
         if (res.second)
         {
@@ -278,12 +246,12 @@ bool Drawing::drawWorld(const int& level_num)
 
         if (backButton.isPressed()) 
         {
-            if (coins - 10 >= 0) 
+            if (coins_ - 10 >= 0) 
             {
                 if (player.cancelMove()) 
                 {
-                    coins -= 10;
-                    coinsText.setString(std::to_string(coins));
+                    coins_ -= 10;
+                    coinsText.setString(std::to_string(coins_));
                     wasteCoins.play();
                     sleep(milliseconds(500));
                 }
@@ -294,20 +262,20 @@ bool Drawing::drawWorld(const int& level_num)
 
         if (restartButton.isPressed()) 
         {
-            coins = tmpCoins;
-            coinsText.setString(std::to_string(coins));
+            coins_ = tmpCoins;
+            coinsText.setString(std::to_string(coins_));
             player.restartLevel();
         }
 
         else if (levelsButton.isPressed()) 
         {
-            if (showWarning(window, L"Ваши результаты будут утеряны")) break;
+            if (showWarning(window_, L"Ваши результаты будут утеряны")) break;
         }
     }
 
     return false;
 }
 
-void Drawing::setCoins(const int& coins_num) { coins = coins_num; }
+void Drawing::setCoins(int coins_num) { coins_ = coins_num; }
 
-const int Drawing::getCoins() const { return coins; }
+const int Drawing::getCoins() const { return coins_; }

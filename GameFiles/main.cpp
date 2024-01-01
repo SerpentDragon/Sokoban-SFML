@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include "Interface.h"
+#include "Interface.hpp"
 #include "settings.h"
 
 using namespace sf;

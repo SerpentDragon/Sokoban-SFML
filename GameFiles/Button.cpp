@@ -1,137 +1,133 @@
-#include "Button.h"
+#include "Button.hpp"
 
-template <typename T>
-void Button::Swap(T&& obj) noexcept
+void Button::swap(const Button& other) noexcept
 {
-    window = obj.window;
-    button = obj.button;
-    width = obj.width;
-    height = obj.height;
-    xPos = obj.xPos;
-    yPos = obj.yPos;
-    color = obj.color;
-    colorOn = obj.colorOn;
-    text = obj.text;
-    texture = obj.texture ? new Texture(*obj.texture) : nullptr;
+    window_ = other.window_;
+    button_ = other.button_;
+    width_ = other.width_;
+    height_ = other.height_;
+    xPos_ = other.xPos_;
+    yPos_ = other.yPos_;
+    color_ = other.color_;
+    colorOn_ = other.colorOn_;
+    text_ = other.text_;
+    texture_ = other.texture_ ? new Texture(*other.texture_) : nullptr;
 }
 
-bool Button::OnButton(const int& x, const int& y)
+bool Button::onButton(int x, int y)
 {
-    return xPos <= x && x <= xPos + width && yPos <= y && y <= yPos + height;
+    return xPos_ <= x && x <= xPos_ + width_ && yPos_ <= y && y <= yPos_ + height_;
 }
 
-Button::Button(RenderWindow *window, const Text& txt, const int& x, const int& y, const int& b_width, const int& b_height, const Color& color, const Color& colorOn)
+Button::Button(RenderWindow *window, const Text& text, 
+    int x, int y, int width, int height, 
+    const Color& color, const Color& colorOn)
+    : window_(window), text_(text), xPos_(x), yPos_(y),
+    width_(width), height_(height), color_(color), colorOn_(colorOn),
+    texture_(nullptr)
+
 {
-    this->window = window;
-    xPos = x;
-    yPos = y;
-    width = b_width;
-    height = b_height;
-    this->color = color;
-    this->colorOn = colorOn;
-    text = txt;
-    texture = nullptr;
+    button_ = RectangleShape(Vector2f(width_, height_));
+    button_.setPosition(x, y);
+    button_.setFillColor(color_);
 
-    button = RectangleShape(Vector2f(width, height));
-    button.setPosition(x, y);
-    button.setFillColor(color);
-
-    text.setPosition(x + (width - txt.getGlobalBounds().width) / 2 , y + (height - txt.getGlobalBounds().height) / 2 - size / 5);   
+    text_.setPosition(x + (width_ - text_.getGlobalBounds().width) / 2 , 
+        y + (height_ - text_.getGlobalBounds().height) / 2 - size / 5);   
 }
 
-Button::Button(RenderWindow *window, const int& x, const int& y, const int& b_width, const int& b_height, const Texture* texture)
+Button::Button(RenderWindow *window, int x, int y, 
+    int width, int height, const Texture* texture)
+    : window_(window), xPos_(x), yPos_(y), width_(width),
+    height_(height)
 {
-    this->window = window;
-    xPos = x;
-    yPos = y;
-    width = b_width;
-    height = b_height;
-    color = colorOn = Color(0, 0, 0, 255);
-    text = Text();
-    this->texture = texture ? new Texture(*texture) : new Texture();
+    color_ = colorOn_ = Color(0, 0, 0, 255);
+    text_ = Text();
+    this->texture_ = texture ? new Texture(*texture) : new Texture();
 
-    button = RectangleShape(Vector2f(width, height));
-    button.setPosition(x, y);
-    button.setTexture(this->texture); 
+    button_ = RectangleShape(Vector2f(width_, height_));
+    button_.setPosition(x, y);
+    button_.setTexture(this->texture_); 
 }
 
-Button::Button (const Button& obj)
+Button::Button(const Button& other)
 {
-    Swap(obj);
+    swap(other);
 }
 
-Button::Button(Button&& obj) noexcept
+Button::Button(Button&& other) noexcept
 {
-    Swap(obj);
+    swap(other);
 
-    obj.window = nullptr;
-    obj.width = obj.height = obj.xPos = obj.yPos = 0;
-    obj.texture = nullptr;
+    other.window_ = nullptr;
+    other.width_ = other.height_ = other.xPos_ = other.yPos_ = 0;
+    other.texture_ = nullptr;
 }
 
-Button& Button::operator=(const Button& obj)
+Button& Button::operator=(const Button& other)
 {
-    if (this != &obj)
+    if (this != &other)
     {
-        Swap(obj);
+        swap(other);
     }
     return *this;
 }
 
-Button& Button::operator=(Button&& obj) noexcept
+Button& Button::operator=(Button&& other) noexcept
 {
-    if (this != &obj)
+    if (this != &other)
     {
-        Swap(obj);
+        swap(other);
 
-        obj.window = nullptr;
-        obj.width = obj.height = obj.xPos = obj.yPos = 0;
-        obj.texture = nullptr;
+        other.window_ = nullptr;
+        other.width_ = other.height_ = other.xPos_ = other.yPos_ = 0;
+        other.texture_ = nullptr;
     }
     return *this;
 }
 
 Button::~Button()
 {
-    window = nullptr;
-    if (texture) delete texture;
+    window_ = nullptr;
+    if (texture_) delete texture_;
 }
 
 void Button::drawButton()
 {
-    window->draw(button);
-    window->draw(text);
+    window_->draw(button_);
+    window_->draw(text_);
 }
 
 bool Button::isPressed()
 {
-    int x = Mouse::getPosition(*window).x;
-    int y = Mouse::getPosition(*window).y;
+    int x = Mouse::getPosition(*window_).x;
+    int y = Mouse::getPosition(*window_).y;
 
-    if (OnButton(x, y))
+    if (onButton(x, y))
     {
-        if (!texture) button.setFillColor(colorOn);
+        if (!texture_) button_.setFillColor(colorOn_);
         if (Mouse::isButtonPressed(Mouse::Left)) 
         {
             while(true)
             {
-                if (!Mouse::isButtonPressed(Mouse::Left)) break;
+                if (!Mouse::isButtonPressed(Mouse::Left)) 
+                    break;
             }
-            if (OnButton(Mouse::getPosition(*window).x, Mouse::getPosition(*window).y)) return true;
+            if (onButton(Mouse::getPosition(*window_).x, Mouse::getPosition(*window_).y)) 
+                return true;
         }
     }
-    else if (!texture) button.setFillColor(color);
+    else if (!texture_) button_.setFillColor(color_);
 
     return false;
 }
 
-void Button::setTextColor(const Color& color)
+void Button::setTextColor(const Color& color_)
 {
-    text.setFillColor(color);
+    text_.setFillColor(color_);
 }
 
-void Button::setButtonColor(const Color& color)
+void Button::setButtonColor(const Color& color_)
 {
-    this->color = color;
-    button.setFillColor(color);
+    this->color_ = color_;
+    button_.setFillColor(color_);
 }
