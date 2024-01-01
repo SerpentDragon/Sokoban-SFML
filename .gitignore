@@ -1,3 +1,4 @@
 GameFiles/*.o
 GameFiles/sfml-app
 .vscode
+GameFiles/data
