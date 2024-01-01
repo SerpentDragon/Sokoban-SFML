@@ -51,9 +51,12 @@ public:
     void setCurrentLevel(size_t);
 
 private:
+
     RenderWindow* window_;
     
     std::map<std::string, std::pair<Texture, RectangleShape>> img_;
+
+    Drawing drawing;
 
     size_t currentMode_;
     size_t currentLevel_;

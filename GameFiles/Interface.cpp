@@ -1,9 +1,9 @@
 #include "Interface.hpp"
 
 Interface::Interface(RenderWindow* window)
+    : window_(window), currentMode_(MainMenuMode), currentLevel_(0),
+    passedLevel_(0), coins_(0), drawing(window)
 {
-    this->window_ = window;
-
     Texture texture;
 
     texture.loadFromFile("images/interface/background.png");
@@ -18,9 +18,6 @@ Interface::Interface(RenderWindow* window)
     texture.loadFromFile("images/interface/levels_back.png");
     img_["levels_back"] = std::pair(Texture(texture), RectangleShape(Vector2f(Width, Height)));
     img_["levels_back"].second.setTexture(&img_["levels_back"].first);
-
-    currentMode_ = MainMenuMode;
-    currentLevel_ = passedLevel_ = coins_ = 0;
 }
 
 Interface::~Interface()
@@ -88,8 +85,6 @@ void Interface::chooseLevel()
     titleText.setFillColor(DARK_BLUE);
     titleText.setPosition(0.433 * Width, 0.0375 * Height);
 
-    Drawing draw(window_);
-
     std::vector<Button> ButtonArray;
     for(size_t i = 0; i < 4; i++)
     {
@@ -129,13 +124,13 @@ void Interface::chooseLevel()
                             currentMode_ = MainMenuMode;
                             break;
                         default:
-                            draw.setCoins(getCoins());
-                            if (draw.drawWorld(i + 1)) 
+                            drawing.setCoins(getCoins());
+                            if (drawing.drawWorld(i + 1)) 
                             {
                                 currentMode_ = ChooseAction;
                                 passedLevel_ = i + 1;
                             }
-                            coins_ = draw.getCoins();
+                            coins_ = drawing.getCoins();
                             break;
                     }
                 }
@@ -205,14 +200,18 @@ void Interface::chooseFurtherAction()
     rect.setFillColor(BLUE);
 
     Text text(L"Уровень пройден!", font, 0.03333 * Width);
-    text.setPosition(Width / 3 + (rect.getGlobalBounds().width - text.getGlobalBounds().width) / 2, 0.43 * Height + (rect.getGlobalBounds().height - text.getGlobalBounds().height) / 2);     
+    text.setPosition(Width / 3 + (rect.getGlobalBounds().width - text.getGlobalBounds().width) / 2, 
+        0.43 * Height + (rect.getGlobalBounds().height - text.getGlobalBounds().height) / 2);     
 
     int button_width = 0.16666 * Width;
     int button_height = 0.08125 * Height;
 
-    Button levelsButton(window_, Text(L"уровни", font, 0.025 * Width), 0.241666 * Width, 0.5325 * Height, button_width, button_height, GREEN, BLUE);
-    Button repeatButton(window_, Text(L"повтор", font, 0.025 * Width), 0.416666 * Width, 0.5325 * Height, button_width, button_height, GREEN, BLUE);
-    Button nextButton(window_, Text(L"дальше", font, 0.025 * Width), 0.591666 * Width, 0.5325 * Height, button_width, button_height, GREEN, BLUE);
+    Button levelsButton(window_, Text(L"уровни", font, 0.025 * Width), 0.241666 * Width, 
+        0.5325 * Height, button_width, button_height, GREEN, BLUE);
+    Button repeatButton(window_, Text(L"повтор", font, 0.025 * Width), 0.416666 * Width, 
+        0.5325 * Height, button_width, button_height, GREEN, BLUE);
+    Button nextButton(window_, Text(L"дальше", font, 0.025 * Width), 0.591666 * Width, 
+        0.5325 * Height, button_width, button_height, GREEN, BLUE);
     if (passedLevel_ == 16) nextButton.setButtonColor(GREY);
 
     while(window_->isOpen())
@@ -238,20 +237,18 @@ void Interface::chooseFurtherAction()
 
         else if (repeatButton.isPressed())
         {
-            Drawing draw(window_);
-            draw.setCoins(getCoins());
-            if (!draw.drawWorld(passedLevel_)) currentMode_ = ChooseLevelMode;
-            coins_ = draw.getCoins();
+            drawing.setCoins(getCoins());
+            if (!drawing.drawWorld(passedLevel_)) currentMode_ = ChooseLevelMode;
+            coins_ = drawing.getCoins();
             break;
         }
 
         else if (passedLevel_ != 16 && nextButton.isPressed())
         {
-            Drawing draw(window_);
-            draw.setCoins(getCoins());
-            if (draw.drawWorld(passedLevel_ + 1)) passedLevel_ = passedLevel_ + 1;
+            drawing.setCoins(getCoins());
+            if (drawing.drawWorld(passedLevel_ + 1)) passedLevel_ = passedLevel_ + 1;
             else currentMode_ = ChooseLevelMode;
-            coins_ = draw.getCoins();
+            coins_ = drawing.getCoins();
             break;
         }
 
