@@ -33,13 +33,13 @@ void Player::setLevel(const std::vector<std::vector<int>>& level)
         {
             switch(level_[i][j])
             {
-                case 3:
+                case FIELD::AIM:
                     aims_.emplace_back(std::pair(j * size + offset1_, i * size + offset2_));
                     break;
-                case 4:
+                case FIELD::BOX:
                     boxes_.emplace_back(std::pair(j * size + offset1_, i * size + offset2_));
                     break;
-                case 5:
+                case FIELD::PLAYER:
                     x_ = j * size + offset1_;
                     y_ = i * size + offset2_;
                     img_["player"].second.setPosition(x_, y_);

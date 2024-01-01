@@ -21,3 +21,6 @@ extern Color GOLD;
 
 // fonts
 extern Font font;
+
+// field cells
+enum FIELD : unsigned int { NO_FIELD = 0, WALL, GRASS, AIM, BOX, PLAYER };

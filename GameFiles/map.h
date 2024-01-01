@@ -6,7 +6,7 @@
 // 0 - no field
 // 1 - wall
 // 2 - grass
-// 3 - position for a box
+// 3 - position for a box (aim)
 // 4 - box
 // 5 - player start position
 

@@ -206,11 +206,13 @@ bool Drawing::drawWorld(int level_num)
             {
                 switch(levelsMap[level_num][i][j])
                 {
-                    case 1:
+                    case FIELD::NO_FIELD:
+                        break;
+                    case FIELD::WALL:
                         world_["wall"].second.setPosition(j * size + offset1, i * size + offset2);
                         window_->draw(world_["wall"].second);
                         break;
-                    case 2: case 3: case 4: case 5:
+                    default:
                         world_["floor"].second.setPosition(j * size + offset1, i * size + offset2);
                         window_->draw(world_["floor"].second);
 
