@@ -43,4 +43,6 @@ private:
     std::map<std::string, std::pair<Texture, RectangleShape>> world_;
 
     int coins_;
+
+    Player player;
 };

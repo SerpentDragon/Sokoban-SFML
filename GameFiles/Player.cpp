@@ -1,10 +1,28 @@
 #include "Player.hpp"
 
-Player::Player(RenderWindow* window, const std::vector<std::vector<int>>& level_, int speed_)
+Player::Player(RenderWindow* window, int speed)
+    : window_(window)
 {
-    this->window_ = window;
-    this->level_ = level_;
-    this->speed_ = speed_ > size ? size : speed_;
+    this->speed_ = speed > size ? size : speed;
+
+    Texture texture;
+
+    texture.loadFromFile("images/player/player.png");
+    img_["player"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
+    img_["player"].second.setTexture(&img_["player"].first);
+
+    texture.loadFromFile("images/player/box.png");
+    img_["box"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
+    img_["box"].second.setTexture(&img_["box"].first);
+
+    texture.loadFromFile("images/player/gold_box.png");
+    img_["gold_box"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
+    img_["gold_box"].second.setTexture(&img_["gold_box"].first);
+}
+
+void Player::setLevel(const std::vector<std::vector<int>>& level)
+{
+    this->level_ = level;
 
     offset1_ = (Width - level_[0].size() * size) / 2;
     offset2_ = (Height - level_.size() * size) / 2;
@@ -24,25 +42,11 @@ Player::Player(RenderWindow* window, const std::vector<std::vector<int>>& level_
                 case 5:
                     x_ = j * size + offset1_;
                     y_ = i * size + offset2_;
+                    img_["player"].second.setPosition(x_, y_);
                     break;
             }
         }
     }
-
-    Texture texture;
-
-    texture.loadFromFile("images/player/player.png");
-    img_["player"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
-    img_["player"].second.setTexture(&img_["player"].first);
-    img_["player"].second.setPosition(x_, y_);
-
-    texture.loadFromFile("images/player/box.png");
-    img_["box"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
-    img_["box"].second.setTexture(&img_["box"].first);
-
-    texture.loadFromFile("images/player/gold_box.png");
-    img_["gold_box"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
-    img_["gold_box"].second.setTexture(&img_["gold_box"].first);
 }
 
 Player::~Player()

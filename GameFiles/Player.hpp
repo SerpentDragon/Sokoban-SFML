@@ -13,15 +13,17 @@ class Player
 {
 public:
 
-    Player(RenderWindow*, const std::vector<std::vector<int>>&, int speed = size / 7);
+    Player(RenderWindow*, int speed = size / 7);
 
     ~Player();
 
-    void movement(int essed_key);
+    void setLevel(const std::vector<std::vector<int>>&);
+
+    void movement(int);
 
     void alignPlayer(int, int); // player and boxes must be aligned by cells
 
-    std::pair<bool, bool>  drawPlayer();
+    std::pair<bool, bool> drawPlayer();
 
     void restartLevel();
 

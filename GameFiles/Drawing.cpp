@@ -62,10 +62,9 @@ void pollEvents(RenderWindow *window)
     }
 }
 
-Drawing::Drawing(RenderWindow* window)
+Drawing::Drawing(RenderWindow* window) 
+    : window_(window), coins_(0), player(window)
 {
-    this->window_ = window;
-
     Texture texture;
 
     texture.loadFromFile("images/cell/wall.png");
@@ -84,8 +83,6 @@ Drawing::Drawing(RenderWindow* window)
     world_["coin"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
     world_["coin"].second.setTexture(&world_["coin"].first);
     world_["coin"].second.setPosition(0.759 * Width, size / 2);
-
-    coins_ = 0;
 }
 
 Drawing::~Drawing()
@@ -130,7 +127,7 @@ bool Drawing::drawWorld(int level_num)
     int offset2 = (Height - mapHeight * size) / 2;
     int tmpCoins = coins_;
 
-    Player player(window_, levelsMap[level_num]);
+    player.setLevel(levelsMap[level_num]);
 
     Event event;
 
