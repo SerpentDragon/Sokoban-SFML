@@ -68,7 +68,8 @@ private:
 
     RectangleShape background_;
 
-    int coins_;
+    int coins_; // coins amount you have 
+    const int price_ = 10;  // coins amount you need to cancel your move
 
     Player player_;
 };

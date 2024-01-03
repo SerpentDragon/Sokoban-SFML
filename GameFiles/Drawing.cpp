@@ -169,14 +169,15 @@ bool Drawing::drawWorld(const int level)
     size_t mapHeight = levelsMap[level].size();
     size_t mapWidth = levelsMap[level][0].size();
 
-    int tmpCoins = coins_;
+    int initialCoinsValue = coins_;
 
     player_.setLevel(levelsMap[level]);
 
     Event event;
 
     int count_pressed = 0; // is used to catch single press
-    bool move_up = false, move_down = false, move_right = false, move_left = false;
+    bool move_up = false, move_down = false;
+    bool move_right = false, move_left = false;
 
     while(window_->isOpen())
     {
@@ -259,22 +260,21 @@ bool Drawing::drawWorld(const int level)
 
         if (backButton_.isPressed()) 
         {
-            if (coins_ - 10 >= 0) 
+            if (coins_ >= price_) 
             {
                 if (player_.cancelMove()) 
                 {
-                    coins_ -= 10;
+                    coins_ -= price_;
                     updateCoinsText();
                     SoundManager::getManager()->playSound("waste_money");
                 }
             }
         }
-
         else if (res.first) return true;
 
         if (restartButton_.isPressed()) 
         {
-            coins_ = tmpCoins;
+            coins_ = initialCoinsValue;
             updateCoinsText();
             player_.restartLevel();
         }
