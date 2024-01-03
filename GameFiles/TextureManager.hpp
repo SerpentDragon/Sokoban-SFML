@@ -31,7 +31,7 @@ private:
 
 private:
 
-    static TextureManager* manager;
+    static TextureManager* manager_;
 
-    mutable std::unordered_map<std::string, sf::Texture> textures;
+    mutable std::unordered_map<std::string, sf::Texture> textures_;
 };
