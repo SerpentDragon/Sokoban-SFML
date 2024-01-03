@@ -2,4 +2,4 @@ GameFiles/*.o
 GameFiles/sfml-app
 GameFiles/data
 GameFiles/Makefile
-./.vscode
+.vscode/
