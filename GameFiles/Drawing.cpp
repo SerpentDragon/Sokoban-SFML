@@ -106,8 +106,41 @@ void Drawing::updateBackground(int level)
         loadTextureFromFile("textures/levels/" + std::to_string(level) + "-1.png"));
 }
 
+void Drawing::drawMap(size_t height, size_t width, 
+    const std::vector<std::vector<int>>& map)
+{
+    static int offset1 = (Width - width * size) / 2;
+    static int offset2 = (Height - height * size) / 2;
+
+    for(size_t i = 0; i < height; i++)
+    {
+        for(size_t j = 0; j < width; j++)
+        {
+            switch(map[i][j])
+            {
+                case FIELD::NO_FIELD:
+                    break;
+                case FIELD::WALL:
+                    world_["wall"].setPosition(j * size + offset1, i * size + offset2);
+                    window_->draw(world_["wall"]);
+                    break;
+                default:
+                    world_["floor"].setPosition(j * size + offset1, i * size + offset2);
+                    window_->draw(world_["floor"]);
+
+                    if (map[i][j] == FIELD::AIM)
+                    {
+                        world_["cross"].setPosition(j * size + offset1, i * size + offset2);
+                        window_->draw(world_["cross"]);
+                    }
+                    break;
+            }
+        }
+    }
+}
+
 Drawing::Drawing(RenderWindow* window) 
-    : window_(window), coins_(0), player(window),
+    : window_(window), coins_(0), player_(window),
     levelText_("", font, 0.025 * Width),
     coinsText_("", font, 0.039 * Width),
     background_(Vector2f(Width, Height))
@@ -133,18 +166,12 @@ bool Drawing::drawWorld(const int level)
     updateLevelText(level);
     updateCoinsText();
 
-    SoundBuffer buf;
-    buf.loadFromFile("music/waste_money.wav");
-    Sound wasteCoins(buf);
-
     size_t mapHeight = levelsMap[level].size();
-    size_t mapWidth = levelsMap[level][0].size();  
+    size_t mapWidth = levelsMap[level][0].size();
 
-    int offset1 = (Width - mapWidth * size) / 2;
-    int offset2 = (Height - mapHeight * size) / 2;
     int tmpCoins = coins_;
 
-    player.setLevel(levelsMap[level]);
+    player_.setLevel(levelsMap[level]);
 
     Event event;
 
@@ -186,7 +213,7 @@ bool Drawing::drawWorld(const int level)
                             else event.key.code = Keyboard::Key::Unknown;
                             break;
                     }
-                    player.movement(event.key.code);
+                    player_.movement(event.key.code);
                     break;
                 case Event::KeyReleased:
                     switch(event.key.code)
@@ -204,7 +231,7 @@ bool Drawing::drawWorld(const int level)
                             move_right = false;
                             break;
                     }
-                    player.alignPlayer(event.key.code, count_pressed);
+                    player_.alignPlayer(event.key.code, count_pressed);
                     count_pressed = 0;
                     break;
             }
@@ -217,59 +244,28 @@ bool Drawing::drawWorld(const int level)
         window_->draw(coinsText_);
         window_->draw(world_["coin"]);
 
-        for(size_t i = 0; i < mapHeight; i++)
-        {
-            for(size_t j = 0; j < mapWidth; j++)
-            {
-                switch(levelsMap[level][i][j])
-                {
-                    case FIELD::NO_FIELD:
-                        break;
-                    case FIELD::WALL:
-                        world_["wall"].setPosition(j * size + offset1, i * size + offset2);
-                        window_->draw(world_["wall"]);
-                        break;
-                    default:
-                        world_["floor"].setPosition(j * size + offset1, i * size + offset2);
-                        window_->draw(world_["floor"]);
-
-                        if (levelsMap[level][i][j] == FIELD::AIM)
-                        {
-                            world_["cross"].setPosition(j * size + offset1, i * size + offset2);
-                            window_->draw(world_["cross"]);
-                        }
-                        break;
-                }
-            }
-        }
+        drawMap(mapHeight, mapWidth, levelsMap[level]);
 
         backButton_.drawButton();
         restartButton_.drawButton();
         levelsButton_.drawButton();
 
-        std::pair<int, int> res = player.drawPlayer();
+        std::pair<int, int> res = player_.drawPlayer();
 
         window_->display();
 
         if (res.second)
-        {
-            SoundBuffer buf;
-            buf.loadFromFile("music/box_placed.wav");
-            Sound levelCompleteSound(buf);
-            levelCompleteSound.play();
-            sleep(milliseconds(500));
-        }
+            SoundManager::getManager()->playSound("box_placed");
 
         if (backButton_.isPressed()) 
         {
             if (coins_ - 10 >= 0) 
             {
-                if (player.cancelMove()) 
+                if (player_.cancelMove()) 
                 {
                     coins_ -= 10;
                     updateCoinsText();
-                    wasteCoins.play();
-                    sleep(milliseconds(500));
+                    SoundManager::getManager()->playSound("waste_money");
                 }
             }
         }
@@ -280,7 +276,7 @@ bool Drawing::drawWorld(const int level)
         {
             coins_ = tmpCoins;
             updateCoinsText();
-            player.restartLevel();
+            player_.restartLevel();
         }
 
         else if (levelsButton_.isPressed()) 

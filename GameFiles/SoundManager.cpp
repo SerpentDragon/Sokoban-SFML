@@ -13,6 +13,7 @@ void SoundManager::playSound(const std::string& name)
 {
     sf::Sound sound(sounds_[name]);
     sound.play();
+    sf::sleep(sf::milliseconds(500));
 }
 
 SoundManager::SoundManager()
@@ -30,7 +31,7 @@ void SoundManager::loadAllSoundsFromDirectory()
             std::string filename = entry.path().filename();
             std::string sound_name = entry.path().stem();
 
-            sounds_[sound_name].loadFromFile(filename);
+            sounds_[sound_name].loadFromFile(dir + filename);
         }
     }
 }

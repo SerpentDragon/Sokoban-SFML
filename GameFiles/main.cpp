@@ -1,4 +1,6 @@
 #include <SFML/Graphics.hpp>
+#include "TextureManager.hpp"
+#include "SoundManager.hpp"
 #include "Interface.hpp"
 #include "settings.h"
 
@@ -27,6 +29,9 @@ void initFont()
 int main()
 {
     initFont();
+
+    TextureManager::getManager();
+    SoundManager::getManager();
     
     RenderWindow window(VideoMode(Width, Height), "Sokoban", Style::Close);
     window.setPosition(Vector2i((ScreenWidth - Width) / 2, (ScreenHeight - Height) / 2));

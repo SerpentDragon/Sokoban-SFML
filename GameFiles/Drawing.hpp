@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <string>
 #include "TextureManager.hpp"
+#include "SoundManager.hpp"
 #include "Button.hpp"
 #include "Player.hpp"
 #include "settings.h"
@@ -50,6 +51,8 @@ private:
 
     void updateBackground(int);
 
+    void drawMap(size_t, size_t, const std::vector<std::vector<int>>&);
+
 private:
 
     RenderWindow* window_;
@@ -67,5 +70,5 @@ private:
 
     int coins_;
 
-    Player player;
+    Player player_;
 };

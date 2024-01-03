@@ -5,8 +5,6 @@
 #include <filesystem>
 #include <string>
 
-#include <iostream>
-
 namespace fs = std::filesystem;
 
 class TextureManager
