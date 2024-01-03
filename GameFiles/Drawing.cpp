@@ -62,27 +62,64 @@ void pollEvents(RenderWindow *window)
     }
 }
 
-Drawing::Drawing(RenderWindow* window) 
-    : window_(window), coins_(0), player(window)
+void Drawing::loadTextures()
 {
-    Texture texture;
+    world_.emplace("wall", RectangleShape(Vector2f(size, size))).first->second.setTexture(
+        TextureManager::getManager()->getTexture("textures/cell/wall"));
 
-    texture.loadFromFile("images/cell/wall.png");
-    world_["wall"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
-    world_["wall"].second.setTexture(&world_["wall"].first);
+    world_.emplace("floor", RectangleShape(Vector2f(size, size))).first->second.setTexture(
+        TextureManager::getManager()->getTexture("textures/cell/floor"));
 
-    texture.loadFromFile("images/cell/floor.png");
-    world_["floor"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
-    world_["floor"].second.setTexture(&world_["floor"].first);
+    world_.emplace("cross", RectangleShape(Vector2f(size, size))).first->second.setTexture(
+        TextureManager::getManager()->getTexture("textures/cell/cross"));
 
-    texture.loadFromFile("images/cell/cross.png");
-    world_["cross"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
-    world_["cross"].second.setTexture(&world_["cross"].first);
+    world_.emplace("coin", RectangleShape(Vector2f(size, size))).first->second.setTexture(
+        TextureManager::getManager()->getTexture("textures/player/coin"));
+    world_["coin"].setPosition(0.759 * Width, size / 2);
+}
 
-    texture.loadFromFile("images/player/coin.png");
-    world_["coin"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
-    world_["coin"].second.setTexture(&world_["coin"].first);
-    world_["coin"].second.setPosition(0.759 * Width, size / 2);
+void Drawing::createButtons()
+{
+    backButton_ = Button(window_, 0.817 * Width, size / 2, size, size, 
+        TextureManager::getManager()->getTexture("textures/buttons/back"));
+
+    restartButton_ = Button(window_, 0.875 * Width, size / 2, size, size, 
+        TextureManager::getManager()->getTexture("textures/buttons/restart"));
+
+    levelsButton_ = Button(window_, 0.933 * Width, size / 2, size, size, 
+        TextureManager::getManager()->getTexture("textures/buttons/levels"));
+}
+
+void Drawing::updateLevelText(int level)
+{
+    levelText_.setString(L"Уровень" + std::to_string(level));
+}
+
+void Drawing::updateCoinsText()
+{
+    coinsText_.setString(std::to_string(coins_));
+}
+
+void Drawing::updateBackground(int level)
+{
+    background_.setTexture(TextureManager::getManager()->
+        loadTextureFromFile("textures/levels/" + std::to_string(level) + "-1.png"));
+}
+
+Drawing::Drawing(RenderWindow* window) 
+    : window_(window), coins_(0), player(window),
+    levelText_("", font, 0.025 * Width),
+    coinsText_("", font, 0.039 * Width),
+    background_(Vector2f(Width, Height))
+{
+    loadTextures();
+    createButtons();
+
+    levelText_.setFillColor(DARK_BLUE);
+    levelText_.setPosition(0.041666 * Width, 0.03125 * Height);
+
+    coinsText_.setFillColor(GOLD);
+    coinsText_.setPosition(0.68 * Width, size / 2.5);
 }
 
 Drawing::~Drawing()
@@ -90,44 +127,24 @@ Drawing::~Drawing()
     window_ = nullptr;
 }
 
-bool Drawing::drawWorld(int level_num)
+bool Drawing::drawWorld(const int level)
 {
-    std::string fileName = "images/levels/" + std::to_string(level_num) + "-1.png";
-
-    Texture texture;
-
-    Text levelText(L"Уровень" + std::to_string(level_num), font, 0.025 * Width);
-    levelText.setFillColor(DARK_BLUE);
-    levelText.setPosition(0.041666 * Width, 0.03125 * Height);
-
-    Text coinsText(std::to_string(coins_), font, 0.039 * Width);
-    coinsText.setFillColor(GOLD);
-    coinsText.setPosition(0.68 * Width, size / 2.5);
-
-    texture.loadFromFile("images/buttons/back.png");
-    Button backButton(window_, 0.817 * Width, size / 2, size, size, &texture);
-
-    texture.loadFromFile("images/buttons/restart.png");
-    Button restartButton(window_, 0.875 * Width, size / 2, size, size, &texture);
-
-    texture.loadFromFile("images/buttons/levels.png");
-    Button levelsButton(window_, 0.933 * Width, size / 2, size, size, &texture);
-
-    texture.loadFromFile(fileName);
-    Sprite background(texture, Rect(0, 0, Width, Height)); 
+    updateBackground(level);
+    updateLevelText(level);
+    updateCoinsText();
 
     SoundBuffer buf;
     buf.loadFromFile("music/waste_money.wav");
     Sound wasteCoins(buf);
 
-    size_t mapHeight = levelsMap[level_num].size();
-    size_t mapWidth = levelsMap[level_num][0].size();  
+    size_t mapHeight = levelsMap[level].size();
+    size_t mapWidth = levelsMap[level][0].size();  
 
     int offset1 = (Width - mapWidth * size) / 2;
     int offset2 = (Height - mapHeight * size) / 2;
     int tmpCoins = coins_;
 
-    player.setLevel(levelsMap[level_num]);
+    player.setLevel(levelsMap[level]);
 
     Event event;
 
@@ -195,40 +212,40 @@ bool Drawing::drawWorld(int level_num)
 
         window_->clear();
 
-        window_->draw(background); 
-        window_->draw(levelText);
-        window_->draw(coinsText);
-        window_->draw(world_["coin"].second);
+        window_->draw(background_); 
+        window_->draw(levelText_);
+        window_->draw(coinsText_);
+        window_->draw(world_["coin"]);
 
         for(size_t i = 0; i < mapHeight; i++)
         {
             for(size_t j = 0; j < mapWidth; j++)
             {
-                switch(levelsMap[level_num][i][j])
+                switch(levelsMap[level][i][j])
                 {
                     case FIELD::NO_FIELD:
                         break;
                     case FIELD::WALL:
-                        world_["wall"].second.setPosition(j * size + offset1, i * size + offset2);
-                        window_->draw(world_["wall"].second);
+                        world_["wall"].setPosition(j * size + offset1, i * size + offset2);
+                        window_->draw(world_["wall"]);
                         break;
                     default:
-                        world_["floor"].second.setPosition(j * size + offset1, i * size + offset2);
-                        window_->draw(world_["floor"].second);
+                        world_["floor"].setPosition(j * size + offset1, i * size + offset2);
+                        window_->draw(world_["floor"]);
 
-                        if (levelsMap[level_num][i][j] == 3)
+                        if (levelsMap[level][i][j] == FIELD::AIM)
                         {
-                            world_["cross"].second.setPosition(j * size + offset1, i * size + offset2);
-                            window_->draw(world_["cross"].second);
+                            world_["cross"].setPosition(j * size + offset1, i * size + offset2);
+                            window_->draw(world_["cross"]);
                         }
                         break;
                 }
             }
         }
 
-        restartButton.drawButton();
-        levelsButton.drawButton();
-        backButton.drawButton();
+        backButton_.drawButton();
+        restartButton_.drawButton();
+        levelsButton_.drawButton();
 
         std::pair<int, int> res = player.drawPlayer();
 
@@ -243,14 +260,14 @@ bool Drawing::drawWorld(int level_num)
             sleep(milliseconds(500));
         }
 
-        if (backButton.isPressed()) 
+        if (backButton_.isPressed()) 
         {
             if (coins_ - 10 >= 0) 
             {
                 if (player.cancelMove()) 
                 {
                     coins_ -= 10;
-                    coinsText.setString(std::to_string(coins_));
+                    updateCoinsText();
                     wasteCoins.play();
                     sleep(milliseconds(500));
                 }
@@ -259,14 +276,14 @@ bool Drawing::drawWorld(int level_num)
 
         else if (res.first) return true;
 
-        if (restartButton.isPressed()) 
+        if (restartButton_.isPressed()) 
         {
             coins_ = tmpCoins;
-            coinsText.setString(std::to_string(coins_));
+            updateCoinsText();
             player.restartLevel();
         }
 
-        else if (levelsButton.isPressed()) 
+        else if (levelsButton_.isPressed()) 
         {
             if (showWarning(window_, L"Ваши результаты будут утеряны")) break;
         }
