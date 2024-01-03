@@ -7,15 +7,15 @@ Player::Player(RenderWindow* window, int speed)
 
     Texture texture;
 
-    texture.loadFromFile("images/player/player.png");
+    texture.loadFromFile("textures/player/player.png");
     img_["player"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
     img_["player"].second.setTexture(&img_["player"].first);
 
-    texture.loadFromFile("images/player/box.png");
+    texture.loadFromFile("textures/player/box.png");
     img_["box"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
     img_["box"].second.setTexture(&img_["box"].first);
 
-    texture.loadFromFile("images/player/gold_box.png");
+    texture.loadFromFile("textures/player/gold_box.png");
     img_["gold_box"] = std::pair(Texture(texture), RectangleShape(Vector2f(size, size)));
     img_["gold_box"].second.setTexture(&img_["gold_box"].first);
 }

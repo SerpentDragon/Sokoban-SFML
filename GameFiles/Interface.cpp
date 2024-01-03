@@ -6,16 +6,16 @@ Interface::Interface(RenderWindow* window)
 {
     Texture texture;
 
-    texture.loadFromFile("images/interface/background.png");
+    texture.loadFromFile("textures/interface/background.png");
     img_["background"] = std::pair(Texture(texture), RectangleShape(Vector2f(Width, Height)));
     img_["background"].second.setTexture(&img_["background"].first);
 
-    texture.loadFromFile("images/interface/logo.png");
+    texture.loadFromFile("textures/interface/logo.png");
     img_["logo"] = std::pair(Texture(texture), RectangleShape(Vector2f(0.416 * Width, 0.0975 * Height)));
     img_["logo"].second.setTexture(&img_["logo"].first);
     img_["logo"].second.setPosition((Width - img_["logo"].second.getGlobalBounds().width) / 2, Height * 0.03);
 
-    texture.loadFromFile("images/interface/levels_back.png");
+    texture.loadFromFile("textures/interface/levels_back.png");
     img_["levels_back"] = std::pair(Texture(texture), RectangleShape(Vector2f(Width, Height)));
     img_["levels_back"].second.setTexture(&img_["levels_back"].first);
 }
@@ -158,7 +158,7 @@ void Interface::chooseFurtherAction()
     coinsText.setFillColor(GOLD);
 
     Texture coinsTexture;
-    coinsTexture.loadFromFile("images/player/coin.png");
+    coinsTexture.loadFromFile("textures/player/coin.png");
 
     RectangleShape coinsRect(Vector2f(size, size));
     coinsRect.setTexture(&coinsTexture);
@@ -188,7 +188,7 @@ void Interface::chooseFurtherAction()
     }
 
     if (passedLevel_ > currentLevel_) currentLevel_ = passedLevel_;
-    std::string fileName = "images/levels/" + std::to_string(passedLevel_) + "-2.png";
+    std::string fileName = "textures/levels/" + std::to_string(passedLevel_) + "-2.png";
 
     Texture texture;
     texture.loadFromFile(fileName);
