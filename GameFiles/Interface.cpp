@@ -1,77 +1,123 @@
 #include "Interface.hpp"
 
-Interface::Interface(RenderWindow* window)
-    : window_(window), currentMode_(MainMenuMode), currentLevel_(0),
-    passedLevel_(0), coins_(0), drawing(window)
+void Interface::loadTextures()
 {
-    Texture texture;
+    img_.emplace("background", RectangleShape(Vector2f(Width, Height))).first->second.setTexture(
+        TextureManager::getManager()->getTexture("textures/interface/background"));
 
-    texture.loadFromFile("textures/interface/background.png");
-    img_["background"] = std::pair(Texture(texture), RectangleShape(Vector2f(Width, Height)));
-    img_["background"].second.setTexture(&img_["background"].first);
+    img_.emplace("logo", RectangleShape(Vector2f(0.416 * Width, 0.0975 * Height))).
+        first->second.setTexture(TextureManager::getManager()->getTexture("textures/interface/logo"));
+    img_["logo"].setPosition((Width - img_["logo"].getGlobalBounds().width) / 2, Height * 0.03);
 
-    texture.loadFromFile("textures/interface/logo.png");
-    img_["logo"] = std::pair(Texture(texture), RectangleShape(Vector2f(0.416 * Width, 0.0975 * Height)));
-    img_["logo"].second.setTexture(&img_["logo"].first);
-    img_["logo"].second.setPosition((Width - img_["logo"].second.getGlobalBounds().width) / 2, Height * 0.03);
+    img_.emplace("levels_back", RectangleShape(Vector2f(Width, Height))).first->second.setTexture(
+        TextureManager::getManager()->getTexture("textures/interface/levels_back"));  
 
-    texture.loadFromFile("textures/interface/levels_back.png");
-    img_["levels_back"] = std::pair(Texture(texture), RectangleShape(Vector2f(Width, Height)));
-    img_["levels_back"].second.setTexture(&img_["levels_back"].first);
+}
+
+void Interface::createMainMenuButtons()
+{
+    int button_width = Width / 4.8, button_height = Height / 8;
+    int xPos = (Width - button_width) / 2, yPos = (Height - 3 * button_height) / 4;
+
+    newGameButton_ = Button(window_, Text(L"НОВАЯ ИГРА", font, 0.025 * Width), 
+        xPos, yPos + button_height, button_width, button_height, GREEN, BLUE);
+
+    continueButton_ = Button(window_, Text(L"ПРОДОЛЖИТЬ", font, 0.025 * Width), 
+        xPos, 2 * yPos + button_height, button_width, button_height, GREEN, BLUE);
+
+    exitButton_ = Button(window_, Text(L"ВЫХОД", font, 0.025 * Width), 
+        xPos, 3 * yPos + button_height, button_width, button_height, GREEN, BLUE);
+}
+
+void Interface::createLevelButtons()
+{
+    size_t rows = 4;
+    size_t columns = 4;
+
+    for(size_t i = 0; i < rows; i++)
+    {
+        for(size_t j = 0; j < columns; j++)
+        {
+            levelButtons_.emplace_back(Button(window_, 
+                Text(std::to_string(i * rows + j + 1), font, 0.0375 * Width), 
+                0.3083 * Width + j * (size * 2 + 0.0166 * Width), 
+                0.14375 * Height + i * (size * 2 + 0.025 * Height), 
+                size * 2, size * 2, GREY, BLUE));
+        }
+    }
+
+    menuButton_ = Button(window_, Text(L"МЕНЮ", font, 0.0375 * Width), 
+        0.3958 * Width, 0.8125 * Height, size * 5, size * 2, GREEN, BLUE);
+}
+
+void Interface::updateLevelButtonsColor()
+{
+    for(size_t i = 0; i < levelButtons_.size(); i++)
+    {
+        if (i <= currentLevel_) 
+            levelButtons_[i].setButtonColor(GREEN);
+    }
+}
+
+Interface::Interface(RenderWindow* window)
+    : window_(window), currentMode_(MODE::MainMenuMode), 
+    currentLevel_(0), passedLevel_(0), coins_(0), 
+    drawing_(window), titleText_(L"Уровни", font, 0.04 * Width)
+{
+    loadTextures();
+    createMainMenuButtons();
+    createLevelButtons();
+
+    titleText_.setFillColor(DARK_BLUE);
+    titleText_.setPosition(0433 * Width, 0.0375 * Height);
+
+    std::tie(coins_, currentLevel_) = file_.readDataFromFile();
 }
 
 Interface::~Interface()
 {
     window_ = nullptr;
+    file_.writeDataToFile(coins_, currentLevel_);
 }
 
 void Interface::showMenu()
 {
-    currentMode_ = MainMenuMode; 
-
-    int button_width = Width / 4.8, button_height = Height / 8;
-    int xPos = (Width - button_width) / 2, yPos = (Height - 3 * button_height) / 4;
-
-    Button newGameButton(window_, Text(L"НОВАЯ ИГРА", font, 0.025 * Width), xPos, yPos + button_height, button_width, button_height, GREEN, BLUE);
-    Button continueButton(window_, Text(L"ПРОДОЛЖИТЬ", font, 0.025 * Width), xPos, 2 * yPos + button_height, button_width, button_height, GREEN, BLUE);
-    Button exitButton(window_, Text(L"ВЫХОД", font, 0.025 * Width), xPos, 3 * yPos + button_height, button_width, button_height, GREEN, BLUE);
-
     while (window_->isOpen())
     {
         pollEvents(window_);
     
-        window_->draw(img_["background"].second);
-        window_->draw(img_["logo"].second);
+        window_->draw(img_["background"]);
+        window_->draw(img_["logo"]);
 
-        newGameButton.drawButton();
-        continueButton.drawButton();
-        exitButton.drawButton();
+        newGameButton_.drawButton();
+        continueButton_.drawButton();
+        exitButton_.drawButton();
 
-        if (newGameButton.isPressed())
+        if (newGameButton_.isPressed())
         {
             if (currentLevel_)
             {
                 if (showWarning(window_, L"Ваши результы будут утеряны!"))
                 {
                     currentLevel_ = 0;
-                    currentMode_ = ChooseLevelMode;
+                    currentMode_ = MODE::ChooseLevelMode;
                     break;
                 }
             }
             else 
             {
-                currentMode_ = ChooseLevelMode;
+                currentMode_ = MODE::ChooseLevelMode;
                 break;
             }
         }
-        else if (continueButton.isPressed())
+        else if (continueButton_.isPressed())
         {
-            currentMode_ = ChooseLevelMode;
+            currentMode_ = MODE::ChooseLevelMode;
             break;
         }
-        else if (exitButton.isPressed())
+        else if (exitButton_.isPressed())
         {
-            currentMode_ = ExitMode;
+            currentMode_ = MODE::ExitMode;
             break;
         }
 
@@ -84,6 +130,8 @@ void Interface::chooseLevel()
     Text titleText(L"Уровни", font, 0.04 * Width);
     titleText.setFillColor(DARK_BLUE);
     titleText.setPosition(0.433 * Width, 0.0375 * Height);
+
+    Drawing draw(window_);
 
     std::vector<Button> ButtonArray;
     for(size_t i = 0; i < 4; i++)
@@ -108,7 +156,7 @@ void Interface::chooseLevel()
     {
         pollEvents(window_);
         
-        window_->draw(img_["levels_back"].second);
+        window_->draw(img_["levels_back"]);
         window_->draw(titleText);
 
         for(size_t i = 0; i < 17; i++) 
@@ -124,13 +172,13 @@ void Interface::chooseLevel()
                             currentMode_ = MainMenuMode;
                             break;
                         default:
-                            drawing.setCoins(getCoins());
-                            if (drawing.drawWorld(i + 1)) 
+                            draw.setCoins(getCoins());
+                            if (draw.drawWorld(i + 1)) 
                             {
                                 currentMode_ = ChooseAction;
                                 passedLevel_ = i + 1;
                             }
-                            coins_ = drawing.getCoins();
+                            coins_ = draw.getCoins();
                             break;
                     }
                 }
@@ -200,18 +248,14 @@ void Interface::chooseFurtherAction()
     rect.setFillColor(BLUE);
 
     Text text(L"Уровень пройден!", font, 0.03333 * Width);
-    text.setPosition(Width / 3 + (rect.getGlobalBounds().width - text.getGlobalBounds().width) / 2, 
-        0.43 * Height + (rect.getGlobalBounds().height - text.getGlobalBounds().height) / 2);     
+    text.setPosition(Width / 3 + (rect.getGlobalBounds().width - text.getGlobalBounds().width) / 2, 0.43 * Height + (rect.getGlobalBounds().height - text.getGlobalBounds().height) / 2);     
 
     int button_width = 0.16666 * Width;
     int button_height = 0.08125 * Height;
 
-    Button levelsButton(window_, Text(L"уровни", font, 0.025 * Width), 0.241666 * Width, 
-        0.5325 * Height, button_width, button_height, GREEN, BLUE);
-    Button repeatButton(window_, Text(L"повтор", font, 0.025 * Width), 0.416666 * Width, 
-        0.5325 * Height, button_width, button_height, GREEN, BLUE);
-    Button nextButton(window_, Text(L"дальше", font, 0.025 * Width), 0.591666 * Width, 
-        0.5325 * Height, button_width, button_height, GREEN, BLUE);
+    Button levelsButton(window_, Text(L"уровни", font, 0.025 * Width), 0.241666 * Width, 0.5325 * Height, button_width, button_height, GREEN, BLUE);
+    Button repeatButton(window_, Text(L"повтор", font, 0.025 * Width), 0.416666 * Width, 0.5325 * Height, button_width, button_height, GREEN, BLUE);
+    Button nextButton(window_, Text(L"дальше", font, 0.025 * Width), 0.591666 * Width, 0.5325 * Height, button_width, button_height, GREEN, BLUE);
     if (passedLevel_ == 16) nextButton.setButtonColor(GREY);
 
     while(window_->isOpen())
@@ -237,18 +281,20 @@ void Interface::chooseFurtherAction()
 
         else if (repeatButton.isPressed())
         {
-            drawing.setCoins(getCoins());
-            if (!drawing.drawWorld(passedLevel_)) currentMode_ = ChooseLevelMode;
-            coins_ = drawing.getCoins();
+            Drawing draw(window_);
+            draw.setCoins(getCoins());
+            if (!draw.drawWorld(passedLevel_)) currentMode_ = ChooseLevelMode;
+            coins_ = draw.getCoins();
             break;
         }
 
         else if (passedLevel_ != 16 && nextButton.isPressed())
         {
-            drawing.setCoins(getCoins());
-            if (drawing.drawWorld(passedLevel_ + 1)) passedLevel_ = passedLevel_ + 1;
+            Drawing draw(window_);
+            draw.setCoins(getCoins());
+            if (draw.drawWorld(passedLevel_ + 1)) passedLevel_ = passedLevel_ + 1;
             else currentMode_ = ChooseLevelMode;
-            coins_ = drawing.getCoins();
+            coins_ = draw.getCoins();
             break;
         }
 
@@ -260,78 +306,6 @@ void Interface::exitGame()
 {
     if (!showWarning(window_, L"Вы уверены, что хотите выйти?")) currentMode_ = MainMenuMode;
     else window_->close();
-}
-
-int Interface::readFile()
-{
-    std::fstream recordFile("data/records.ltx", std::ios_base::in | std::ios_base::binary);
-    std::fstream coinsFile("data/coins.ltx", std::ios_base::in | std::ios_base::binary);
-    
-    if (!recordFile)
-    {
-        std::filesystem::create_directory("data");
-        std::fstream tmp("data/records.ltx", std::ios_base::out | std::ios_base::binary);
-        tmp << 0;
-        tmp.close();
-        currentLevel_ = 0;
-        coins_ = 50;
-    }
-    else
-    {
-        std::string str;
-        recordFile >> str;
-        try
-        {
-            currentLevel_ = stoi(str);
-        }
-        catch(const std::exception& e)
-        {
-            currentLevel_ = 0;
-            remove("data/records.ltx");
-        }
-
-        if (currentLevel_ < 0 || currentLevel_ > 15) currentLevel_ = 0;      
-    }
-
-    if (!coinsFile)
-    {
-        std::fstream tmp("data/records.ltx", std::ios_base::out | std::ios_base::binary);
-        tmp << 50;
-        tmp.close();
-        coins_ = 50;
-    }
-    else
-    {
-        std::string str;
-        coinsFile >> str;
-        try
-        {
-            coins_ = stoi(str);
-        }
-        catch(const std::exception& e)
-        {
-            coins_ = 50;
-            remove("data/records.ltx");
-        }
-
-        if (coins_ < 0) coins_ = 50;  
-    }
-
-    recordFile.close();
-    coinsFile.close();
-
-    return currentLevel_;
-}
-
-void Interface::writeFile()
-{
-    std::fstream recordFile("data/records.ltx", std::ios_base::out | std::ios_base::binary);
-    recordFile << currentLevel_;
-    recordFile.close();
-
-    std::fstream coinsFile("data/coins.ltx", std::ios_base::out | std::ios_base::binary);
-    coinsFile << coins_;
-    coinsFile.close();
 }
 
 void Interface::setCoins(int coins_num) { coins_ = coins_num; }

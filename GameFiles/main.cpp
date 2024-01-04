@@ -1,6 +1,4 @@
 #include <SFML/Graphics.hpp>
-#include "TextureManager.hpp"
-#include "SoundManager.hpp"
 #include "Interface.hpp"
 #include "settings.h"
 
@@ -29,39 +27,30 @@ void initFont()
 int main()
 {
     initFont();
-
-    TextureManager::getManager();
-    SoundManager::getManager();
     
     RenderWindow window(VideoMode(Width, Height), "Sokoban", Style::Close);
     window.setPosition(Vector2i((ScreenWidth - Width) / 2, (ScreenHeight - Height) / 2));
 
     Interface interface(&window);
 
-    int currentLevel = interface.readFile();
-    
-    interface.setCurrentLevel(currentLevel);
-
     while (window.isOpen())
     {
         switch(interface.getCurrentMode())
         {
-            case MainMenuMode:
-                interface.showMenu();
+            case MODE::MainMenuMode:
+                interface.showMenu();   
                 break;
-            case ChooseLevelMode:
+            case MODE::ChooseLevelMode:
                 interface.chooseLevel();
                 break;
-            case ChooseAction:
+            case MODE::ChooseAction:
                 interface.chooseFurtherAction();
                 break;
-            case ExitMode:
+            case MODE::ExitMode:
                 interface.exitGame();
                 break;
         }
     }
-
-    interface.writeFile();
 
     return 0;
 }
