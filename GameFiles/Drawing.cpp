@@ -107,11 +107,9 @@ void Drawing::updateBackground(int level)
 }
 
 void Drawing::drawMap(size_t height, size_t width, 
-    const std::vector<std::vector<int>>& map)
+    const std::vector<std::vector<int>>& map,
+    int offset1, int offset2)
 {
-    static int offset1 = (Width - width * size) / 2;
-    static int offset2 = (Height - height * size) / 2;
-
     for(size_t i = 0; i < height; i++)
     {
         for(size_t j = 0; j < width; j++)
@@ -168,6 +166,8 @@ bool Drawing::drawWorld(const int level)
 
     size_t mapHeight = levelsMap[level].size();
     size_t mapWidth = levelsMap[level][0].size();
+    int offset1 = (Width - mapWidth * size) / 2;
+    int offset2 = (Height - mapHeight * size) / 2;
 
     int initialCoinsValue = coins_;
 
@@ -244,8 +244,8 @@ bool Drawing::drawWorld(const int level)
         window_->draw(levelText_);
         window_->draw(coinsText_);
         window_->draw(world_["coin"]);
-
-        drawMap(mapHeight, mapWidth, levelsMap[level]);
+        
+        drawMap(mapHeight, mapWidth, levelsMap[level], offset1, offset2);
 
         backButton_.drawButton();
         restartButton_.drawButton();

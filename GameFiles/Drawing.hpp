@@ -51,7 +51,8 @@ private:
 
     void updateBackground(int);
 
-    void drawMap(size_t, size_t, const std::vector<std::vector<int>>&);
+    void drawMap(size_t, size_t, 
+        const std::vector<std::vector<int>>&, int, int);
 
 private:
 
