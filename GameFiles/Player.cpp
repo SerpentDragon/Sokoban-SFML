@@ -22,7 +22,10 @@ Player::Player(RenderWindow* window, int speed)
 
 void Player::setLevel(const std::vector<std::vector<int>>& level)
 {
-    this->level_ = level;
+    level_ = level;
+    boxes_.clear(); aims_.clear();
+    while(!playerMoves_.empty()) playerMoves_.pop();
+    while(!boxesMoves_.empty()) boxesMoves_.pop();
 
     offset1_ = (Width - level_[0].size() * size) / 2;
     offset2_ = (Height - level_.size() * size) / 2;

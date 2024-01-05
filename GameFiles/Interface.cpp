@@ -27,6 +27,9 @@ void Interface::createMainMenuButtons()
 
     exitButton_ = Button(window_, Text(L"ВЫХОД", font, 0.025 * Width), 
         xPos, 3 * yPos + button_height, button_width, button_height, GREEN, BLUE);
+
+    menuButton_ = Button(window_, Text(L"МЕНЮ", font, 0.0375 * Width), 
+        0.3958 * Width, 0.8125 * Height, size * 5, size * 2, GREEN, BLUE);
 }
 
 void Interface::createLevelButtons()
@@ -45,9 +48,6 @@ void Interface::createLevelButtons()
                 size * 2, size * 2, GREY, BLUE));
         }
     }
-
-    menuButton_ = Button(window_, Text(L"МЕНЮ", font, 0.0375 * Width), 
-        0.3958 * Width, 0.8125 * Height, size * 5, size * 2, GREEN, BLUE);
 }
 
 void Interface::updateLevelButtonsColor()
@@ -131,26 +131,7 @@ void Interface::chooseLevel()
     titleText.setFillColor(DARK_BLUE);
     titleText.setPosition(0.433 * Width, 0.0375 * Height);
 
-    Drawing draw(window_);
-
-    std::vector<Button> ButtonArray;
-    for(size_t i = 0; i < 4; i++)
-    {
-        for(size_t j = 0; j < 4; j++)
-        {
-            Color tmp_color;
-            if (i * 4 + j <= currentLevel_) tmp_color = GREEN;
-            else tmp_color = GREY;
-
-            ButtonArray.emplace_back(Button(window_, 
-                Text(std::to_string(i * 4 + j + 1), font, 0.0375 * Width), 
-                0.3083 * Width + j * (size * 2 + 0.0166 * Width), 
-                0.14375 * Height + i * (size * 2 + 0.025 * Height), 
-                size * 2, size * 2, tmp_color, BLUE));
-        }
-    }
-    ButtonArray.emplace_back(Button(window_, Text(L"МЕНЮ", font, 0.0375 * Width), 
-        0.3958 * Width, 0.8125 * Height, size * 5, size * 2, GREEN, BLUE));
+    updateLevelButtonsColor();
     
     while(window_->isOpen())
     {
@@ -158,32 +139,28 @@ void Interface::chooseLevel()
         
         window_->draw(img_["levels_back"]);
         window_->draw(titleText);
+        menuButton_.drawButton();
 
-        for(size_t i = 0; i < 17; i++) 
+        for(size_t i = 0; i < levelButtons_.size(); i++) 
         { 
-            ButtonArray[i].drawButton();
-            if (i <= currentLevel_ || i == 16)
+            levelButtons_[i].drawButton();
+            if (i <= currentLevel_)
             {
-                if (ButtonArray[i].isPressed())
+                if (levelButtons_[i].isPressed())
                 {
-                    switch(i)
+                    drawing_.setCoins(getCoins());
+                    if (drawing_.drawWorld(i + 1)) 
                     {
-                        case 16:
-                            currentMode_ = MainMenuMode;
-                            break;
-                        default:
-                            draw.setCoins(getCoins());
-                            if (draw.drawWorld(i + 1)) 
-                            {
-                                currentMode_ = ChooseAction;
-                                passedLevel_ = i + 1;
-                            }
-                            coins_ = draw.getCoins();
-                            break;
+                        currentMode_ = MODE::ChooseAction;
+                        passedLevel_ = i + 1;
                     }
+                    coins_ = drawing_.getCoins();
                 }
             }
         }
+
+        if (menuButton_.isPressed())
+            currentMode_ = MODE::MainMenuMode;
 
         if (currentMode_ != ChooseLevelMode) break;
 
@@ -288,12 +265,14 @@ void Interface::chooseFurtherAction()
             break;
         }
 
-        else if (passedLevel_ != 16 && nextButton.isPressed())
+        else if (passedLevel_ != levelsMap.size() && nextButton.isPressed())
         {
             Drawing draw(window_);
             draw.setCoins(getCoins());
-            if (draw.drawWorld(passedLevel_ + 1)) passedLevel_ = passedLevel_ + 1;
+
+            if (draw.drawWorld(passedLevel_ + 1)) passedLevel_++;
             else currentMode_ = ChooseLevelMode;
+
             coins_ = draw.getCoins();
             break;
         }
