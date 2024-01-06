@@ -53,7 +53,15 @@ private:
 
     void createLevelButtons();
 
+    void createFurtherActionButtons();
+
+    void initTexts();
+
+    void initLevelPassedText();
+
     void updateLevelButtonsColor();
+
+    void updateCoinsText();
 
     void setCoins(int);
 
@@ -79,11 +87,21 @@ private:
     Button exitButton_;
     Button menuButton_;
 
+    // further actions buttons
+    Button levelsButton_;
+    Button repeatButton_;
+    Button nextButton_;
+
     // level buttons
     std::vector<Button> levelButtons_;
 
-    // main manu window title
+    // text to display
     Text titleText_;
+    Text coinsText_;
+
+    // elements to display level passed text
+    Text levelPassedText_;
+    RectangleShape levelPassedSubstrate_;
 
     // object to draw levels
     Drawing drawing_;

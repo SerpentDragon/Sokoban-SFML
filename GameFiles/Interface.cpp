@@ -12,6 +12,9 @@ void Interface::loadTextures()
     img_.emplace("levels_back", RectangleShape(Vector2f(Width, Height))).first->second.setTexture(
         TextureManager::getManager()->getTexture("textures/interface/levels_back"));  
 
+    img_.emplace("coin", RectangleShape(Vector2f(size, size))).first->second.setTexture(
+        TextureManager::getManager()->getTexture("textures/player/coin")); 
+    img_["coin"].setPosition(Width * 0.53, Height * 0.325); 
 }
 
 void Interface::createMainMenuButtons()
@@ -50,6 +53,42 @@ void Interface::createLevelButtons()
     }
 }
 
+void Interface::createFurtherActionButtons()
+{
+    int button_width = 0.16666 * Width;
+    int button_height = 0.08125 * Height;
+
+    levelsButton_ = Button(window_, Text(L"уровни", font, 0.025 * Width), 
+        0.241666 * Width, 0.5325 * Height, button_width, button_height, GREEN, BLUE);
+    repeatButton_ = Button(window_, Text(L"повтор", font, 0.025 * Width), 
+        0.416666 * Width, 0.5325 * Height, button_width, button_height, GREEN, BLUE);
+    nextButton_ = Button(window_, Text(L"дальше", font, 0.025 * Width), 
+        0.591666 * Width, 0.5325 * Height, button_width, button_height, GREEN, BLUE);
+}
+
+void Interface::initTexts()
+{
+    titleText_ = Text(L"Уровни", font, 0.04 * Width);
+    titleText_.setFillColor(DARK_BLUE);
+    titleText_.setPosition(0.433 * Width, 0.0375 * Height);
+
+    coinsText_ = Text("", font, 0.045 * Width);
+    coinsText_.setPosition(Width * 0.45, Height * 0.31);
+    coinsText_.setFillColor(GOLD);
+}
+
+void Interface::initLevelPassedText()
+{
+    levelPassedSubstrate_.setPosition(0.33333 * Width, 0.4375 * Height);
+    levelPassedSubstrate_.setFillColor(BLUE);
+
+    levelPassedText_.setString(L"Уровень пройден!");
+    levelPassedText_.setPosition(Width / 3 + (levelPassedSubstrate_.getGlobalBounds().width - 
+        levelPassedText_.getGlobalBounds().width) / 2, 
+        0.43 * Height + (levelPassedSubstrate_.getGlobalBounds().height - 
+        levelPassedText_.getGlobalBounds().height) / 2);
+}
+
 void Interface::updateLevelButtonsColor()
 {
     for(size_t i = 0; i < levelButtons_.size(); i++)
@@ -59,17 +98,45 @@ void Interface::updateLevelButtonsColor()
     }
 }
 
+void Interface::updateCoinsText()
+{
+    switch(passedLevel_)
+    {
+        case 1: case 2:
+            coins_ += 20;
+            coinsText_.setString("+20");
+            break;
+        case 3: case 4: case 6:
+        case 7: case 8: case 9:
+        case 10: case 11:
+            coins_ += 30;
+            coinsText_.setString("+30");
+            break;
+        case 5: case 12: case 13:
+        case 14: case 15:
+            coins_ += 40;
+            coinsText_.setString("+40");
+            break;
+        case 16:
+            coins_ += 50;
+            coinsText_.setString("+50");
+            break;
+    }
+}
+
 Interface::Interface(RenderWindow* window)
     : window_(window), currentMode_(MODE::MainMenuMode), 
     currentLevel_(0), passedLevel_(0), coins_(0), 
-    drawing_(window), titleText_(L"Уровни", font, 0.04 * Width)
+    drawing_(window),
+    levelPassedText_("", font, 0.03333 * Width),
+    levelPassedSubstrate_(Vector2f(0.341666 * Width, 0.08125 * Height))    
 {
     loadTextures();
     createMainMenuButtons();
     createLevelButtons();
-
-    titleText_.setFillColor(DARK_BLUE);
-    titleText_.setPosition(0433 * Width, 0.0375 * Height);
+    createFurtherActionButtons();
+    initTexts();
+    initLevelPassedText();
 
     std::tie(coins_, currentLevel_) = file_.readDataFromFile();
 }
@@ -127,10 +194,6 @@ void Interface::showMenu()
 
 void Interface::chooseLevel()
 {
-    Text titleText(L"Уровни", font, 0.04 * Width);
-    titleText.setFillColor(DARK_BLUE);
-    titleText.setPosition(0.433 * Width, 0.0375 * Height);
-
     updateLevelButtonsColor();
     
     while(window_->isOpen())
@@ -138,7 +201,7 @@ void Interface::chooseLevel()
         pollEvents(window_);
         
         window_->draw(img_["levels_back"]);
-        window_->draw(titleText);
+        window_->draw(titleText_);
         menuButton_.drawButton();
 
         for(size_t i = 0; i < levelButtons_.size(); i++) 
@@ -172,68 +235,17 @@ void Interface::chooseFurtherAction()
 {
     sleep(milliseconds(250));
 
-    SoundBuffer buf;
-    buf.loadFromFile("music/level_complete.wav");
-
-    Sound levelCompleteSound(buf);
-    levelCompleteSound.play();
-
-    Text coinsText("", font, 0.045 * Width);
-    coinsText.setPosition(Width * 0.45, Height * 0.31);
-    coinsText.setFillColor(GOLD);
-
-    Texture coinsTexture;
-    coinsTexture.loadFromFile("textures/player/coin.png");
-
-    RectangleShape coinsRect(Vector2f(size, size));
-    coinsRect.setTexture(&coinsTexture);
-    coinsRect.setPosition(Width * 0.53, Height * 0.325);
+    SoundManager::getManager()->playSound("level_complete");
     
-    switch(passedLevel_)
-    {
-        case 1: case 2:
-            coins_ += 20;
-            coinsText.setString("+20");
-            break;
-        case 3: case 4: case 6:
-        case 7: case 8: case 9:
-        case 10: case 11:
-            coins_ += 30;
-            coinsText.setString("+30");
-            break;
-        case 5: case 12: case 13:
-        case 14: case 15:
-            coins_ += 40;
-            coinsText.setString("+40");
-            break;
-        case 16:
-            coins_ += 50;
-            coinsText.setString("+50");
-            break;
-    }
+    updateCoinsText();
 
     if (passedLevel_ > currentLevel_) currentLevel_ = passedLevel_;
-    std::string fileName = "textures/levels/" + std::to_string(passedLevel_) + "-2.png";
 
-    Texture texture;
-    texture.loadFromFile(fileName);
+    Sprite background(*TextureManager::getManager()->loadTextureFromFile(
+        "textures/levels/" + std::to_string(passedLevel_) + "-2.png"), 
+        { 0, 0, Width, Height });
 
-    Sprite background(texture, Rect(0, 0, Width, Height));
-
-    RectangleShape rect(Vector2f(0.341666 * Width, 0.08125 * Height));
-    rect.setPosition(0.33333 * Width, 0.4375 * Height);
-    rect.setFillColor(BLUE);
-
-    Text text(L"Уровень пройден!", font, 0.03333 * Width);
-    text.setPosition(Width / 3 + (rect.getGlobalBounds().width - text.getGlobalBounds().width) / 2, 0.43 * Height + (rect.getGlobalBounds().height - text.getGlobalBounds().height) / 2);     
-
-    int button_width = 0.16666 * Width;
-    int button_height = 0.08125 * Height;
-
-    Button levelsButton(window_, Text(L"уровни", font, 0.025 * Width), 0.241666 * Width, 0.5325 * Height, button_width, button_height, GREEN, BLUE);
-    Button repeatButton(window_, Text(L"повтор", font, 0.025 * Width), 0.416666 * Width, 0.5325 * Height, button_width, button_height, GREEN, BLUE);
-    Button nextButton(window_, Text(L"дальше", font, 0.025 * Width), 0.591666 * Width, 0.5325 * Height, button_width, button_height, GREEN, BLUE);
-    if (passedLevel_ == 16) nextButton.setButtonColor(GREY);
+    if (passedLevel_ == 16) nextButton_.setButtonColor(GREY);
 
     while(window_->isOpen())
     {
@@ -241,39 +253,40 @@ void Interface::chooseFurtherAction()
 
         window_->draw(background);
 
-        window_->draw(rect);
-        window_->draw(text);
-        window_->draw(coinsRect);
-        window_->draw(coinsText);
+        window_->draw(levelPassedSubstrate_);
+        window_->draw(levelPassedText_);
+        window_->draw(img_["coin"]);
+        window_->draw(coinsText_);
 
-        levelsButton.drawButton();
-        repeatButton.drawButton();
-        nextButton.drawButton();
+        levelsButton_.drawButton();
+        repeatButton_.drawButton();
+        nextButton_.drawButton();
 
-        if (levelsButton.isPressed()) 
+        if (levelsButton_.isPressed()) 
         {
-            currentMode_ = ChooseLevelMode;
+            currentMode_ = MODE::ChooseLevelMode;
             break;
         }
 
-        else if (repeatButton.isPressed())
+        else if (repeatButton_.isPressed())
         {
-            Drawing draw(window_);
-            draw.setCoins(getCoins());
-            if (!draw.drawWorld(passedLevel_)) currentMode_ = ChooseLevelMode;
-            coins_ = draw.getCoins();
+            drawing_.setCoins(getCoins());
+
+            if (!drawing_.drawWorld(passedLevel_)) 
+                currentMode_ = MODE::ChooseLevelMode;
+
+            coins_ = drawing_.getCoins();
             break;
         }
 
-        else if (passedLevel_ != levelsMap.size() && nextButton.isPressed())
+        else if (passedLevel_ != levelsMap.size() && nextButton_.isPressed())
         {
-            Drawing draw(window_);
-            draw.setCoins(getCoins());
+            drawing_.setCoins(getCoins());
 
-            if (draw.drawWorld(passedLevel_ + 1)) passedLevel_++;
-            else currentMode_ = ChooseLevelMode;
+            if (drawing_.drawWorld(passedLevel_ + 1)) passedLevel_++;
+            else currentMode_ = MODE::ChooseLevelMode;
 
-            coins_ = draw.getCoins();
+            coins_ = drawing_.getCoins();
             break;
         }
 
