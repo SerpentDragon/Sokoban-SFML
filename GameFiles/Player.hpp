@@ -5,6 +5,7 @@
 #include <stack>
 #include <vector>
 #include <tuple>
+#include "TextureManager.hpp"
 #include "settings.h"
 
 using namespace sf;
@@ -43,6 +44,8 @@ private:
 
     RenderWindow* window_;
 
+    std::map<std::string, RectangleShape> img_; // textures
+
     std::vector<std::vector<int>> level_; // info about level structure 
     std::vector<std::pair<int, int>> boxes_; // info about boxes locations
     std::vector<std::pair<int, int>> aims_; // info about positions where boxes should be placed 
@@ -53,8 +56,6 @@ private:
     // the values by which position of level map was moved relative to the point (0, 0)
     int offset1_; 
     int offset2_;
-
-    std::map<std::string, std::pair<Texture, RectangleShape>> img_; // textures
 
     // coordinates and speed of player
     int x_;  
