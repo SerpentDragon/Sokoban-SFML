@@ -279,11 +279,13 @@ void Interface::chooseFurtherAction()
             break;
         }
 
-        else if (passedLevel_ != levelsMap.size() && nextButton_.isPressed())
+        else if (passedLevel_ != levelsMap.size() 
+            && nextButton_.isPressed())
         {
             drawing_.setCoins(getCoins());
 
-            if (drawing_.drawWorld(passedLevel_ + 1)) passedLevel_++;
+            if (drawing_.drawWorld(passedLevel_ + 1)) 
+                passedLevel_++;
             else currentMode_ = MODE::ChooseLevelMode;
 
             coins_ = drawing_.getCoins();
