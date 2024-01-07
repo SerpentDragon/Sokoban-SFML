@@ -171,10 +171,11 @@ void Player::movement(int pressed_key)
     img_["player"].setPosition(x_, y_);
 }
 
-// align player and boxes by cells
 void Player::alignPlayer(int released_key, int param) 
 {
     bool flag = false;
+    const int next_ceil = 1.5 * size;
+    const int cell_through_next = 2.5 * size;
 
     if (param == 1)
     {
@@ -187,25 +188,25 @@ void Player::alignPlayer(int released_key, int param)
                 x_ -= size / 2;
                 break;
             case Keyboard::S: case Keyboard::Down:
-                if (checkPosition(x_, y_ + 1.5 * size) != 1) 
+                if (checkPosition(x_, y_ + next_ceil) != 1) 
                 {
-                    auto it = checkBoxes(x_, y_ + 1.5 * size);
+                    auto it = checkBoxes(x_, y_ + next_ceil);
                     if (it)
                     {
-                        if (checkPosition(x_, y_ + 2.5 * size) != 1 && 
-                            !checkBoxes(x_, y_ + 2.5 * size)) y_ += size / 2;
+                        if (checkPosition(x_, y_ + cell_through_next) != 1 && 
+                            !checkBoxes(x_, y_ + cell_through_next)) y_ += size / 2;
                     }
                     else y_ += size / 2; 
                 }
                 break;
             case Keyboard::D: case Keyboard::Right:
-                if (checkPosition(x_ + 1.5 * size, y_) != 1) 
+                if (checkPosition(x_ + next_ceil, y_) != 1) 
                 {
-                    auto it = checkBoxes(x_ + 1.5 * size, y_);
+                    auto it = checkBoxes(x_ + next_ceil, y_);
                     if (it)
                     {
-                        if (checkPosition(x_ + 2.5 * size, y_) != 1 && 
-                            !checkBoxes(x_ + 2.5 * size, y_)) x_ += size / 2;
+                        if (checkPosition(x_ + cell_through_next, y_) != 1 && 
+                            !checkBoxes(x_ + cell_through_next, y_)) x_ += size / 2;
                     }
                     else x_ += size / 2;
                 }

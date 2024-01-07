@@ -2,18 +2,32 @@
 
 bool showWarning(RenderWindow *window, const String& str)
 {
-    int button_width = 0.2083 * Width, button_height = Height / 8;
-
-    RectangleShape warningWindow(Vector2f(button_width * 2, button_height * 2));
+    RectangleShape warningWindow(
+            Vector2f(warningWindowWidth, warningWindowHeight));
     warningWindow.setFillColor(DARK_BLUE);
-    warningWindow.setPosition(0.292 * Width, 0.375 * Height);
+    warningWindow.setPosition(warningWindowXPos, 
+        warningWindowYPos);
 
-    Text text(str + L"\n\t\t\t\tПродолжить?", font, 0.0216 * Width);
-    text.setPosition(0.3291 * Width, 0.4 * Height);
+    String continueText = L"Продолжить?";
 
-    Button yesButton(window, Text(L"Да", font, 0.0225 * Width), 0.3917 * Width, 0.525 * Height, button_width / 2, button_height / 2, WHITE, BLUE);
+    Text mainMessage(str, font, warningTextSize);
+    mainMessage.setPosition(warningWindowXPos + 
+        (warningWindowWidth - mainMessage.getGlobalBounds().width) / 2, 
+        warningWindowYPos + size / 3);
+    
+    Text continueMessage(continueText, font, warningTextSize);
+    continueMessage.setPosition(warningWindowXPos + 
+        (warningWindowWidth - continueMessage.getGlobalBounds().width) / 2,
+        mainMessage.getGlobalBounds().top + mainMessage.getGlobalBounds().height + size / 4);
+
+    Button yesButton(window, Text(L"Да", font, 0.0225 * Width), 
+        yesButtonXPos, yesButtonYPos, 
+        warningButtonWidth, warningButtonHeight, WHITE, BLUE);
     yesButton.setTextColor(DARK_BLUE);
-    Button noButton(window, Text(L"Нет", font, 0.0225 * Width), 0.5077 * Width, 0.525 * Height, button_width / 2, button_height / 2, WHITE, BLUE);
+    
+    Button noButton(window, Text(L"Нет", font, 0.0225 * Width), 
+        noButtonXPos, noButtonYPos, 
+            warningButtonWidth, warningButtonHeight, WHITE, BLUE);
     noButton.setTextColor(DARK_BLUE);
 
     Event event;
@@ -31,7 +45,8 @@ bool showWarning(RenderWindow *window, const String& str)
         }
 
         window->draw(warningWindow);
-        window->draw(text);
+        window->draw(mainMessage);
+        window->draw(continueMessage);
         yesButton.drawButton();
         noButton.drawButton();
 
@@ -80,24 +95,26 @@ void Drawing::loadTextures()
 
 void Drawing::createButtons()
 {
-    backButton_ = Button(window_, 0.817 * Width, size / 2, size, size, 
+    backButton_ = Button(window_, backButtonXPos, size / 2, size, size, 
         TextureManager::getManager()->getTexture("textures/buttons/back"));
 
-    restartButton_ = Button(window_, 0.875 * Width, size / 2, size, size, 
+    restartButton_ = Button(window_, restartButtonXPos, size / 2, size, size, 
         TextureManager::getManager()->getTexture("textures/buttons/restart"));
 
-    levelsButton_ = Button(window_, 0.933 * Width, size / 2, size, size, 
+    levelsButton_ = Button(window_, levelsButtonXPos, size / 2, size, size, 
         TextureManager::getManager()->getTexture("textures/buttons/levels"));
 }
 
 void Drawing::updateLevelText(int level)
 {
-    levelText_.setString(L"Уровень" + std::to_string(level));
+    levelText_.setString(L"Уровень " + std::to_string(level));
 }
 
 void Drawing::updateCoinsText()
 {
     coinsText_.setString(std::to_string(coins_));
+    coinsText_.setPosition(world_["coin"].getGlobalBounds().left - 
+        coinsText_.getGlobalBounds().width - size / 2, drawingCoinsTextYPos);
 }
 
 void Drawing::updateBackground(int level)
@@ -139,18 +156,18 @@ void Drawing::drawMap(size_t height, size_t width,
 
 Drawing::Drawing(RenderWindow* window) 
     : window_(window), coins_(0), player_(window),
-    levelText_("", font, 0.025 * Width),
-    coinsText_("", font, 0.039 * Width),
+    levelText_("", font, levelTextSize),
+    coinsText_("", font, coinsTextSize),
     background_(Vector2f(Width, Height))
 {
     loadTextures();
     createButtons();
 
     levelText_.setFillColor(DARK_BLUE);
-    levelText_.setPosition(0.041666 * Width, 0.03125 * Height);
+    levelText_.setPosition(levelTextXPos, levelTextYPos);
 
     coinsText_.setFillColor(GOLD);
-    coinsText_.setPosition(0.68 * Width, size / 2.5);
+    coinsText_.setPosition(drawingCoinsTextXPos, drawingCoinsTextYPos);
 }
 
 Drawing::~Drawing()

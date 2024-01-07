@@ -93,7 +93,7 @@ private:
     Button nextButton_;
 
     // level buttons
-    std::vector<Button> levelButtons_;
+    std::vector<Button> levelsButtons_;
 
     // text to display
     Text titleText_;
