@@ -18,20 +18,21 @@ void Interface::loadTextures()
 
 void Interface::createMainMenuButtons()
 {
-    newGameButton_ = Button(window_, Text(L"НОВАЯ ИГРА", font, mainMenuButtonsTextSize), 
-        mainMenuButtonsXPos, newGameButtonYPos, mainMenuButtonsWidth, 
-        mainMenuButtonsHeight, GREEN, BLUE);
+    newGameButton_ = Button(window_, Text(Localizer::translate(L"NEW GAME"), font, 
+        mainMenuButtonsTextSize), mainMenuButtonsXPos, newGameButtonYPos, 
+        mainMenuButtonsWidth, mainMenuButtonsHeight, GREEN, BLUE);
 
-    continueButton_ = Button(window_, Text(L"ПРОДОЛЖИТЬ", font, mainMenuButtonsTextSize), 
-        mainMenuButtonsXPos, continueButtonYPos, mainMenuButtonsWidth, 
-        mainMenuButtonsHeight, GREEN, BLUE);
+    continueButton_ = Button(window_, Text(Localizer::translate(L"CONTINUE"), font, 
+        mainMenuButtonsTextSize), mainMenuButtonsXPos, continueButtonYPos, 
+        mainMenuButtonsWidth, mainMenuButtonsHeight, GREEN, BLUE);
 
-    exitButton_ = Button(window_, Text(L"ВЫХОД", font, mainMenuButtonsTextSize), 
-        mainMenuButtonsXPos, exitButtonYPos, mainMenuButtonsWidth, 
-        mainMenuButtonsHeight, GREEN, BLUE);
+    exitButton_ = Button(window_, Text(Localizer::translate(L"EXIT"), font, 
+        mainMenuButtonsTextSize), mainMenuButtonsXPos, exitButtonYPos, 
+        mainMenuButtonsWidth, mainMenuButtonsHeight, GREEN, BLUE);
 
-    menuButton_ = Button(window_, Text(L"МЕНЮ", font, menuButtonTextSize), 
-        menuButtonXPos, menuButtonYPos, menuButtonWidth, menuButtonHeight, GREEN, BLUE);
+    menuButton_ = Button(window_, Text(Localizer::translate(L"MENU"), font, 
+        menuButtonTextSize), menuButtonXPos, menuButtonYPos, 
+        menuButtonWidth, menuButtonHeight, GREEN, BLUE);
 }
 
 void Interface::createLevelButtons()
@@ -54,20 +55,20 @@ void Interface::createLevelButtons()
 
 void Interface::createFurtherActionButtons()
 {
-    levelsButton_ = Button(window_, Text(L"уровни", font, furtherActionButtonsTextSize), 
-        levelButtonXPos, furtherActionButtonsYPos, furtherActionButtonWidth, 
-        furtherActionButtonHeight, GREEN, BLUE);
-    repeatButton_ = Button(window_, Text(L"повтор", font, furtherActionButtonsTextSize), 
-        repeatButtonXPos, furtherActionButtonsYPos, furtherActionButtonWidth, 
-        furtherActionButtonHeight, GREEN, BLUE);
-    nextButton_ = Button(window_, Text(L"дальше", font, furtherActionButtonsTextSize), 
-        nextButtonXPos, furtherActionButtonsYPos, furtherActionButtonWidth, 
-        furtherActionButtonHeight, GREEN, BLUE);
+    levelsButton_ = Button(window_, Text(Localizer::translate(L"levels"), font, 
+        furtherActionButtonsTextSize), levelButtonXPos, furtherActionButtonsYPos, 
+        furtherActionButtonWidth, furtherActionButtonHeight, GREEN, BLUE);
+    repeatButton_ = Button(window_, Text(Localizer::translate(L"again"), font, 
+        furtherActionButtonsTextSize), repeatButtonXPos, furtherActionButtonsYPos, 
+        furtherActionButtonWidth, furtherActionButtonHeight, GREEN, BLUE);
+    nextButton_ = Button(window_, Text(Localizer::translate(L"next"), font, 
+        furtherActionButtonsTextSize), nextButtonXPos, furtherActionButtonsYPos, 
+        furtherActionButtonWidth, furtherActionButtonHeight, GREEN, BLUE);
 }
 
 void Interface::initTexts()
 {
-    titleText_ = Text(L"Уровни", font, titleTextSize);
+    titleText_ = Text(Localizer::translate(L"Levels"), font, titleTextSize);
     titleText_.setFillColor(DARK_BLUE);
     titleText_.setPosition((Width - titleText_.getGlobalBounds().width) / 2, 
         titleTextYPos);
@@ -87,7 +88,7 @@ void Interface::initLevelPassedText()
     int levelPassedSubstrateWidth_ = levelPassedSubstrate_.getGlobalBounds().width;
     int levelPassedSubstrateHeight_ = levelPassedSubstrate_.getGlobalBounds().height;
 
-    levelPassedText_.setString(L"Уровень пройден!");
+    levelPassedText_.setString(Localizer::translate(L"Level is passed!"));
     levelPassedText_.setPosition(levelPassedSubstrateLeft_ + 
         (levelPassedSubstrateWidth_ - levelPassedText_.getGlobalBounds().width) / 2,
         levelPassedSubstrateTop_ + (levelPassedSubstrateHeight_ - 
@@ -181,7 +182,8 @@ void Interface::showMenu()
         {
             if (currentLevel_)
             {
-                if (showWarning(window_, L"Ваши результы будут утеряны!"))
+                if (showWarning(window_, 
+                    Localizer::translate(L"Your results will be lost!")))
                 {
                     currentLevel_ = 0;
                     currentMode_ = MODE::ChooseLevelMode;
@@ -316,7 +318,9 @@ void Interface::chooseFurtherAction()
 
 void Interface::exitGame()
 {
-    if (!showWarning(window_, L"Вы уверены, что хотите выйти?")) currentMode_ = MainMenuMode;
+    if (!showWarning(window_, 
+        Localizer::translate(L"Are you sure you want to exit?"))) 
+            currentMode_ = MainMenuMode;
     else window_->close();
 }
 

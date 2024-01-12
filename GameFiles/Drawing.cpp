@@ -8,7 +8,7 @@ bool showWarning(RenderWindow *window, const String& str)
     warningWindow.setPosition(warningWindowXPos, 
         warningWindowYPos);
 
-    String continueText = L"Продолжить?";
+    String continueText = Localizer::translate(L"Continue?");
 
     Text mainMessage(str, font, warningTextSize);
     mainMessage.setPosition(warningWindowXPos + 
@@ -20,14 +20,14 @@ bool showWarning(RenderWindow *window, const String& str)
         (warningWindowWidth - continueMessage.getGlobalBounds().width) / 2,
         mainMessage.getGlobalBounds().top + mainMessage.getGlobalBounds().height + size / 4);
 
-    Button yesButton(window, Text(L"Да", font, 0.0225 * Width), 
-        yesButtonXPos, yesButtonYPos, 
+    Button yesButton(window, Text(Localizer::translate(L"Yes"), font, 
+        0.0225 * Width), yesButtonXPos, yesButtonYPos, 
         warningButtonWidth, warningButtonHeight, WHITE, BLUE);
     yesButton.setTextColor(DARK_BLUE);
     
-    Button noButton(window, Text(L"Нет", font, 0.0225 * Width), 
-        noButtonXPos, noButtonYPos, 
-            warningButtonWidth, warningButtonHeight, WHITE, BLUE);
+    Button noButton(window, Text(Localizer::translate(L"No"), font, 
+        0.0225 * Width), noButtonXPos, noButtonYPos, 
+        warningButtonWidth, warningButtonHeight, WHITE, BLUE);
     noButton.setTextColor(DARK_BLUE);
 
     Event event;
@@ -66,11 +66,13 @@ void pollEvents(RenderWindow *window)
         switch(event.type)
         {
             case Event::Closed:
-                    if (showWarning(window, L"Вы уверены, что хотите выйти?")) window->close();
+                    if (showWarning(window, 
+                        Localizer::translate(L"Are you sure you want to exit?"))) window->close();
                 break;
             case Event::KeyPressed:
                 if (event.key.code == Keyboard::Escape)
-                    if (showWarning(window, L"Вы уверены, что хотите выйти?")) window->close();
+                    if (showWarning(window, 
+                        Localizer::translate(L"Are you sure you want to exit?"))) window->close();
                 return;
         }
         window->clear();
@@ -107,7 +109,8 @@ void Drawing::createButtons()
 
 void Drawing::updateLevelText(int level)
 {
-    levelText_.setString(L"Уровень " + std::to_string(level));
+    levelText_.setString(Localizer::translate(L"Level ") 
+        + std::to_string(level));
 }
 
 void Drawing::updateCoinsText()
@@ -120,7 +123,8 @@ void Drawing::updateCoinsText()
 void Drawing::updateBackground(int level)
 {
     background_.setTexture(TextureManager::getManager()->
-        loadTextureFromFile("textures/levels/" + std::to_string(level) + "-1.png"));
+        loadTextureFromFile("textures/levels/" + 
+        std::to_string(level) + "-1.png"));
 }
 
 void Drawing::drawMap(size_t height, size_t width, 
@@ -203,16 +207,18 @@ bool Drawing::drawWorld(const int level)
             switch(event.type)
             {
                 case Event::Closed:
-                    if (showWarning(window_, L"Вы уверены, что хотите выйти?")) 
-                        window_->close();
+                    if (showWarning(window_, 
+                        Localizer::translate(L"Are you sure you want to exit?")))
+                            window_->close();
                     break;
                 case Event::KeyPressed:
                     count_pressed++;
                     switch(event.key.code)
                     {
                         case Keyboard::Escape:
-                            if (showWarning(window_, L"Вы уверены, что хотите выйти?")) 
-                                window_->close();
+                            if (showWarning(window_, 
+                                Localizer::translate(L"Are you sure you want to exit?")))
+                                    window_->close();
                             break;
                         case Keyboard::W: case Keyboard::Up:
                             if (!move_down && !move_right && !move_left) move_up = true; 
@@ -298,7 +304,9 @@ bool Drawing::drawWorld(const int level)
 
         else if (levelsButton_.isPressed()) 
         {
-            if (showWarning(window_, L"Ваши результаты будут утеряны")) break;
+            if (showWarning(window_, 
+                Localizer::translate(L"Your results will be lost!"))) 
+                    break;
         }
     }
 

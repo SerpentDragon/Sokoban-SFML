@@ -6,6 +6,7 @@
 #include <string>
 #include "TextureManager.hpp"
 #include "SoundManager.hpp"
+#include "Localizer.hpp"
 #include "Button.hpp"
 #include "Player.hpp"
 #include "settings.h"
