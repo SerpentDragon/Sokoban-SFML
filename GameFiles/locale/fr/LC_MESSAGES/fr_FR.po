@@ -1,0 +1,48 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Continue?"
+msgstr "Poursuivre?"
+
+msgid "Yes"
+msgstr "Oui"
+
+msgid "No"
+msgstr "Non"
+
+msgid "Are you sure you want to exit?"
+msgstr "Êtes-vous sûr de vouloir sortir?"
+
+msgid "Niveau "
+msgstr "Уровень "
+
+msgid "Your results will be lost!"
+msgstr "Vos résultats seront perdus!"
+
+msgid "NEW GAME"
+msgstr "NOUVEAU JEU"
+
+msgid "CONTINUE"
+msgstr "CONTINUER"
+
+msgid "EXIT"
+msgstr "EXIT"
+
+msgid "MENU"
+msgstr "MENU"
+
+msgid "levels"
+msgstr "niveaux"
+
+msgid "again"
+msgstr "à nouveau"
+
+msgid "next"
+msgstr "suivant"
+
+msgid "Levels"
+msgstr "Niveaux"
+
+msgid "Level is passed!"
+msgstr "Le niveau est atteint!"
