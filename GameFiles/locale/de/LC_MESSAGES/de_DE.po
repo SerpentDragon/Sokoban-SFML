@@ -12,7 +12,7 @@ msgid "No"
 msgstr "Nein"
 
 msgid "Are you sure you want to exit?"
-msgstr "Sind Sie sicher, dass Sie aussteigen wollen?"
+msgstr "Sie wollen aussteigen?"
 
 msgid "Level "
 msgstr "Level "
