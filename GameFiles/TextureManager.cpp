@@ -33,6 +33,7 @@ TextureManager::TextureManager()
     loadAllTexturesFromDirectory("textures/cell/");
     loadAllTexturesFromDirectory("textures/interface/");
     loadAllTexturesFromDirectory("textures/player/");
+    loadAllTexturesFromDirectory("textures/languages/");
 }
 
 void TextureManager::loadAllTexturesFromDirectory(const std::string& dir)
