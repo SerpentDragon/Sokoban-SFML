@@ -65,6 +65,8 @@ private:
 
     void updateCoinsText();
 
+    void recreateTexts();
+
     void setCoins(int);
 
     const int getCoins() const;
@@ -96,6 +98,9 @@ private:
 
     // level buttons
     std::vector<Button> levelsButtons_;
+
+    // dropdown list for localization
+    DropDownList dropDownList;
 
     // text to display
     Text titleText_;

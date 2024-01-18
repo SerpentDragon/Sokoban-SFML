@@ -1,5 +1,7 @@
 #include "Interface.hpp"
 
+#include <iostream>
+
 void Interface::loadTextures()
 {
     img_.emplace("background", RectangleShape(Vector2f(Width, Height))).first->second.setTexture(
@@ -83,15 +85,12 @@ void Interface::initLevelPassedText()
         levelPassedSubstrate_.getGlobalBounds().width) / 2, levelPassedSubstrateYPos);
     levelPassedSubstrate_.setFillColor(BLUE);
 
-    int levelPassedSubstrateLeft_ = levelPassedSubstrate_.getGlobalBounds().left;
-    int levelPassedSubstrateTop_ = levelPassedSubstrate_.getGlobalBounds().top;
-    int levelPassedSubstrateWidth_ = levelPassedSubstrate_.getGlobalBounds().width;
-    int levelPassedSubstrateHeight_ = levelPassedSubstrate_.getGlobalBounds().height;
+    auto levelPassedBounds = levelPassedSubstrate_.getGlobalBounds();
 
     levelPassedText_.setString(Localizer::translate(L"Level is passed!"));
-    levelPassedText_.setPosition(levelPassedSubstrateLeft_ + 
-        (levelPassedSubstrateWidth_ - levelPassedText_.getGlobalBounds().width) / 2,
-        levelPassedSubstrateTop_ + (levelPassedSubstrateHeight_ - 
+    levelPassedText_.setPosition(levelPassedBounds.left + 
+        (levelPassedBounds.width - levelPassedText_.getGlobalBounds().width) / 2,
+        levelPassedBounds.top + (levelPassedBounds.height - 
         levelPassedText_.getGlobalBounds().height) / 3);
 }
 
@@ -141,10 +140,30 @@ void Interface::updateCoinsText()
         coinTextureYPos + size / 4);
 }
 
+void Interface::recreateTexts()
+{
+    newGameButton_.setText(Localizer::translate(L"NEW GAME"));
+    continueButton_.setText(Localizer::translate(L"CONTINUE"));
+    exitButton_.setText(Localizer::translate(L"EXIT"));
+    menuButton_.setText(Localizer::translate(L"MENU"));
+    levelsButton_.setText(Localizer::translate(L"levels"));
+    repeatButton_.setText(Localizer::translate(L"again"));
+    nextButton_.setText(Localizer::translate(L"next"));
+
+    titleText_.setString(Localizer::translate(L"Levels"));
+    levelPassedText_.setString(Localizer::translate(L"Level is passed!"));
+
+    auto levelPassedBounds = levelPassedSubstrate_.getGlobalBounds();
+    levelPassedText_.setPosition(levelPassedBounds.left + 
+        (levelPassedBounds.width - levelPassedText_.getGlobalBounds().width) / 2,
+        levelPassedBounds.top + (levelPassedBounds.height - 
+        levelPassedText_.getGlobalBounds().height) / 3);
+}
+
 Interface::Interface(RenderWindow* window)
     : window_(window), currentMode_(MODE::MainMenuMode), 
     currentLevel_(0), passedLevel_(0), coins_(0), 
-    drawing_(window),
+    drawing_(window), dropDownList(window_),
     levelPassedText_("", font, levelPassedTextSize),
     levelPassedSubstrate_(Vector2f(levelPassedSubstrateWidth, 
         levelPassedSubstrateHeight))    
@@ -167,8 +186,6 @@ Interface::~Interface()
 
 void Interface::showMenu()
 {
-    DropDownList dropDownList(window_);
-
     while (window_->isOpen())
     {
         pollEvents(window_);
@@ -214,7 +231,8 @@ void Interface::showMenu()
         std::string locale = dropDownList.isPressed();
         if (locale.size())
         {
-            
+            Localizer::initLocalizer(locale);
+            recreateTexts();
         }
 
         window_->display();

@@ -87,13 +87,13 @@ void DropDownList::createItems()
     items_ = {
         { 0, 0, itemSize, 
             TextureManager::getManager()->
-                getTexture("textures/languages/ru_RU"),
-            "ru_RU" },
+                getTexture("textures/languages/en_UK"),
+            "en_UK" },
 
         { 0, 0, itemSize, 
             TextureManager::getManager()->
-                getTexture("textures/languages/en_UK"),
-            "en_UK" },
+                getTexture("textures/languages/ru_RU"),
+            "ru_RU" },        
 
         { 0, 0, itemSize, 
             TextureManager::getManager()->
