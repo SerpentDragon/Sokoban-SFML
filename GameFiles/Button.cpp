@@ -121,6 +121,11 @@ bool Button::isPressed()
     return false;
 }
 
+void Button::setText(const std::wstring& text)
+{
+    text_.setString(text);
+}
+
 void Button::setTextColor(const Color& color_)
 {
     text_.setFillColor(color_);

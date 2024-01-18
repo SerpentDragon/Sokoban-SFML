@@ -29,6 +29,8 @@ public:
     
     bool isPressed();
 
+    void setText(const std::wstring&);
+
     void setTextColor(const Color&);
 
     void setButtonColor(const Color&);
