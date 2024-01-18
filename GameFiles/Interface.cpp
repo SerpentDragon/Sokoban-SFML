@@ -5,8 +5,8 @@ void Interface::loadTextures()
     img_.emplace("background", RectangleShape(Vector2f(Width, Height))).first->second.setTexture(
         TextureManager::getManager()->getTexture("textures/interface/background"));
 
-    img_.emplace("logo", RectangleShape(Vector2f(logoWidth, logoHeight))).
-        first->second.setTexture(TextureManager::getManager()->getTexture("textures/interface/logo"));
+    img_.emplace("logo", RectangleShape(Vector2f(logoWidth, logoHeight))).first->second.setTexture(
+        TextureManager::getManager()->getTexture("textures/interface/logo"));
     img_["logo"].setPosition((Width - img_["logo"].getGlobalBounds().width) / 2, logoYPos);
 
     img_.emplace("levels_back", RectangleShape(Vector2f(Width, Height))).first->second.setTexture(
@@ -167,6 +167,8 @@ Interface::~Interface()
 
 void Interface::showMenu()
 {
+    DropDownList dropDownList(window_);
+
     while (window_->isOpen())
     {
         pollEvents(window_);
@@ -177,6 +179,8 @@ void Interface::showMenu()
         newGameButton_.drawButton();
         continueButton_.drawButton();
         exitButton_.drawButton();
+
+        dropDownList.drawList();
 
         if (newGameButton_.isPressed())
         {
@@ -205,6 +209,12 @@ void Interface::showMenu()
         {
             currentMode_ = MODE::ExitMode;
             break;
+        }
+        
+        std::string locale = dropDownList.isPressed();
+        if (locale.size())
+        {
+            
         }
 
         window_->display();

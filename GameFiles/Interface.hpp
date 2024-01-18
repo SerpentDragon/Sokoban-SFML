@@ -9,6 +9,7 @@
 #include <string>
 #include "TextureManager.hpp"
 #include "FileIOManager.hpp"
+#include "DropDownList.hpp"
 #include "Localizer.hpp"
 #include "Button.hpp"
 #include "Drawing.hpp"
