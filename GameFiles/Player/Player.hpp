@@ -5,7 +5,7 @@
 #include <stack>
 #include <vector>
 #include <tuple>
-#include "TextureManager.hpp"
+#include "../Managers/TextureManager.hpp"
 #include "settings.h"
 
 using namespace sf;

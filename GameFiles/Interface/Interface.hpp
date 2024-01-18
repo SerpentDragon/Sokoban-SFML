@@ -7,13 +7,13 @@
 #include <fstream>
 #include <vector>
 #include <string>
-#include "TextureManager.hpp"
-#include "FileIOManager.hpp"
-#include "DropDownList.hpp"
-#include "Localizer.hpp"
-#include "Button.hpp"
+#include "../Managers/TextureManager.hpp"
+#include "../Managers/FileIOManager.hpp"
+#include "../Widgets/DropDownList.hpp"
+#include "../Managers/Localizer.hpp"
+#include "../Widgets/Button.hpp"
 #include "Drawing.hpp"
-#include "settings.h"
+#include "../Player/settings.h"
 
 using namespace sf;
 

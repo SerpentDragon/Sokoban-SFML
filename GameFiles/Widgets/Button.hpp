@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "settings.h"
+#include "../Player/settings.h"
 
 using namespace sf;
 

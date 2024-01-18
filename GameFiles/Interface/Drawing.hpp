@@ -4,13 +4,13 @@
 #include <SFML/Audio.hpp>
 #include <unordered_map>
 #include <string>
-#include "TextureManager.hpp"
-#include "SoundManager.hpp"
-#include "Localizer.hpp"
-#include "Button.hpp"
-#include "Player.hpp"
-#include "settings.h"
-#include "map.h"
+#include "../Managers/TextureManager.hpp"
+#include "../Managers/SoundManager.hpp"
+#include "../Managers/Localizer.hpp"
+#include "../Widgets/Button.hpp"
+#include "../Player/Player.hpp"
+#include "../Player/settings.h"
+#include "../Player/map.h"
 
 using namespace sf;
 

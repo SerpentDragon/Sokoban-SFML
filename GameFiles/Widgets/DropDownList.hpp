@@ -4,8 +4,8 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
-#include "TextureManager.hpp"
-#include "settings.h"
+#include "../Managers/TextureManager.hpp"
+#include "../Player/settings.h"
 
 using namespace sf;
 
