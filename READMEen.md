@@ -30,6 +30,7 @@ You should run the app using
 sudo sokoban
 ```
 command to ensure correct operation of the app. 
+More info in "release_branch" branch.
 ## Demo
 ![Alt text](https://github.com/SerpentDragon/Sokoban-SFML/blob/master/Demo/demo1.png)
 ![Alt text](https://github.com/SerpentDragon/Sokoban-SFML/blob/master/Demo/demo2.png)

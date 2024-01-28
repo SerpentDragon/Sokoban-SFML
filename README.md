@@ -30,7 +30,7 @@ sudo dpkg -i SOKOBAN-1.0.0-Linux.deb
 ```
 sudo sokoban
 ```
-
+Больше информации в ветке "release_branch".
 
 ## Демо
 ![Alt text](https://github.com/SerpentDragon/Sokoban-SFML/blob/master/Demo/demo1.png)
