@@ -31,6 +31,7 @@ private:
 
     std::string coinsPath_;
     std::string recordsPath_;
+    std::string dir_;
 
     const int default_coins_ = 50;
     const int default_record_ = 0;

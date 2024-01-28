@@ -19,7 +19,7 @@ const Color GOLD(255, 215, 0);
 Font font;
 void initFont()
 {
-    font.loadFromFile("fonts/arial_bold.ttf");
+    font.loadFromFile("app_data/fonts/arial_bold.ttf");
 }
 
 // Drawing settings

@@ -23,7 +23,7 @@ SoundManager::SoundManager()
 
 void SoundManager::loadAllSoundsFromDirectory()
 {
-    const std::string dir = "music/";
+    const std::string dir = "app_data/music/";
     for(const auto& entry : fs::directory_iterator(dir))
     {
         if (fs::is_regular_file(entry))

@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
-#include "Interface/Interface.hpp"
-#include "Player/settings.h"
+#include "source/Interface/Interface.hpp"
+#include "source/Player/settings.h"
 
 using namespace sf;
 

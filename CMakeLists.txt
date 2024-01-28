@@ -6,23 +6,23 @@ find_package(Boost COMPONENTS locale REQUIRED)
 find_package(SFML 2.5 COMPONENTS graphics audio window system REQUIRED)
 
 set(SOURCE_FILE
-    GameFiles/Interface/Interface.cpp
-    GameFiles/Interface/Drawing.cpp
-    GameFiles/Managers/FileIOManager.cpp
-    GameFiles/Managers/Localizer.cpp
-    GameFiles/Managers/TextureManager.cpp
-    GameFiles/Managers/SoundManager.cpp
-    GameFiles/Player/Player.cpp
-    GameFiles/Player/settings.cpp
-    GameFiles/Widgets/Button.cpp
-    GameFiles/Widgets/DropDownList.cpp
+    GameFiles/source/Interface/Interface.cpp
+    GameFiles/source/Interface/Drawing.cpp
+    GameFiles/source/Managers/FileIOManager.cpp
+    GameFiles/source/Managers/Localizer.cpp
+    GameFiles/source/Managers/TextureManager.cpp
+    GameFiles/source/Managers/SoundManager.cpp
+    GameFiles/source/Player/Player.cpp
+    GameFiles/source/Player/settings.cpp
+    GameFiles/source/Widgets/Button.cpp
+    GameFiles/source/Widgets/DropDownList.cpp
     GameFiles/main.cpp
 )
 
-file(COPY GameFiles/fonts DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY GameFiles/locale DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY GameFiles/music DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY GameFiles/textures DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY GameFiles/app_data/fonts DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/app_data)
+file(COPY GameFiles/app_data/locale DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/app_data)
+file(COPY GameFiles/app_data/music DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/app_data)
+file(COPY GameFiles/app_data/textures DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/app_data)
 
 add_executable(sokoban ${SOURCE_FILE})
 
