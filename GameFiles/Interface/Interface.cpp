@@ -1,7 +1,5 @@
 #include "Interface.hpp"
 
-#include <iostream>
-
 void Interface::loadTextures()
 {
     img_.emplace("background", RectangleShape(Vector2f(Width, Height))).first->second.setTexture(
@@ -96,10 +94,11 @@ void Interface::initLevelPassedText()
 
 void Interface::updateLevelButtonsColor()
 {
+    Color color;
     for(size_t i = 0; i < levelsButtons_.size(); i++)
     {
-        if (i <= currentLevel_) 
-            levelsButtons_[i].setButtonColor(GREEN);
+        color = i <= currentLevel_ ? GREEN : GREY;
+        levelsButtons_[i].setButtonColor(color);
     }
 }
 

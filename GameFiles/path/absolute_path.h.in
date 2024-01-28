@@ -1,0 +1,6 @@
+#ifndef path_h
+#define path_h
+
+#cmakedefine INSTALL_DIR "@INSTALL_DIR@/"
+
+#endif

@@ -13,7 +13,7 @@ void SoundManager::playSound(const std::string& name)
 {
     sf::Sound sound(sounds_[name]);
     sound.play();
-    sf::sleep(sf::milliseconds(500));
+    sf::sleep(sf::milliseconds(700));
 }
 
 SoundManager::SoundManager()
@@ -23,7 +23,7 @@ SoundManager::SoundManager()
 
 void SoundManager::loadAllSoundsFromDirectory()
 {
-    const std::string dir = "music/";
+    const std::string dir = std::string(INSTALL_DIR) + "music/";
     for(const auto& entry : fs::directory_iterator(dir))
     {
         if (fs::is_regular_file(entry))

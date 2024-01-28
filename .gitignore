@@ -1,5 +1,5 @@
 GameFiles/*.o
-GameFiles/sfml-app
+GameFiles/sokoban
 GameFiles/data
 .vscode/
 build/

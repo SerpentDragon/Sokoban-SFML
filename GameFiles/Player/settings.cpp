@@ -19,7 +19,7 @@ const Color GOLD(255, 215, 0);
 Font font;
 void initFont()
 {
-    font.loadFromFile("fonts/arial_bold.ttf");
+    font.loadFromFile(std::string(INSTALL_DIR) + "fonts/arial_bold.ttf");
 }
 
 // Drawing settings

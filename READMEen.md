@@ -4,7 +4,7 @@ This app is a multilevel game Sokoban created using SFML graphic library
 
 # Compilation
 
-Compilation and building are assembled using Makefile provided in this reposiroty
+Compilation and building are assembled using CMakeLists.txt provided in this reposiroty
 
 # Rules
 
@@ -19,6 +19,17 @@ These keys are used to move the player:
 
 To exit this application you can press Esc key.
 
+## Launch of the release
+You can install downloaded release using
+```
+sudo dpkg -i SOKOBAN-1.0.0-Linux.deb
+```
+command.
+You should run the app using 
+```
+sudo sokoban
+```
+command to ensure correct operation of the app. 
 ## Demo
 ![Alt text](https://github.com/SerpentDragon/Sokoban-SFML/blob/master/Demo/demo1.png)
 ![Alt text](https://github.com/SerpentDragon/Sokoban-SFML/blob/master/Demo/demo2.png)

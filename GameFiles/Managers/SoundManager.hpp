@@ -3,6 +3,7 @@
 #include <SFML/Audio.hpp>
 #include <unordered_map>
 #include <filesystem>
+#include "absolute_path.h"
 
 namespace fs = std::filesystem;
 

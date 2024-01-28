@@ -11,7 +11,7 @@ TextureManager* TextureManager::getManager()
 
 const sf::Texture* TextureManager::getTexture(const std::string& name) const
 {
-    auto it = textures_.find(name);
+    auto it = textures_.find(INSTALL_DIR + name);
     if (it != textures_.end()) return &(it->second);
     else return nullptr;
 }
@@ -19,21 +19,21 @@ const sf::Texture* TextureManager::getTexture(const std::string& name) const
 sf::Texture* TextureManager::loadTextureFromFile(const std::string& filename)
 {
     sf::Texture texture;
-    if (texture.loadFromFile(filename))
+    if (texture.loadFromFile(INSTALL_DIR + filename))
     {
-        textures_[filename] = texture;
-        return &textures_[filename];
+        textures_[INSTALL_DIR + filename] = texture;
+        return &textures_[INSTALL_DIR + filename];
     }
     else return nullptr;
 }
 
 TextureManager::TextureManager()
 {
-    loadAllTexturesFromDirectory("textures/buttons/");
-    loadAllTexturesFromDirectory("textures/cell/");
-    loadAllTexturesFromDirectory("textures/interface/");
-    loadAllTexturesFromDirectory("textures/player/");
-    loadAllTexturesFromDirectory("textures/languages/");
+    loadAllTexturesFromDirectory(std::string(INSTALL_DIR) + "textures/buttons/");
+    loadAllTexturesFromDirectory(std::string(INSTALL_DIR) + "textures/cell/");
+    loadAllTexturesFromDirectory(std::string(INSTALL_DIR) + "textures/interface/");
+    loadAllTexturesFromDirectory(std::string(INSTALL_DIR) + "textures/player/");
+    loadAllTexturesFromDirectory(std::string(INSTALL_DIR) + "textures/languages/");
 }
 
 void TextureManager::loadAllTexturesFromDirectory(const std::string& dir)

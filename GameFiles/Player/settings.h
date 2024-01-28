@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "absolute_path.h"
 
 using namespace sf;
 
