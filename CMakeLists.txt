@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.10)
 
 project (SOKOBAN VERSION 1.0.0)
 
-set(INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME})
-configure_file(GameFiles/path/absolute_path.h.in absolute_path.h)
-
 find_package(Boost COMPONENTS locale REQUIRED)
 find_package(SFML 2.5 COMPONENTS graphics audio window system REQUIRED)
 
@@ -37,21 +34,3 @@ set_target_properties(sokoban PROPERTIES
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
 )
-
-install(TARGETS sokoban RUNTIME DESTINATION bin)
-
-set(CPACK_GENERATOR DEB)
-
-install(DIRECTORY GameFiles/fonts DESTINATION ${INSTALL_DIR})
-install(DIRECTORY GameFiles/locale DESTINATION ${INSTALL_DIR})
-install(DIRECTORY GameFiles/music DESTINATION ${INSTALL_DIR})
-install(DIRECTORY GameFiles/textures DESTINATION ${INSTALL_DIR})
-install(CODE "file(MAKE_DIRECTORY ${INSTALL_DIR}/data)")
-
-set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
-set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
-
-set(CPACK_PACKAGE_CONTACT shelyganovdmitry@gmail.com)
-
-include (CPack)

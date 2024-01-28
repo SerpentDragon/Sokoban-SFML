@@ -1,7 +1,6 @@
 #pragma once
 
 #include <boost/locale.hpp>
-#include "absolute_path.h"
 
 namespace loc = boost::locale;
 

@@ -1,15 +1,15 @@
 #include "FileIOManager.hpp"
 
 FileIOManager::FileIOManager()
-    : coinsPath_(std::string(INSTALL_DIR) + "data/coins.ltx"),
-    recordsPath_(std::string(INSTALL_DIR) + "data/records.ltx")
+    : coinsPath_("data/coins.ltx"),
+    recordsPath_("data/records.ltx")
 {
 }
 
 std::pair<int, int> FileIOManager::readDataFromFile()
 {
-    if (!fs::exists(std::string(INSTALL_DIR) + "data/")) 
-        fs::create_directory(std::string(INSTALL_DIR) + "data/");
+    if (!fs::exists("data/")) 
+        fs::create_directory("data/");
 
     int coins_;
     int record_;    

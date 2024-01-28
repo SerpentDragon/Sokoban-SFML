@@ -7,7 +7,7 @@ std::locale Localizer::locale_ = std::locale();
 void Localizer::initLocalizer(const std::string& domain)
 {
     gen_.clear_domains();
-    gen_.add_messages_path(std::string(INSTALL_DIR) + "locale/");
+    gen_.add_messages_path("locale/");
     gen_.add_messages_domain(domain);
 
     locale_ = std::locale();
