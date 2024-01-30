@@ -14,7 +14,7 @@ class Player
 {
 public:
 
-    Player(RenderWindow*, int speed = size / 7);
+    Player(RenderWindow*, int speed = gl::size / 7);
 
     ~Player();
 

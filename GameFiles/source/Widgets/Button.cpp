@@ -32,7 +32,7 @@ Button::Button(RenderWindow *window, const Text& text,
     button_.setFillColor(color_);
 
     text_.setPosition(x + (width_ - text_.getGlobalBounds().width) / 2 , 
-        y + (height_ - text_.getGlobalBounds().height) / 2 - size / 5);   
+        y + (height_ - text_.getGlobalBounds().height) / 2 - gl::size / 5);   
 }
 
 Button::Button(RenderWindow *window, int x, int y, 
@@ -125,7 +125,7 @@ void Button::setText(const std::wstring& text)
 {
     text_.setString(text);
     text_.setPosition(xPos_ + (width_ - text_.getGlobalBounds().width) / 2 , 
-        yPos_ + (height_ - text_.getGlobalBounds().height) / 2 - size / 5);
+        yPos_ + (height_ - text_.getGlobalBounds().height) / 2 - gl::size / 5);
 }
 
 void Button::setTextColor(const Color& color_)

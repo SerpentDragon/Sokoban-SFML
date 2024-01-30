@@ -4,11 +4,11 @@
 // DropdownList class
 
 DropDownList::DropDownList(RenderWindow* window)
-    : window_(window), list_(Vector2f(size, size)),
-    x_(window->getSize().x - size * 1.5), y_(size / 2),
-    width_(size), height_(size)
+    : window_(window), list_(Vector2f(gl::size, gl::size)),
+    x_(window->getSize().x - gl::size * 1.5), y_(gl::size / 2),
+    width_(gl::size), height_(gl::size)
 {
-    list_.setFillColor(GREEN);
+    list_.setFillColor(gl::GREEN);
     list_.setPosition(x_, y_);
 
     createItems();
@@ -24,7 +24,7 @@ void DropDownList::drawList()
     int x = Mouse::getPosition(*window_).x;
     int y = Mouse::getPosition(*window_).y;
 
-    height_ = onList(x, y) ? size * items_.size() : size;
+    height_ = onList(x, y) ? gl::size * items_.size() : gl::size;
 
     list_.setSize(Vector2f(width_, height_));
 
@@ -35,7 +35,7 @@ void DropDownList::drawList()
         item.highlightItem(item.onItem(x, y));
     }
 
-    if (height_ > size)
+    if (height_ > gl::size)
         for(auto& item : items_) window_->draw(item.itemRect_);
     else
         window_->draw(items_[0].itemRect_);
@@ -82,7 +82,7 @@ bool DropDownList::onList(int x, int y) const
 
 void DropDownList::createItems()
 {
-    const int itemSize = size - Item::itemOutlineThickness * 2;
+    const int itemSize = gl::size - Item::itemOutlineThickness * 2;
     
     items_ = {
         { 0, 0, itemSize, 
@@ -109,7 +109,7 @@ void DropDownList::createItems()
     for(size_t i = 0; i < items_.size(); i++)
     {
         items_[i].itemRect_.setPosition(x_ + Item::itemOutlineThickness,
-            y_ + size * i + Item::itemOutlineThickness);
+            y_ + gl::size * i + Item::itemOutlineThickness);
     }
 }
 
@@ -135,7 +135,7 @@ bool DropDownList::Item::onItem(int x, int y) const
 
 void DropDownList::Item::highlightItem(bool highlight)
 {
-    Color outlineColor = highlight ? BLUE : GREEN;
+    Color outlineColor = highlight ? gl::BLUE : gl::GREEN;
     itemRect_.setOutlineColor(outlineColor);
 }
 

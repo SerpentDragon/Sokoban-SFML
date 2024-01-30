@@ -2,37 +2,37 @@
 
 void Interface::loadTextures()
 {
-    img_.emplace("background", RectangleShape(Vector2f(Width, Height))).first->second.setTexture(
+    img_.emplace("background", RectangleShape(Vector2f(gl::Width, gl::Height))).first->second.setTexture(
         TextureManager::getManager()->getTexture("textures/interface/background"));
 
-    img_.emplace("logo", RectangleShape(Vector2f(logoWidth, logoHeight))).first->second.setTexture(
+    img_.emplace("logo", RectangleShape(Vector2f(IN::logoWidth, IN::logoHeight))).first->second.setTexture(
         TextureManager::getManager()->getTexture("textures/interface/logo"));
-    img_["logo"].setPosition((Width - img_["logo"].getGlobalBounds().width) / 2, logoYPos);
+    img_["logo"].setPosition((gl::Width - img_["logo"].getGlobalBounds().width) / 2, IN::logoYPos);
 
-    img_.emplace("levels_back", RectangleShape(Vector2f(Width, Height))).first->second.setTexture(
+    img_.emplace("levels_back", RectangleShape(Vector2f(gl::Width, gl::Height))).first->second.setTexture(
         TextureManager::getManager()->getTexture("textures/interface/levels_back"));  
 
-    img_.emplace("coin", RectangleShape(Vector2f(size, size))).first->second.setTexture(
+    img_.emplace("coin", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
         TextureManager::getManager()->getTexture("textures/player/coin")); 
 }
 
 void Interface::createMainMenuButtons()
 {
-    newGameButton_ = Button(window_, Text(Localizer::translate(L"NEW GAME"), font, 
-        mainMenuButtonsTextSize), mainMenuButtonsXPos, newGameButtonYPos, 
-        mainMenuButtonsWidth, mainMenuButtonsHeight, GREEN, BLUE);
+    newGameButton_ = Button(window_, Text(Localizer::translate(L"NEW GAME"), gl::font, 
+        IN::mainMenuButtonsTextSize), IN::mainMenuButtonsXPos, IN::newGameButtonYPos, 
+        IN::mainMenuButtonsWidth, IN::mainMenuButtonsHeight, gl::GREEN, gl::BLUE);
 
-    continueButton_ = Button(window_, Text(Localizer::translate(L"CONTINUE"), font, 
-        mainMenuButtonsTextSize), mainMenuButtonsXPos, continueButtonYPos, 
-        mainMenuButtonsWidth, mainMenuButtonsHeight, GREEN, BLUE);
+    continueButton_ = Button(window_, Text(Localizer::translate(L"CONTINUE"), gl::font, 
+        IN::mainMenuButtonsTextSize), IN::mainMenuButtonsXPos, IN::continueButtonYPos, 
+        IN::mainMenuButtonsWidth, IN::mainMenuButtonsHeight, gl::GREEN, gl::BLUE);
 
-    exitButton_ = Button(window_, Text(Localizer::translate(L"EXIT"), font, 
-        mainMenuButtonsTextSize), mainMenuButtonsXPos, exitButtonYPos, 
-        mainMenuButtonsWidth, mainMenuButtonsHeight, GREEN, BLUE);
+    exitButton_ = Button(window_, Text(Localizer::translate(L"EXIT"), gl::font, 
+        IN::mainMenuButtonsTextSize), IN::mainMenuButtonsXPos, IN::exitButtonYPos, 
+        IN::mainMenuButtonsWidth, IN::mainMenuButtonsHeight, gl::GREEN, gl::BLUE);
 
-    menuButton_ = Button(window_, Text(Localizer::translate(L"MENU"), font, 
-        menuButtonTextSize), menuButtonXPos, menuButtonYPos, 
-        menuButtonWidth, menuButtonHeight, GREEN, BLUE);
+    menuButton_ = Button(window_, Text(Localizer::translate(L"MENU"), gl::font, 
+        IN::menuButtonTextSize), IN::menuButtonXPos, IN::menuButtonYPos, 
+        IN::menuButtonWidth, IN::menuButtonHeight, gl::GREEN, gl::BLUE);
 }
 
 void Interface::createLevelButtons()
@@ -45,43 +45,43 @@ void Interface::createLevelButtons()
         for(size_t j = 0; j < columns; j++)
         {
             levelsButtons_.emplace_back(Button(window_, 
-                Text(std::to_string(i * rows + j + 1), font, levelsButtonTextSize), 
-                levelsButtonsXOffset + j * (levelsButtonSize + betweenButtonsXPos), 
-                levelsButtonsYOffset + i * (levelsButtonSize + betweenButtonsYPos), 
-                levelsButtonSize, levelsButtonSize, GREY, BLUE));
+                Text(std::to_string(i * rows + j + 1), gl::font, IN::levelsButtonTextSize), 
+                IN::levelsButtonsXOffset + j * (IN::levelsButtonSize + IN::betweenButtonsXPos), 
+                IN::levelsButtonsYOffset + i * (IN::levelsButtonSize + IN::betweenButtonsYPos), 
+                IN::levelsButtonSize, IN::levelsButtonSize, gl::GREY, gl::BLUE));
         }
     }
 }
 
 void Interface::createFurtherActionButtons()
 {
-    levelsButton_ = Button(window_, Text(Localizer::translate(L"levels"), font, 
-        furtherActionButtonsTextSize), levelButtonXPos, furtherActionButtonsYPos, 
-        furtherActionButtonWidth, furtherActionButtonHeight, GREEN, BLUE);
-    repeatButton_ = Button(window_, Text(Localizer::translate(L"again"), font, 
-        furtherActionButtonsTextSize), repeatButtonXPos, furtherActionButtonsYPos, 
-        furtherActionButtonWidth, furtherActionButtonHeight, GREEN, BLUE);
-    nextButton_ = Button(window_, Text(Localizer::translate(L"next"), font, 
-        furtherActionButtonsTextSize), nextButtonXPos, furtherActionButtonsYPos, 
-        furtherActionButtonWidth, furtherActionButtonHeight, GREEN, BLUE);
+    levelsButton_ = Button(window_, Text(Localizer::translate(L"levels"), gl::font, 
+        IN::furtherActionButtonsTextSize), IN::levelButtonXPos, IN::furtherActionButtonsYPos, 
+        IN::furtherActionButtonWidth, IN::furtherActionButtonHeight, gl::GREEN, gl::BLUE);
+    repeatButton_ = Button(window_, Text(Localizer::translate(L"again"), gl::font, 
+        IN::furtherActionButtonsTextSize), IN::repeatButtonXPos, IN::furtherActionButtonsYPos, 
+        IN::furtherActionButtonWidth, IN::furtherActionButtonHeight, gl::GREEN, gl::BLUE);
+    nextButton_ = Button(window_, Text(Localizer::translate(L"next"), gl::font, 
+        IN::furtherActionButtonsTextSize), IN::nextButtonXPos, IN::furtherActionButtonsYPos, 
+        IN::furtherActionButtonWidth, IN::furtherActionButtonHeight, gl::GREEN, gl::BLUE);
 }
 
 void Interface::initTexts()
 {
-    titleText_ = Text(Localizer::translate(L"Levels"), font, titleTextSize);
-    titleText_.setFillColor(DARK_BLUE);
-    titleText_.setPosition((Width - titleText_.getGlobalBounds().width) / 2, 
-        titleTextYPos);
+    titleText_ = Text(Localizer::translate(L"Levels"), gl::font, IN::titleTextSize);
+    titleText_.setFillColor(gl::DARK_BLUE);
+    titleText_.setPosition((gl::Width - titleText_.getGlobalBounds().width) / 2, 
+        IN::titleTextYPos);
 
-    coinsText_ = Text("", font, interfaceCoinsTextSize);
-    coinsText_.setFillColor(GOLD);
+    coinsText_ = Text("", gl::font, IN::interfaceCoinsTextSize);
+    coinsText_.setFillColor(gl::GOLD);
 }
 
 void Interface::initLevelPassedText()
 {
-    levelPassedSubstrate_.setPosition((Width - 
-        levelPassedSubstrate_.getGlobalBounds().width) / 2, levelPassedSubstrateYPos);
-    levelPassedSubstrate_.setFillColor(BLUE);
+    levelPassedSubstrate_.setPosition((gl::Width - 
+        levelPassedSubstrate_.getGlobalBounds().width) / 2, IN::levelPassedSubstrateYPos);
+    levelPassedSubstrate_.setFillColor(gl::BLUE);
 
     auto levelPassedBounds = levelPassedSubstrate_.getGlobalBounds();
 
@@ -97,7 +97,7 @@ void Interface::updateLevelButtonsColor()
     Color color;
     for(size_t i = 0; i < levelsButtons_.size(); i++)
     {
-        color = i <= currentLevel_ ? GREEN : GREY;
+        color = i <= currentLevel_ ? gl::GREEN : gl::GREY;
         levelsButtons_[i].setButtonColor(color);
     }
 }
@@ -130,13 +130,13 @@ void Interface::updateCoinsText()
     int coinsTextWidth = coinsText_.getGlobalBounds().width;
     int coinsTextureWidth = img_["coin"].getGlobalBounds().width;
 
-    coinsText_.setPosition((Width - 
-        (coinsTextWidth + coinsTextureWidth + size / 3)) / 2, coinTextureYPos);
+    coinsText_.setPosition((gl::Width - 
+        (coinsTextWidth + coinsTextureWidth + gl::size / 3)) / 2, IN::coinTextureYPos);
 
     int coinsTextXPos = coinsText_.getGlobalBounds().left;
 
-    img_["coin"].setPosition(coinsTextXPos + coinsTextWidth + size / 3, 
-        coinTextureYPos + size / 4);
+    img_["coin"].setPosition(coinsTextXPos + coinsTextWidth + gl::size / 3, 
+        IN::coinTextureYPos + gl::size / 4);
 }
 
 void Interface::recreateTexts()
@@ -163,9 +163,9 @@ Interface::Interface(RenderWindow* window)
     : window_(window), currentMode_(MODE::MainMenuMode), 
     currentLevel_(0), passedLevel_(0), coins_(0), 
     drawing_(window), dropDownList(window_),
-    levelPassedText_("", font, levelPassedTextSize),
-    levelPassedSubstrate_(Vector2f(levelPassedSubstrateWidth, 
-        levelPassedSubstrateHeight))    
+    levelPassedText_("", gl::font, IN::levelPassedTextSize),
+    levelPassedSubstrate_(Vector2f(IN::levelPassedSubstrateWidth, 
+        IN::levelPassedSubstrateHeight))    
 {
     loadTextures();
     createMainMenuButtons();
@@ -289,10 +289,10 @@ void Interface::chooseFurtherAction()
 
     Sprite background(*TextureManager::getManager()->loadTextureFromFile(
         "textures/levels/" + std::to_string(passedLevel_) + "-2.png"), 
-        { 0, 0, Width, Height });
+        { 0, 0, gl::Width, gl::Height });
 
     if (passedLevel_ == levelsMap.size()) 
-        nextButton_.setButtonColor(GREY);
+        nextButton_.setButtonColor(gl::GREY);
 
     while(window_->isOpen())
     {

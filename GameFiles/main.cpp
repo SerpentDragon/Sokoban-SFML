@@ -6,10 +6,10 @@ using namespace sf;
 
 int main()
 {
-    initFont();
+    gl::initFont();
     
-    RenderWindow window(VideoMode(Width, Height), "Sokoban", Style::Close);
-    window.setPosition(Vector2i((ScreenWidth - Width) / 2, (ScreenHeight - Height) / 2));
+    RenderWindow window(VideoMode(gl::Width, gl::Height), "Sokoban", Style::Close);
+    window.setPosition(Vector2i((gl::ScreenWidth - gl::Width) / 2, (gl::ScreenHeight - gl::Height) / 2));
 
     Interface interface(&window);
 

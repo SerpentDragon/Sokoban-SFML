@@ -3,32 +3,32 @@
 bool showWarning(RenderWindow *window, const String& str)
 {
     RectangleShape warningWindow(
-            Vector2f(warningWindowWidth, warningWindowHeight));
-    warningWindow.setFillColor(DARK_BLUE);
-    warningWindow.setPosition(warningWindowXPos, 
-        warningWindowYPos);
+            Vector2f(DR::warningWindowWidth, DR::warningWindowHeight));
+    warningWindow.setFillColor(gl::DARK_BLUE);
+    warningWindow.setPosition(DR::warningWindowXPos, 
+        DR::warningWindowYPos);
 
     String continueText = Localizer::translate(L"Continue?");
 
-    Text mainMessage(str, font, warningTextSize);
-    mainMessage.setPosition(warningWindowXPos + 
-        (warningWindowWidth - mainMessage.getGlobalBounds().width) / 2, 
-        warningWindowYPos + size / 3);
+    Text mainMessage(str, gl::font, DR::warningTextSize);
+    mainMessage.setPosition(DR::warningWindowXPos + 
+        (DR::warningWindowWidth - mainMessage.getGlobalBounds().width) / 2, 
+        DR::warningWindowYPos + gl::size / 3);
     
-    Text continueMessage(continueText, font, warningTextSize);
-    continueMessage.setPosition(warningWindowXPos + 
-        (warningWindowWidth - continueMessage.getGlobalBounds().width) / 2,
-        mainMessage.getGlobalBounds().top + mainMessage.getGlobalBounds().height + size / 4);
+    Text continueMessage(continueText, gl::font, DR::warningTextSize);
+    continueMessage.setPosition(DR::warningWindowXPos + 
+        (DR::warningWindowWidth - continueMessage.getGlobalBounds().width) / 2,
+        mainMessage.getGlobalBounds().top + mainMessage.getGlobalBounds().height + gl::size / 4);
 
-    Button yesButton(window, Text(Localizer::translate(L"Yes"), font, 
-        0.0225 * Width), yesButtonXPos, yesButtonYPos, 
-        warningButtonWidth, warningButtonHeight, WHITE, BLUE);
-    yesButton.setTextColor(DARK_BLUE);
+    Button yesButton(window, Text(Localizer::translate(L"Yes"), gl::font, 
+        0.0225 * gl::Width), DR::yesButtonXPos, DR::yesButtonYPos, 
+        DR::warningButtonWidth, DR::warningButtonHeight, gl::WHITE, gl::BLUE);
+    yesButton.setTextColor(gl::DARK_BLUE);
     
-    Button noButton(window, Text(Localizer::translate(L"No"), font, 
-        0.0225 * Width), noButtonXPos, noButtonYPos, 
-        warningButtonWidth, warningButtonHeight, WHITE, BLUE);
-    noButton.setTextColor(DARK_BLUE);
+    Button noButton(window, Text(Localizer::translate(L"No"), gl::font, 
+        0.0225 * gl::Width), DR::noButtonXPos, DR::noButtonYPos, 
+        DR::warningButtonWidth, DR::warningButtonHeight, gl::WHITE, gl::BLUE);
+    noButton.setTextColor(gl::DARK_BLUE);
 
     Event event;
 
@@ -81,29 +81,29 @@ void pollEvents(RenderWindow *window)
 
 void Drawing::loadTextures()
 {
-    world_.emplace("wall", RectangleShape(Vector2f(size, size))).first->second.setTexture(
+    world_.emplace("wall", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
         TextureManager::getManager()->getTexture("textures/cell/wall"));
 
-    world_.emplace("floor", RectangleShape(Vector2f(size, size))).first->second.setTexture(
+    world_.emplace("floor", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
         TextureManager::getManager()->getTexture("textures/cell/floor"));
 
-    world_.emplace("cross", RectangleShape(Vector2f(size, size))).first->second.setTexture(
+    world_.emplace("cross", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
         TextureManager::getManager()->getTexture("textures/cell/cross"));
 
-    world_.emplace("coin", RectangleShape(Vector2f(size, size))).first->second.setTexture(
+    world_.emplace("coin", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
         TextureManager::getManager()->getTexture("textures/player/coin"));
-    world_["coin"].setPosition(0.759 * Width, size / 2);
+    world_["coin"].setPosition(0.759 * gl::Width, gl::size / 2);
 }
 
 void Drawing::createButtons()
 {
-    backButton_ = Button(window_, backButtonXPos, size / 2, size, size, 
+    backButton_ = Button(window_, DR::backButtonXPos, gl::size / 2, gl::size, gl::size, 
         TextureManager::getManager()->getTexture("textures/buttons/back"));
 
-    restartButton_ = Button(window_, restartButtonXPos, size / 2, size, size, 
+    restartButton_ = Button(window_, DR::restartButtonXPos, gl::size / 2, gl::size, gl::size, 
         TextureManager::getManager()->getTexture("textures/buttons/restart"));
 
-    levelsButton_ = Button(window_, levelsButtonXPos, size / 2, size, size, 
+    levelsButton_ = Button(window_, DR::levelsButtonXPos, gl::size / 2, gl::size, gl::size, 
         TextureManager::getManager()->getTexture("textures/buttons/levels"));
 }
 
@@ -117,7 +117,7 @@ void Drawing::updateCoinsText()
 {
     coinsText_.setString(std::to_string(coins_));
     coinsText_.setPosition(world_["coin"].getGlobalBounds().left - 
-        coinsText_.getGlobalBounds().width - size / 2, drawingCoinsTextYPos);
+        coinsText_.getGlobalBounds().width - gl::size / 2, DR::drawingCoinsTextYPos);
 }
 
 void Drawing::updateBackground(int level)
@@ -140,16 +140,16 @@ void Drawing::drawMap(size_t height, size_t width,
                 case FIELD::NO_FIELD:
                     break;
                 case FIELD::WALL:
-                    world_["wall"].setPosition(j * size + offset1, i * size + offset2);
+                    world_["wall"].setPosition(j * gl::size + offset1, i * gl::size + offset2);
                     window_->draw(world_["wall"]);
                     break;
                 default:
-                    world_["floor"].setPosition(j * size + offset1, i * size + offset2);
+                    world_["floor"].setPosition(j * gl::size + offset1, i * gl::size + offset2);
                     window_->draw(world_["floor"]);
 
                     if (map[i][j] == FIELD::AIM)
                     {
-                        world_["cross"].setPosition(j * size + offset1, i * size + offset2);
+                        world_["cross"].setPosition(j * gl::size + offset1, i * gl::size + offset2);
                         window_->draw(world_["cross"]);
                     }
                     break;
@@ -160,18 +160,18 @@ void Drawing::drawMap(size_t height, size_t width,
 
 Drawing::Drawing(RenderWindow* window) 
     : window_(window), coins_(0), player_(window),
-    levelText_("", font, levelTextSize),
-    coinsText_("", font, coinsTextSize),
-    background_(Vector2f(Width, Height))
+    levelText_("", gl::font, DR::levelTextSize),
+    coinsText_("", gl::font, DR::coinsTextSize),
+    background_(Vector2f(gl::Width, gl::Height))
 {
     loadTextures();
     createButtons();
 
-    levelText_.setFillColor(DARK_BLUE);
-    levelText_.setPosition(levelTextXPos, levelTextYPos);
+    levelText_.setFillColor(gl::DARK_BLUE);
+    levelText_.setPosition(DR::levelTextXPos, DR::levelTextYPos);
 
-    coinsText_.setFillColor(GOLD);
-    coinsText_.setPosition(drawingCoinsTextXPos, drawingCoinsTextYPos);
+    coinsText_.setFillColor(gl::GOLD);
+    coinsText_.setPosition(DR::drawingCoinsTextXPos, DR::drawingCoinsTextYPos);
 }
 
 Drawing::~Drawing()
@@ -187,8 +187,8 @@ bool Drawing::drawWorld(const int level)
 
     size_t mapHeight = levelsMap[level].size();
     size_t mapWidth = levelsMap[level][0].size();
-    int offset1 = (Width - mapWidth * size) / 2;
-    int offset2 = (Height - mapHeight * size) / 2;
+    int offset1 = (gl::Width - mapWidth * gl::size) / 2;
+    int offset2 = (gl::Height - mapHeight * gl::size) / 2;
 
     int initialCoinsValue = coins_;
 
