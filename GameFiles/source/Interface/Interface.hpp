@@ -100,7 +100,7 @@ private:
     std::vector<Button> levelsButtons_;
 
     // dropdown list for localization
-    DropDownList dropDownList;
+    DropDownList dropDownList_;
 
     // text to display
     Text titleText_;

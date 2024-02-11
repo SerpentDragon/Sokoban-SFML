@@ -162,7 +162,7 @@ void Interface::recreateTexts()
 Interface::Interface(RenderWindow* window)
     : window_(window), currentMode_(MODE::MainMenuMode), 
     currentLevel_(0), passedLevel_(0), coins_(0), 
-    drawing_(window), dropDownList(window_),
+    drawing_(window), dropDownList_(window_),
     levelPassedText_("", gl::font, IN::levelPassedTextSize),
     levelPassedSubstrate_(Vector2f(IN::levelPassedSubstrateWidth, 
         IN::levelPassedSubstrateHeight))    
@@ -196,7 +196,7 @@ void Interface::showMenu()
         continueButton_.drawButton();
         exitButton_.drawButton();
 
-        dropDownList.drawList();
+        dropDownList_.drawList();
 
         if (newGameButton_.isPressed())
         {
@@ -227,7 +227,7 @@ void Interface::showMenu()
             break;
         }
         
-        std::string locale = dropDownList.isPressed();
+        std::string locale = dropDownList_.isPressed();
         if (locale.size())
         {
             Localizer::initLocalizer(locale);
