@@ -1,28 +1,29 @@
 #pragma once 
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <unordered_map>
 #include <string>
-#include "../Managers/TextureManager.hpp"
-#include "../Managers/SoundManager.hpp"
-#include "../Managers/Localizer.hpp"
-#include "../Widgets/Button.hpp"
-#include "../Player/Player.hpp"
-#include "../Player/settings.h"
+#include <memory>
+#include <unordered_map>
+#include <SFML/Audio.hpp>
 #include "../Player/map.h"
+#include <SFML/Graphics.hpp>
+#include "../Player/settings.h"
+#include "../Player/Player.hpp"
+#include "../Widgets/Button.hpp"
+#include "../Managers/Localizer.hpp"
+#include "../Managers/SoundManager.hpp"
+#include "../Managers/TextureManager.hpp"
 
 using namespace sf;
 
-bool showWarning(RenderWindow*, const String&);
+bool showWarning(std::shared_ptr<RenderWindow>, const String&);
 
-void pollEvents(RenderWindow*);
+void pollEvents(std::shared_ptr<RenderWindow>);
 
 class Drawing
 {
 public:
 
-    Drawing(RenderWindow*);
+    Drawing(std::shared_ptr<RenderWindow>);
 
     Drawing(const Drawing&) = delete;
     
@@ -32,7 +33,7 @@ public:
 
     Drawing& operator=(Drawing&&) noexcept = delete;
 
-    ~Drawing();
+    ~Drawing() = default;
 
     bool drawWorld(const int);
 
@@ -57,7 +58,7 @@ private:
 
 private:
 
-    RenderWindow* window_;
+    std::shared_ptr<RenderWindow> window_;
 
     std::unordered_map<std::string, RectangleShape> world_;
 

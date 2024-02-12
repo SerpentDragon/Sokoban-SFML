@@ -1,11 +1,12 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <unordered_map>
 #include <string>
 #include <vector>
-#include "../Managers/TextureManager.hpp"
+#include <unordered_map>
+#include <SFML/Graphics.hpp>
 #include "../Player/settings.h"
+#include "../Managers/TextureManager.hpp"
+
 
 using namespace sf;
 
@@ -13,9 +14,7 @@ class DropDownList
 {
 public:
 
-    DropDownList(RenderWindow*);
-
-    ~DropDownList();
+    DropDownList(std::shared_ptr<RenderWindow>);
 
     void drawList();
 
@@ -37,7 +36,7 @@ private:
 
 private:
 
-    RenderWindow* window_;
+    std::shared_ptr<RenderWindow> window_;
 
     RectangleShape list_;
 
@@ -50,7 +49,7 @@ private:
     {
     public:
 
-        Item(int, int, const int, const Texture*, const std::string&);
+        Item(int, int, const int, std::shared_ptr<Texture>, const std::string&);
 
         bool onItem(int, int) const;
 
@@ -60,11 +59,12 @@ private:
 
     public:
 
-        constexpr static int itemOutlineThickness = 3;
+        static int itemOutlineThickness;
 
     public:
 
         RectangleShape itemRect_;
+        std::shared_ptr<Texture> texture_;
         std::string locale_;
     };
 

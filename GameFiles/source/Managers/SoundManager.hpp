@@ -1,8 +1,8 @@
 #pragma once
 
-#include <SFML/Audio.hpp>
-#include <unordered_map>
 #include <filesystem>
+#include <unordered_map>
+#include <SFML/Audio.hpp>
 
 namespace fs = std::filesystem;
 

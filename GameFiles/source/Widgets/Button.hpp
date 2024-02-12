@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <SFML/Graphics.hpp>
 #include "../Player/settings.h"
 
@@ -11,19 +12,19 @@ public:
 
     Button() = default;
     
-    Button(RenderWindow*, const Text&, int, int, int, int, const Color&, const Color&);
+    Button(std::shared_ptr<RenderWindow>, const Text&, int, int, int, int, const Color&, const Color&);
 
-    Button(RenderWindow*, int, int, int, int, const Texture*);
+    Button(std::shared_ptr<RenderWindow>, int, int, int, int, std::shared_ptr<Texture>);
 
     Button (const Button&);
 
-    Button(Button&&) noexcept;
+    Button(Button&&) noexcept = default;
 
-    Button& operator=(const Button&);
+    Button& operator=(const Button&) = default;
 
-    Button& operator=(Button&&) noexcept;
+    Button& operator=(Button&&) noexcept = default;
 
-    ~Button();
+    ~Button() = default;
 
     void drawButton();
     
@@ -37,13 +38,13 @@ public:
 
 private:
 
-    void swap(const Button&) noexcept;
+    // void swap(const Button&) noexcept;
 
     bool onButton(int, int);
 
 private:
 
-    RenderWindow* window_;
+    std::shared_ptr<RenderWindow> window_;
     RectangleShape button_;
 
     // coordinates and dimensions of the button
@@ -55,5 +56,5 @@ private:
     Color color_; // button color
     Color colorOn_; // button color when the cursore is over it
     Text text_; // button text
-    Texture* texture_; // button texture
+    std::shared_ptr<Texture> texture_; // button texture
 };

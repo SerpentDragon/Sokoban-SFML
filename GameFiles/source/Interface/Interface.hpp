@@ -1,19 +1,20 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <unordered_map>
-#include <filesystem>
-#include <fstream>
-#include <vector>
 #include <string>
-#include "../Managers/TextureManager.hpp"
-#include "../Managers/FileIOManager.hpp"
-#include "../Widgets/DropDownList.hpp"
-#include "../Managers/Localizer.hpp"
-#include "../Widgets/Button.hpp"
+#include <vector>
+#include <memory>
+#include <fstream>
+#include <filesystem>
 #include "Drawing.hpp"
+#include <unordered_map>
+#include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
 #include "../Player/settings.h"
+#include "../Widgets/Button.hpp"
+#include "../Managers/Localizer.hpp"
+#include "../Widgets/DropDownList.hpp"
+#include "../Managers/FileIOManager.hpp"
+#include "../Managers/TextureManager.hpp"
 
 using namespace sf;
 
@@ -23,7 +24,7 @@ class Interface
 {
 public:
 
-    Interface(RenderWindow*);
+    Interface(std::shared_ptr<RenderWindow>);
 
     Interface(const Interface&) = delete;
 
@@ -74,7 +75,7 @@ private:
 private:
 
     // window to render objects
-    RenderWindow* window_;
+    std::shared_ptr<RenderWindow> window_;
     
     //set of used textures
     std::unordered_map<std::string, RectangleShape> img_;

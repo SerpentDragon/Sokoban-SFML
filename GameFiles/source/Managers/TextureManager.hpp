@@ -1,9 +1,9 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <unordered_map>
-#include <filesystem>
 #include <string>
+#include <filesystem>
+#include <unordered_map>
+#include <SFML/Graphics.hpp>
 
 namespace fs = std::filesystem;
 
@@ -15,7 +15,7 @@ public:
 
     const sf::Texture* getTexture(const std::string&) const;
 
-    sf::Texture* loadTextureFromFile(const std::string&);
+    const sf::Texture* loadTextureFromFile(const std::string&);
 
 private:
 

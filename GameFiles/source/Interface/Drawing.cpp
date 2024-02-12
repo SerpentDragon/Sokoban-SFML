@@ -1,6 +1,6 @@
 #include "Drawing.hpp"
 
-bool showWarning(RenderWindow *window, const String& str)
+bool showWarning(std::shared_ptr<RenderWindow> window, const String& str)
 {
     RectangleShape warningWindow(
             Vector2f(DR::warningWindowWidth, DR::warningWindowHeight));
@@ -57,7 +57,7 @@ bool showWarning(RenderWindow *window, const String& str)
     }
 }
 
-void pollEvents(RenderWindow *window)
+void pollEvents(std::shared_ptr<RenderWindow> window)
 {
     Event event;
 
@@ -98,13 +98,13 @@ void Drawing::loadTextures()
 void Drawing::createButtons()
 {
     backButton_ = Button(window_, DR::backButtonXPos, gl::size / 2, gl::size, gl::size, 
-        TextureManager::getManager()->getTexture("textures/buttons/back"));
+        std::make_shared<Texture>(*TextureManager::getManager()->getTexture("textures/buttons/back")));
 
     restartButton_ = Button(window_, DR::restartButtonXPos, gl::size / 2, gl::size, gl::size, 
-        TextureManager::getManager()->getTexture("textures/buttons/restart"));
+        std::make_shared<Texture>(*TextureManager::getManager()->getTexture("textures/buttons/restart")));
 
     levelsButton_ = Button(window_, DR::levelsButtonXPos, gl::size / 2, gl::size, gl::size, 
-        TextureManager::getManager()->getTexture("textures/buttons/levels"));
+        std::make_shared<Texture>(*TextureManager::getManager()->getTexture("textures/buttons/levels")));
 }
 
 void Drawing::updateLevelText(int level)
@@ -158,7 +158,7 @@ void Drawing::drawMap(size_t height, size_t width,
     }
 }
 
-Drawing::Drawing(RenderWindow* window) 
+Drawing::Drawing(std::shared_ptr<RenderWindow> window) 
     : window_(window), coins_(0), player_(window),
     levelText_("", gl::font, DR::levelTextSize),
     coinsText_("", gl::font, DR::coinsTextSize),
@@ -174,10 +174,10 @@ Drawing::Drawing(RenderWindow* window)
     coinsText_.setPosition(DR::drawingCoinsTextXPos, DR::drawingCoinsTextYPos);
 }
 
-Drawing::~Drawing()
-{
-    window_ = nullptr;
-}
+// Drawing::~Drawing()
+// {
+//     window_ = nullptr;
+// }
 
 bool Drawing::drawWorld(const int level)
 {

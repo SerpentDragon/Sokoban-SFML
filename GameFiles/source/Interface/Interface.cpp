@@ -159,27 +159,27 @@ void Interface::recreateTexts()
         levelPassedText_.getGlobalBounds().height) / 3);
 }
 
-Interface::Interface(RenderWindow* window)
+Interface::Interface(std::shared_ptr<RenderWindow> window)
     : window_(window), currentMode_(MODE::MainMenuMode), 
     currentLevel_(0), passedLevel_(0), coins_(0), 
-    drawing_(window), dropDownList_(window_),
+    drawing_(window_), dropDownList_(window_),
     levelPassedText_("", gl::font, IN::levelPassedTextSize),
     levelPassedSubstrate_(Vector2f(IN::levelPassedSubstrateWidth, 
         IN::levelPassedSubstrateHeight))    
 {
-    loadTextures();
-    createMainMenuButtons();
-    createLevelButtons();
-    createFurtherActionButtons();
     initTexts();
+    loadTextures();
+    createLevelButtons();
     initLevelPassedText();
+    createMainMenuButtons();
+    createFurtherActionButtons();
 
     std::tie(coins_, currentLevel_) = file_.readDataFromFile();
 }
 
 Interface::~Interface()
 {
-    window_ = nullptr;
+    // window_ = nullptr;
     file_.writeDataToFile(coins_, currentLevel_);
 }
 

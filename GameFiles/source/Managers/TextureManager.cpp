@@ -16,7 +16,7 @@ const sf::Texture* TextureManager::getTexture(const std::string& name) const
     else return nullptr;
 }
 
-sf::Texture* TextureManager::loadTextureFromFile(const std::string& filename)
+const sf::Texture* TextureManager::loadTextureFromFile(const std::string& filename)
 {
     sf::Texture texture;
     std::string file = prefix_ + filename;

@@ -1,12 +1,12 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
+#include <tuple>
 #include <stack>
 #include <vector>
-#include <tuple>
-#include "../Managers/TextureManager.hpp"
 #include "settings.h"
+#include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
+#include "../Managers/TextureManager.hpp"
 
 using namespace sf;
 
@@ -14,9 +14,9 @@ class Player
 {
 public:
 
-    Player(RenderWindow*, int speed = gl::size / 7);
+    Player(std::shared_ptr<RenderWindow>, int speed = gl::size / 7);
 
-    ~Player();
+    ~Player() = default;
 
     void setLevel(const std::vector<std::vector<int>>&);
 
@@ -36,13 +36,13 @@ private:
 
     size_t checkPosition(const Vector2i&);
     
-    std::pair<int, int>* checkBoxes(int, int);
+    std::shared_ptr<std::pair<int, int>> checkBoxes(int, int);
 
-    std::pair<int, int>* checkBoxes(const Vector2i&);
+    std::shared_ptr<std::pair<int, int>> checkBoxes(const Vector2i&);
 
 private:
 
-    RenderWindow* window_;
+    std::shared_ptr<RenderWindow> window_;
 
     std::map<std::string, RectangleShape> img_; // textures
 
