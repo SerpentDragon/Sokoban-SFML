@@ -1,37 +1,45 @@
 # SOKOBAN
 
-Данное приложения является многоуровневой игрой Sokoban (Сокобан), созданное с помощью графической библиотеки SFML.
+This app is a multilevel game Sokoban created using SFML graphic library
 
-# Комплияция
+# Compilation
 
-Компиляция и сборка проекта осуществляются с помощью CMakeLists.txt, предоставленного в данном репозитории
+You can compile and run the program using CMakeLists.txt from this reposiroty: 
+```
+git clone git@github.com:SerpentDragon/Sokoban-SFML.git
+cd Sokoban-SFML
+mkdir build
+cd build
+cmake ..
+cmake --build .
+./sokoban
+```
 
-# Правила игры
+# Rules
 
-Правила данной игры достаточно просты: персонаж игрока находится в лабиринте, внутри которого расставлены ящики. Игроку необходимо пройти весь лабиринт, расставив ящики на отмеченные места. В этом случае уровень является успешно пройденным. За каждый пройденный уровень игроку начисляются монетки, которые он может потратить на отмену неверно сделанного хода.
+The rules are quite simple. The player is in a maze inside which boxes are placed. Player should got through the maze and place all the boxes in marked positions. In this case, the level is successfuly completed. For each successfully completed level, player earns coins which can be used to pay on cancelling his wrong move.
 
+## Functional
+These keys are used to move the player:
+* W (Up) - to move player up;
+* A (Left) - to move player left;
+* S (Down) - to move player down;
+* D (Right) - to move player right;
 
-## Функционал
-Для перемещения игрока используются клавишы:
-* W (Up) - перемещение игрока вверх;
-* A (Left) - перемещение игрока влево;
-* S (Down) - перемещение игрока вниз;
-* D (Right) - перемещение игрока вправо;
+To exit this application you can press Esc key.
 
-Для выхода из приложения можно нажать клавишу Esc.
-
-## Запуск релиза
-Скачанный релиз можно установить командой
+## Launch of the release
+You can install downloaded release using
 ```
 sudo dpkg -i SOKOBAN-1.0.0-Linux.deb
 ```
-
-Для корректной работы приложения и сохранения настроек запуск приложение осуществляется командой
+command.
+You should run the app using 
 ```
 sudo sokoban
 ```
-Больше информации в ветке "release_branch".
-
-## Демо
+command to ensure correct operation of the app. 
+More info in "release_branch" branch.
+## Demo
 ![Alt text](https://github.com/SerpentDragon/Sokoban-SFML/blob/master/Demo/demo1.png)
 ![Alt text](https://github.com/SerpentDragon/Sokoban-SFML/blob/master/Demo/demo2.png)
