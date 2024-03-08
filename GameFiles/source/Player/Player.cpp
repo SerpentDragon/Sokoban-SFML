@@ -47,11 +47,6 @@ void Player::setLevel(const std::vector<std::vector<int>>& level)
     }
 }
 
-// Player::~Player()
-// {
-//     window_ = nullptr;
-// }
-
 size_t Player::checkPosition(int xPos, int yPos)
 {
     return level_[(yPos - offset2_) / gl::size][(xPos - offset1_) / gl::size];

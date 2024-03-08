@@ -179,7 +179,6 @@ Interface::Interface(std::shared_ptr<RenderWindow> window)
 
 Interface::~Interface()
 {
-    // window_ = nullptr;
     file_.writeDataToFile(coins_, currentLevel_);
 }
 

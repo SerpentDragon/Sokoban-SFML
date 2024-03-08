@@ -1,19 +1,5 @@
 #include "Button.hpp"
 
-// void Button::swap(const Button& other) noexcept
-// {
-//     window_ = other.window_;
-//     button_ = other.button_;
-//     width_ = other.width_;
-//     height_ = other.height_;
-//     xPos_ = other.xPos_;
-//     yPos_ = other.yPos_;
-//     color_ = other.color_;
-//     colorOn_ = other.colorOn_;
-//     text_ = other.text_;
-//     texture_ = other.texture_ ? new Texture(*other.texture_) : nullptr;
-// }
-
 bool Button::onButton(int x, int y)
 {
     return xPos_ <= x && x <= xPos_ + width_ && yPos_ <= y && y <= yPos_ + height_;
@@ -49,48 +35,6 @@ Button::Button(std::shared_ptr<RenderWindow> window, int x, int y,
     button_.setPosition(x, y);
     button_.setTexture(&(*texture_));
 }
-
-// Button::Button(const Button& other)
-// {
-//     swap(other);
-// }
-
-// Button::Button(Button&& other) noexcept
-// {
-//     swap(other);
-
-//     other.window_ = nullptr;
-//     other.width_ = other.height_ = other.xPos_ = other.yPos_ = 0;
-//     other.texture_ = nullptr;
-// }
-
-// Button& Button::operator=(const Button& other)
-// {
-//     if (this != &other)
-//     {
-//         swap(other);
-//     }
-//     return *this;
-// }
-
-// Button& Button::operator=(Button&& other) noexcept
-// {
-//     if (this != &other)
-//     {
-//         swap(other);
-
-//         other.window_ = nullptr;
-//         other.width_ = other.height_ = other.xPos_ = other.yPos_ = 0;
-//         other.texture_ = nullptr;
-//     }
-//     return *this;
-// }
-
-// Button::~Button()
-// {
-//     window_ = nullptr;
-//     if (texture_) delete texture_;
-// }
 
 void Button::drawButton()
 {

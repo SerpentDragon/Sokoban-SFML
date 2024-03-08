@@ -174,11 +174,6 @@ Drawing::Drawing(std::shared_ptr<RenderWindow> window)
     coinsText_.setPosition(DR::drawingCoinsTextXPos, DR::drawingCoinsTextYPos);
 }
 
-// Drawing::~Drawing()
-// {
-//     window_ = nullptr;
-// }
-
 bool Drawing::drawWorld(const int level)
 {
     updateBackground(level);
