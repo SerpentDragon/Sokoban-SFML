@@ -1,10 +1,10 @@
 #include "TextureManager.hpp"
 
-TextureManager* TextureManager::manager_ = nullptr;
+std::shared_ptr<TextureManager> TextureManager::manager_ = nullptr;
 
-TextureManager* TextureManager::getManager()
+std::shared_ptr<TextureManager> TextureManager::getManager()
 {
-    if (manager_ == nullptr) manager_ = new TextureManager();
+    if (manager_ == nullptr) manager_ = std::shared_ptr<TextureManager>(new TextureManager());
         
     return manager_;
 }

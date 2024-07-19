@@ -1,10 +1,10 @@
 #include "SoundManager.hpp"
 
-SoundManager* SoundManager::manager_ = nullptr;
+std::shared_ptr<SoundManager> SoundManager::manager_ = nullptr;
 
-SoundManager* SoundManager::getManager()
+std::shared_ptr<SoundManager> SoundManager::getManager()
 {
-    if (manager_ == nullptr) manager_ = new SoundManager();
+    if (manager_ == nullptr) manager_ = std::shared_ptr<SoundManager>(new SoundManager());
 
     return manager_;
 }

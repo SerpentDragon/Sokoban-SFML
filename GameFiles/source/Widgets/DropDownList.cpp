@@ -81,13 +81,13 @@ void DropDownList::createItems()
     items_ = {
         { 0, 0, itemSize, 
             std::make_shared<Texture>(*TextureManager::getManager()->
-                getTexture("textures/languages/ru_RU")),
-            "ru_RU" }, 
-            
-        { 0, 0, itemSize, 
-            std::make_shared<Texture>(*TextureManager::getManager()->
                 getTexture("textures/languages/en_UK")),
             "en_UK" },
+
+        { 0, 0, itemSize, 
+            std::make_shared<Texture>(*TextureManager::getManager()->
+                getTexture("textures/languages/ru_RU")),
+            "ru_RU" }, 
 
         { 0, 0, itemSize, 
             std::make_shared<Texture>(*TextureManager::getManager()->
