@@ -6,13 +6,13 @@ Player::Player(std::shared_ptr<RenderWindow> window, int speed)
     this->speed_ = speed > gl::size ? gl::size : speed;
 
     img_.emplace("player", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
-        TextureManager::getManager()->getTexture("textures/player/player"));
+        TextureManager::getManager().getTexture("textures/player/player"));
 
     img_.emplace("box", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
-        TextureManager::getManager()->getTexture("textures/player/box"));
+        TextureManager::getManager().getTexture("textures/player/box"));
 
     img_.emplace("gold_box", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
-        TextureManager::getManager()->getTexture("textures/player/gold_box"));
+        TextureManager::getManager().getTexture("textures/player/gold_box"));
 }
 
 void Player::setLevel(const std::vector<std::vector<int>>& level)
@@ -57,24 +57,24 @@ size_t Player::checkPosition(const Vector2i& vec)
     return level_[(vec.y - offset2_) / gl::size][(vec.x - offset1_) / gl::size];
 }
 
-std::shared_ptr<std::pair<int, int>> Player::checkBoxes(int first, int second)
+std::pair<int, int>* Player::checkBoxes(int first, int second)
 {
-    for(const auto& box : boxes_)
+    for(auto& box : boxes_)
     {
         if (box.first == first && (box.second < second && second < box.second + gl::size) 
             || box.second == second && (box.first < first && first < box.first + gl::size))
-            return std::make_shared<std::pair<int, int>>(box);
+            return &box;
     }
     return nullptr;
 }
 
-std::shared_ptr<std::pair<int, int>> Player::checkBoxes(const Vector2i& vec)
+std::pair<int, int>* Player::checkBoxes(const Vector2i& vec)
 {
-    for(const auto& box : boxes_)
+    for(auto& box : boxes_)
     {
         if (box.first == vec.x && (box.second < vec.y && vec.y < box.second + gl::size) 
             || box.second == vec.y && (box.first < vec.x && vec.x < box.first + gl::size))
-            return std::make_shared<std::pair<int, int>>(box);
+            return &box;
     }
     return nullptr;
 }
@@ -83,7 +83,7 @@ void Player::movement(int pressed_key)
 {    
     int dist, destination = 1, *ptr, *coord;
     Vector2i nextPos, behindNextPos;
-    std::shared_ptr<std::pair<int, int>> it;
+    std::pair<int, int>* it;
 
     // player position before and after move
     int prevX = (x_ - offset1_) / gl::size, prevY = (y_ - offset2_) / gl::size;

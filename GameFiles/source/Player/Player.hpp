@@ -36,9 +36,9 @@ private:
 
     size_t checkPosition(const Vector2i&);
     
-    std::shared_ptr<std::pair<int, int>> checkBoxes(int, int);
+    std::pair<int, int>* checkBoxes(int, int);
 
-    std::shared_ptr<std::pair<int, int>> checkBoxes(const Vector2i&);
+    std::pair<int, int>* checkBoxes(const Vector2i&);
 
 private:
 
