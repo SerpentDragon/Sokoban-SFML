@@ -16,7 +16,7 @@ public:
 
     Button(std::shared_ptr<RenderWindow>, int, int, int, int, std::shared_ptr<Texture>);
 
-    Button (const Button&);
+    Button(const Button&) = default;
 
     Button(Button&&) noexcept = default;
 
@@ -37,8 +37,6 @@ public:
     void setButtonColor(const Color&);
 
 private:
-
-    // void swap(const Button&) noexcept;
 
     bool onButton(int, int);
 

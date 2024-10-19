@@ -1,12 +1,9 @@
 #include "TextureManager.hpp"
 
-std::shared_ptr<TextureManager> TextureManager::manager_ = nullptr;
-
-std::shared_ptr<TextureManager> TextureManager::getManager()
+TextureManager& TextureManager::getManager()
 {
-    if (manager_ == nullptr) manager_ = std::shared_ptr<TextureManager>(new TextureManager());
-        
-    return manager_;
+    static TextureManager manager;
+    return manager;
 }
 
 const sf::Texture* TextureManager::getTexture(const std::string& name) const

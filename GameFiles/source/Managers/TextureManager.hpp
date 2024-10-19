@@ -12,7 +12,7 @@ class TextureManager
 {
 public:
 
-    static std::shared_ptr<TextureManager> getManager();
+    static TextureManager& getManager();
 
     const sf::Texture* getTexture(const std::string&) const;
 
@@ -30,11 +30,11 @@ private:
 
     TextureManager& operator=(TextureManager&&) noexcept = delete;
 
+    ~TextureManager() = default;
+
     void loadAllTexturesFromDirectory(const std::string&);
 
 private:
-
-    static std::shared_ptr<TextureManager> manager_;
 
     std::string prefix_;
 

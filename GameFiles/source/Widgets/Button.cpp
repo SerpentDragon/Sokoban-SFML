@@ -22,7 +22,7 @@ Button::Button(std::shared_ptr<RenderWindow> window, const Text& text,
 }
 
 Button::Button(std::shared_ptr<RenderWindow> window, int x, int y, 
-    int width, int height, const std::shared_ptr<Texture> texture)
+    int width, int height, std::shared_ptr<Texture> texture)
     : window_(window), xPos_(x), yPos_(y), width_(width),
     height_(height)
 {
@@ -33,7 +33,7 @@ Button::Button(std::shared_ptr<RenderWindow> window, int x, int y,
 
     button_ = RectangleShape(Vector2f(width_, height_));
     button_.setPosition(x, y);
-    button_.setTexture(&(*texture_));
+    button_.setTexture(this->texture_.get());
 }
 
 void Button::drawButton()

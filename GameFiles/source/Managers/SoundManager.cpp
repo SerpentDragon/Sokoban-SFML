@@ -1,12 +1,9 @@
 #include "SoundManager.hpp"
 
-std::shared_ptr<SoundManager> SoundManager::manager_ = nullptr;
-
-std::shared_ptr<SoundManager> SoundManager::getManager()
+SoundManager& SoundManager::getManager()
 {
-    if (manager_ == nullptr) manager_ = std::shared_ptr<SoundManager>(new SoundManager());
-
-    return manager_;
+    static SoundManager manager;
+    return manager;
 }
 
 void SoundManager::playSound(const std::string& name)

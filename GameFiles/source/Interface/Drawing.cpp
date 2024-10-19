@@ -82,29 +82,29 @@ void pollEvents(std::shared_ptr<RenderWindow> window)
 void Drawing::loadTextures()
 {
     world_.emplace("wall", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
-        TextureManager::getManager()->getTexture("textures/cell/wall"));
+        TextureManager::getManager().getTexture("textures/cell/wall"));
 
     world_.emplace("floor", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
-        TextureManager::getManager()->getTexture("textures/cell/floor"));
+        TextureManager::getManager().getTexture("textures/cell/floor"));
 
     world_.emplace("cross", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
-        TextureManager::getManager()->getTexture("textures/cell/cross"));
+        TextureManager::getManager().getTexture("textures/cell/cross"));
 
     world_.emplace("coin", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
-        TextureManager::getManager()->getTexture("textures/player/coin"));
+        TextureManager::getManager().getTexture("textures/player/coin"));
     world_["coin"].setPosition(0.759 * gl::Width, gl::size / 2);
 }
 
 void Drawing::createButtons()
 {
     backButton_ = Button(window_, DR::backButtonXPos, gl::size / 2, gl::size, gl::size, 
-        std::make_shared<Texture>(*TextureManager::getManager()->getTexture("textures/buttons/back")));
+        std::make_shared<Texture>(*TextureManager::getManager().getTexture("textures/buttons/back")));
 
     restartButton_ = Button(window_, DR::restartButtonXPos, gl::size / 2, gl::size, gl::size, 
-        std::make_shared<Texture>(*TextureManager::getManager()->getTexture("textures/buttons/restart")));
+        std::make_shared<Texture>(*TextureManager::getManager().getTexture("textures/buttons/restart")));
 
     levelsButton_ = Button(window_, DR::levelsButtonXPos, gl::size / 2, gl::size, gl::size, 
-        std::make_shared<Texture>(*TextureManager::getManager()->getTexture("textures/buttons/levels")));
+        std::make_shared<Texture>(*TextureManager::getManager().getTexture("textures/buttons/levels")));
 }
 
 void Drawing::updateLevelText(int level)
@@ -122,7 +122,7 @@ void Drawing::updateCoinsText()
 
 void Drawing::updateBackground(int level)
 {
-    background_.setTexture(TextureManager::getManager()->
+    background_.setTexture(TextureManager::getManager().
         loadTextureFromFile("textures/levels/" + 
         std::to_string(level) + "-1.png"));
 }
@@ -274,7 +274,7 @@ bool Drawing::drawWorld(const int level)
         window_->display();
 
         if (res.second)
-            SoundManager::getManager()->playSound("box_placed");
+            SoundManager::getManager().playSound("box_placed");
 
         if (backButton_.isPressed()) 
         {
@@ -284,7 +284,7 @@ bool Drawing::drawWorld(const int level)
                 {
                     coins_ -= price_;
                     updateCoinsText();
-                    SoundManager::getManager()->playSound("waste_money");
+                    SoundManager::getManager().playSound("waste_money");
                 }
             }
         }

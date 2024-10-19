@@ -80,22 +80,22 @@ void DropDownList::createItems()
     
     items_ = {
         { 0, 0, itemSize, 
-            std::make_shared<Texture>(*TextureManager::getManager()->
+            std::make_shared<Texture>(*TextureManager::getManager().
                 getTexture("textures/languages/en_UK")),
             "en_UK" },
 
         { 0, 0, itemSize, 
-            std::make_shared<Texture>(*TextureManager::getManager()->
+            std::make_shared<Texture>(*TextureManager::getManager().
                 getTexture("textures/languages/ru_RU")),
-            "ru_RU" }, 
+            "ru_RU" },
 
         { 0, 0, itemSize, 
-            std::make_shared<Texture>(*TextureManager::getManager()->
+            std::make_shared<Texture>(*TextureManager::getManager().
                 getTexture("textures/languages/de_DE")),
             "de_DE" },
 
         { 0, 0, itemSize, 
-            std::make_shared<Texture>(*TextureManager::getManager()->
+            std::make_shared<Texture>(*TextureManager::getManager().
                 getTexture("textures/languages/fr_FR")),
             "fr_FR" }
     };
@@ -114,12 +114,10 @@ int DropDownList::Item::itemOutlineThickness = gl::Width / 400;
 
 DropDownList::Item::Item(int x, int y, const int size, 
     std::shared_ptr<Texture> texture, const std::string& locale)
-    : itemRect_(Vector2f(size, size)), locale_(locale)
-{
-    texture_ = texture;
-    
+    : itemRect_(Vector2f(size, size)), locale_(locale), texture_(texture)
+{   
     itemRect_.setPosition(x, y);
-    itemRect_.setTexture(&(*texture));
+    itemRect_.setTexture(texture_.get());
     itemRect_.setOutlineThickness(Item::itemOutlineThickness);
 }
 
@@ -142,6 +140,6 @@ void DropDownList::Item::swap(Item& other)
     std::swap(this->locale_, other.locale_);
     std::swap(this->texture_, other.texture_);
 
-    this->itemRect_.setTexture(&(*this->texture_));
-    other.itemRect_.setTexture(&(*other.texture_));
+    this->itemRect_.setTexture(this->texture_.get());
+    other.itemRect_.setTexture(other.texture_.get());
 }

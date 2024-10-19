@@ -3,17 +3,17 @@
 void Interface::loadTextures()
 {
     img_.emplace("background", RectangleShape(Vector2f(gl::Width, gl::Height))).first->second.setTexture(
-        TextureManager::getManager()->getTexture("textures/interface/background"));
+        TextureManager::getManager().getTexture("textures/interface/background"));
 
     img_.emplace("logo", RectangleShape(Vector2f(IN::logoWidth, IN::logoHeight))).first->second.setTexture(
-        TextureManager::getManager()->getTexture("textures/interface/logo"));
+        TextureManager::getManager().getTexture("textures/interface/logo"));
     img_["logo"].setPosition((gl::Width - img_["logo"].getGlobalBounds().width) / 2, IN::logoYPos);
 
     img_.emplace("levels_back", RectangleShape(Vector2f(gl::Width, gl::Height))).first->second.setTexture(
-        TextureManager::getManager()->getTexture("textures/interface/levels_back"));  
+        TextureManager::getManager().getTexture("textures/interface/levels_back"));  
 
     img_.emplace("coin", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
-        TextureManager::getManager()->getTexture("textures/player/coin")); 
+        TextureManager::getManager().getTexture("textures/player/coin")); 
 }
 
 void Interface::createMainMenuButtons()
@@ -280,13 +280,13 @@ void Interface::chooseFurtherAction()
 {
     sleep(milliseconds(250));
 
-    SoundManager::getManager()->playSound("level_complete");
+    SoundManager::getManager().playSound("level_complete");
     
     updateCoinsText();
 
     if (passedLevel_ > currentLevel_) currentLevel_ = passedLevel_;
 
-    Sprite background(*TextureManager::getManager()->loadTextureFromFile(
+    Sprite background(*TextureManager::getManager().loadTextureFromFile(
         "textures/levels/" + std::to_string(passedLevel_) + "-2.png"), 
         { 0, 0, gl::Width, gl::Height });
 
