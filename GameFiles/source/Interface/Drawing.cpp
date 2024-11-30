@@ -105,12 +105,21 @@ void Drawing::createButtons()
 
     levelsButton_ = Button(window_, DR::levelsButtonXPos, gl::size / 2, gl::size, gl::size, 
         std::make_shared<Texture>(*TextureManager::getManager().getTexture("textures/buttons/levels")));
+
+    saveButton_ = Button(window_, DR::saveButtonXPos, gl::size / 2, gl::size, gl::size, 
+        std::make_shared<Texture>(*TextureManager::getManager().getTexture("textures/buttons/save")));
+
+    showCommitTreeButton_ = Button(window_, DR::showCommitTreeButtonXPos, gl::size / 2, gl::size, gl::size, 
+        std::make_shared<Texture>(*TextureManager::getManager().getTexture("textures/buttons/fork")));
 }
 
 void Drawing::updateLevelText(int level)
 {
     levelText_.setString(Localizer::translate(L"Level ") 
         + std::to_string(level));
+
+    const int levelTextXPos = (gl::Width - levelText_.getGlobalBounds().width) / 2;
+    levelText_.setPosition(levelTextXPos, DR::levelTextYPos);
 }
 
 void Drawing::updateCoinsText()
@@ -168,7 +177,6 @@ Drawing::Drawing(std::shared_ptr<RenderWindow> window)
     createButtons();
 
     levelText_.setFillColor(gl::DARK_BLUE);
-    levelText_.setPosition(DR::levelTextXPos, DR::levelTextYPos);
 
     coinsText_.setFillColor(gl::GOLD);
     coinsText_.setPosition(DR::drawingCoinsTextXPos, DR::drawingCoinsTextYPos);
@@ -206,11 +214,14 @@ bool Drawing::drawWorld()
             switch(event.type)
             {
                 case Event::Closed:
+                {
                     if (showWarning(window_, 
                         Localizer::translate(L"Are you sure you want to exit?")))
                             window_->close();
                     break;
+                }
                 case Event::KeyPressed:
+                {
                     count_pressed++;
                     switch(event.key.code)
                     {
@@ -238,7 +249,9 @@ bool Drawing::drawWorld()
                     }
                     player_.movement(event.key.code);
                     break;
+                }   
                 case Event::KeyReleased:
+                {
                     switch(event.key.code)
                     {
                         case Keyboard::W: case Keyboard::Up: 
@@ -257,6 +270,7 @@ bool Drawing::drawWorld()
                     player_.alignPlayer(event.key.code, count_pressed);
                     count_pressed = 0;
                     break;
+                } 
             }
         }
 
@@ -272,6 +286,9 @@ bool Drawing::drawWorld()
         backButton_.drawButton();
         restartButton_.drawButton();
         levelsButton_.drawButton();
+
+        saveButton_.drawButton();
+        showCommitTreeButton_.drawButton();
 
         std::pair<int, int> res = player_.drawPlayer();
 
@@ -300,12 +317,19 @@ bool Drawing::drawWorld()
             updateCoinsText();
             player_.restartLevel();
         }
-
         else if (levelsButton_.isPressed()) 
         {
             if (showWarning(window_, 
                 Localizer::translate(L"Your results will be lost!"))) 
                     break;
+        }
+        else if (saveButton_.isPressed())
+        {
+
+        }
+        else if (showCommitTreeButton_.isPressed())
+        {
+            
         }
 
         window_->display();

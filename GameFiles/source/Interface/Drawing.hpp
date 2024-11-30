@@ -70,6 +70,10 @@ private:
     Button restartButton_;
     Button levelsButton_;
 
+    // version control system
+    Button saveButton_;
+    Button showCommitTreeButton_;
+
     unsigned int level_;
 
     Text levelText_;

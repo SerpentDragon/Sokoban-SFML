@@ -46,10 +46,11 @@ namespace DR
     const int coinsTextSize = 0.039 * gl::Width;
 
     const int backButtonXPos = gl::size * 19.7;
-    const int restartButtonXPos = gl::size * 21;
-    const int levelsButtonXPos = gl::size * 22.3;
+    const int restartButtonXPos = backButtonXPos + gl::size * 1.3;
+    const int levelsButtonXPos = restartButtonXPos + gl::size * 1.3;
+    const int saveButtonXPos = gl::size;
+    const int showCommitTreeButtonXPos = saveButtonXPos + gl::size * 1.3;
 
-    const int levelTextXPos = gl::size;
     const int levelTextYPos = gl::size / 2;
 
     const int drawingCoinsTextXPos = gl::size * 16.5;

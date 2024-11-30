@@ -53,8 +53,11 @@ namespace DR
     extern const int restartButtonXPos;
     extern const int levelsButtonXPos;
 
+    // version control system buttons x-positions
+    extern const int saveButtonXPos;
+    extern const int showCommitTreeButtonXPos;
+
     // level text positions
-    extern const int levelTextXPos;
     extern const int levelTextYPos;
 
     // coins text positions
