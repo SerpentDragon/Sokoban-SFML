@@ -5,6 +5,7 @@
 #include <stack>
 #include <vector>
 #include "settings.h"
+#include <string_view>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include "../Managers/TextureManager.hpp"
@@ -45,7 +46,7 @@ private:
 
     std::shared_ptr<RenderWindow> window_;
 
-    std::map<std::string, RectangleShape> img_; // textures
+    std::map<std::string_view, RectangleShape> img_; // textures
 
     std::vector<std::vector<int>> level_; // info about level structure 
     std::vector<std::pair<int, int>> boxes_; // info about boxes locations

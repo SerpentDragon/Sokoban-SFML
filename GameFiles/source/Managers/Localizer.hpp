@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string_view>
 #include <boost/locale.hpp>
 
 namespace loc = boost::locale;
@@ -10,7 +11,7 @@ public:
 
     static void initLocalizer(const std::string&);
 
-    static std::wstring translate(const std::wstring&);
+    static std::wstring translate(std::wstring_view);
 
 private:
 

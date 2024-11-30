@@ -80,7 +80,7 @@ private:
     std::shared_ptr<RenderWindow> window_;
     
     //set of used textures
-    std::unordered_map<std::string, RectangleShape> img_;
+    std::unordered_map<std::string_view, RectangleShape> img_;
 
     // info about current state of the interface
     unsigned int currentMode_;

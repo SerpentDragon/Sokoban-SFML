@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <string_view>
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
 #include "../Player/settings.h"
@@ -18,7 +19,7 @@ public:
 
     void drawList();
 
-    std::string isPressed();
+    std::string_view isPressed();
 
 private:
 
@@ -49,7 +50,7 @@ private:
     {
     public:
 
-        Item(int, int, const int, std::shared_ptr<Texture>, const std::string&);
+        Item(int, int, const int, std::shared_ptr<Texture>, std::string_view);
 
         bool onItem(int, int) const;
 
@@ -65,7 +66,7 @@ private:
 
         RectangleShape itemRect_;
         std::shared_ptr<Texture> texture_;
-        std::string locale_;
+        std::string_view locale_;
     };
 
     std::vector<Item> items_;

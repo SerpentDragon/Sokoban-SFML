@@ -8,7 +8,7 @@ bool showWarning(std::shared_ptr<RenderWindow> window, const String& str)
     warningWindow.setPosition(DR::warningWindowXPos, 
         DR::warningWindowYPos);
 
-    String continueText = Localizer::translate(L"Continue?");
+    String continueText = Localizer::translate(STRING::Continue);
 
     Text mainMessage(str, gl::font, DR::warningTextSize);
     mainMessage.setPosition(DR::warningWindowXPos + 
@@ -20,12 +20,12 @@ bool showWarning(std::shared_ptr<RenderWindow> window, const String& str)
         (DR::warningWindowWidth - continueMessage.getGlobalBounds().width) / 2,
         mainMessage.getGlobalBounds().top + mainMessage.getGlobalBounds().height + gl::size / 4);
 
-    Button yesButton(window, Text(Localizer::translate(L"Yes"), gl::font, 
+    Button yesButton(window, Text(Localizer::translate(STRING::Yes), gl::font, 
         0.0225 * gl::Width), DR::yesButtonXPos, DR::yesButtonYPos, 
         DR::warningButtonWidth, DR::warningButtonHeight, gl::WHITE, gl::BLUE);
     yesButton.setTextColor(gl::DARK_BLUE);
     
-    Button noButton(window, Text(Localizer::translate(L"No"), gl::font, 
+    Button noButton(window, Text(Localizer::translate(STRING::No), gl::font, 
         0.0225 * gl::Width), DR::noButtonXPos, DR::noButtonYPos, 
         DR::warningButtonWidth, DR::warningButtonHeight, gl::WHITE, gl::BLUE);
     noButton.setTextColor(gl::DARK_BLUE);
@@ -67,12 +67,12 @@ void pollEvents(std::shared_ptr<RenderWindow> window)
         {
             case Event::Closed:
                     if (showWarning(window, 
-                        Localizer::translate(L"Are you sure you want to exit?"))) window->close();
+                        Localizer::translate(STRING::SureToExit))) window->close();
                 break;
             case Event::KeyPressed:
                 if (event.key.code == Keyboard::Escape)
                     if (showWarning(window, 
-                        Localizer::translate(L"Are you sure you want to exit?"))) window->close();
+                        Localizer::translate(STRING::SureToExit))) window->close();
                 return;
         }
         window->clear();
@@ -115,7 +115,7 @@ void Drawing::createButtons()
 
 void Drawing::updateLevelText(int level)
 {
-    levelText_.setString(Localizer::translate(L"Level ") 
+    levelText_.setString(Localizer::translate(STRING::Level) 
         + std::to_string(level));
 
     const int levelTextXPos = (gl::Width - levelText_.getGlobalBounds().width) / 2;
@@ -216,7 +216,7 @@ bool Drawing::drawWorld()
                 case Event::Closed:
                 {
                     if (showWarning(window_, 
-                        Localizer::translate(L"Are you sure you want to exit?")))
+                        Localizer::translate(STRING::SureToExit)))
                             window_->close();
                     break;
                 }
@@ -227,7 +227,7 @@ bool Drawing::drawWorld()
                     {
                         case Keyboard::Escape:
                             if (showWarning(window_, 
-                                Localizer::translate(L"Are you sure you want to exit?")))
+                                Localizer::translate(STRING::SureToExit)))
                                     window_->close();
                             break;
                         case Keyboard::W: case Keyboard::Up:
@@ -320,7 +320,7 @@ bool Drawing::drawWorld()
         else if (levelsButton_.isPressed()) 
         {
             if (showWarning(window_, 
-                Localizer::translate(L"Your results will be lost!"))) 
+                Localizer::translate(STRING::LostResults))) 
                     break;
         }
         else if (saveButton_.isPressed())

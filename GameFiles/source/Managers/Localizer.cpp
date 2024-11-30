@@ -14,7 +14,7 @@ void Localizer::initLocalizer(const std::string& domain)
     locale_ = gen_(domain + ".UTF-8");
 }
 
-std::wstring Localizer::translate(const std::wstring& str)
+std::wstring Localizer::translate(std::wstring_view str)
 {
-    return loc::translate(str).str(locale_);
+    return loc::translate(std::wstring(str)).str(locale_);
 }

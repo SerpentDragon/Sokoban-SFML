@@ -18,19 +18,19 @@ void Interface::loadTextures()
 
 void Interface::createMainMenuButtons()
 {
-    newGameButton_ = Button(window_, Text(Localizer::translate(L"NEW GAME"), gl::font, 
+    newGameButton_ = Button(window_, Text(Localizer::translate(STRING::NewGame), gl::font, 
         IN::mainMenuButtonsTextSize), IN::mainMenuButtonsXPos, IN::newGameButtonYPos, 
         IN::mainMenuButtonsWidth, IN::mainMenuButtonsHeight, gl::GREEN, gl::BLUE);
 
-    continueButton_ = Button(window_, Text(Localizer::translate(L"CONTINUE"), gl::font, 
+    continueButton_ = Button(window_, Text(Localizer::translate(STRING::ContinueGame), gl::font, 
         IN::mainMenuButtonsTextSize), IN::mainMenuButtonsXPos, IN::continueButtonYPos, 
         IN::mainMenuButtonsWidth, IN::mainMenuButtonsHeight, gl::GREEN, gl::BLUE);
 
-    exitButton_ = Button(window_, Text(Localizer::translate(L"EXIT"), gl::font, 
+    exitButton_ = Button(window_, Text(Localizer::translate(STRING::ExitGame), gl::font, 
         IN::mainMenuButtonsTextSize), IN::mainMenuButtonsXPos, IN::exitButtonYPos, 
         IN::mainMenuButtonsWidth, IN::mainMenuButtonsHeight, gl::GREEN, gl::BLUE);
 
-    menuButton_ = Button(window_, Text(Localizer::translate(L"MENU"), gl::font, 
+    menuButton_ = Button(window_, Text(Localizer::translate(STRING::Menu), gl::font, 
         IN::menuButtonTextSize), IN::menuButtonXPos, IN::menuButtonYPos, 
         IN::menuButtonWidth, IN::menuButtonHeight, gl::GREEN, gl::BLUE);
 }
@@ -55,20 +55,20 @@ void Interface::createLevelButtons()
 
 void Interface::createFurtherActionButtons()
 {
-    levelsButton_ = Button(window_, Text(Localizer::translate(L"levels"), gl::font, 
+    levelsButton_ = Button(window_, Text(Localizer::translate(STRING::Levels), gl::font, 
         IN::furtherActionButtonsTextSize), IN::levelButtonXPos, IN::furtherActionButtonsYPos, 
         IN::furtherActionButtonWidth, IN::furtherActionButtonHeight, gl::GREEN, gl::BLUE);
-    repeatButton_ = Button(window_, Text(Localizer::translate(L"again"), gl::font, 
+    repeatButton_ = Button(window_, Text(Localizer::translate(STRING::Again), gl::font, 
         IN::furtherActionButtonsTextSize), IN::repeatButtonXPos, IN::furtherActionButtonsYPos, 
         IN::furtherActionButtonWidth, IN::furtherActionButtonHeight, gl::GREEN, gl::BLUE);
-    nextButton_ = Button(window_, Text(Localizer::translate(L"next"), gl::font, 
+    nextButton_ = Button(window_, Text(Localizer::translate(STRING::Next), gl::font, 
         IN::furtherActionButtonsTextSize), IN::nextButtonXPos, IN::furtherActionButtonsYPos, 
         IN::furtherActionButtonWidth, IN::furtherActionButtonHeight, gl::GREEN, gl::BLUE);
 }
 
 void Interface::initTexts()
 {
-    titleText_ = Text(Localizer::translate(L"Levels"), gl::font, IN::titleTextSize);
+    titleText_ = Text(Localizer::translate(STRING::LevelsLabel), gl::font, IN::titleTextSize);
     titleText_.setFillColor(gl::DARK_BLUE);
     titleText_.setPosition((gl::Width - titleText_.getGlobalBounds().width) / 2, 
         IN::titleTextYPos);
@@ -85,7 +85,7 @@ void Interface::initLevelPassedText()
 
     auto levelPassedBounds = levelPassedSubstrate_.getGlobalBounds();
 
-    levelPassedText_.setString(Localizer::translate(L"Level is passed!"));
+    levelPassedText_.setString(Localizer::translate(STRING::LevelPassed));
     levelPassedText_.setPosition(levelPassedBounds.left + 
         (levelPassedBounds.width - levelPassedText_.getGlobalBounds().width) / 2,
         levelPassedBounds.top + (levelPassedBounds.height - 
@@ -141,16 +141,16 @@ void Interface::updateCoinsText()
 
 void Interface::recreateTexts()
 {
-    newGameButton_.setText(Localizer::translate(L"NEW GAME"));
-    continueButton_.setText(Localizer::translate(L"CONTINUE"));
-    exitButton_.setText(Localizer::translate(L"EXIT"));
-    menuButton_.setText(Localizer::translate(L"MENU"));
-    levelsButton_.setText(Localizer::translate(L"levels"));
-    repeatButton_.setText(Localizer::translate(L"again"));
-    nextButton_.setText(Localizer::translate(L"next"));
+    newGameButton_.setText(Localizer::translate(STRING::NewGame));
+    continueButton_.setText(Localizer::translate(STRING::ContinueGame));
+    exitButton_.setText(Localizer::translate(STRING::ExitGame));
+    menuButton_.setText(Localizer::translate(STRING::Menu));
+    levelsButton_.setText(Localizer::translate(STRING::Levels));
+    repeatButton_.setText(Localizer::translate(STRING::Again));
+    nextButton_.setText(Localizer::translate(STRING::Next));
 
-    titleText_.setString(Localizer::translate(L"Levels"));
-    levelPassedText_.setString(Localizer::translate(L"Level is passed!"));
+    titleText_.setString(Localizer::translate(STRING::LevelsLabel));
+    levelPassedText_.setString(Localizer::translate(STRING::LevelPassed));
 
     auto levelPassedBounds = levelPassedSubstrate_.getGlobalBounds();
     levelPassedText_.setPosition(levelPassedBounds.left + 
@@ -204,7 +204,7 @@ void Interface::showMenu()
             if (currentLevel_)
             {
                 if (showWarning(window_, 
-                    Localizer::translate(L"Your results will be lost!")))
+                    Localizer::translate(STRING::LostResults)))
                 {
                     currentLevel_ = 0;
                     currentMode_ = MODE::ChooseLevelMode;
@@ -228,10 +228,10 @@ void Interface::showMenu()
             break;
         }
         
-        std::string locale = dropDownList_.isPressed();
+        std::string_view locale = dropDownList_.isPressed();
         if (locale.size())
         {
-            Localizer::initLocalizer(locale);
+            Localizer::initLocalizer(locale.data());
             recreateTexts();
         }
 
@@ -362,7 +362,7 @@ void Interface::chooseFurtherAction()
 void Interface::exitGame()
 {
     if (!showWarning(window_, 
-        Localizer::translate(L"Are you sure you want to exit?"))) 
+        Localizer::translate(STRING::SureToExit))) 
             currentMode_ = MainMenuMode;
     else window_->close();
 }

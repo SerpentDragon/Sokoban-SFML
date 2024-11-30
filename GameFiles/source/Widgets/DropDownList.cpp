@@ -35,7 +35,7 @@ void DropDownList::drawList()
         window_->draw(items_[0].itemRect_);
 }
 
-std::string DropDownList::isPressed()
+std::string_view DropDownList::isPressed()
 {
     int x = Mouse::getPosition(*window_).x;
     int y = Mouse::getPosition(*window_).y;
@@ -57,7 +57,7 @@ std::string DropDownList::isPressed()
             {
                 if (items_[i].onItem(x, y))
                 {
-                    std::string locale = items_[i].locale_;
+                    std::string_view locale = items_[i].locale_;
                     items_[i].swap(items_[0]);
                     return locale;
                 }
@@ -113,7 +113,7 @@ void DropDownList::createItems()
 int DropDownList::Item::itemOutlineThickness = gl::Width / 400;
 
 DropDownList::Item::Item(int x, int y, const int size, 
-    std::shared_ptr<Texture> texture, const std::string& locale)
+    std::shared_ptr<Texture> texture, std::string_view locale)
     : itemRect_(Vector2f(size, size)), locale_(locale), texture_(texture)
 {   
     itemRect_.setPosition(x, y);

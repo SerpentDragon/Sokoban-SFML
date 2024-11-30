@@ -1,9 +1,11 @@
 #pragma once
 
+#include <string_view>
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
 
+// GLOBAL SETTINGS
 namespace gl
 {
     // global parameters
@@ -65,6 +67,7 @@ namespace DR
     extern const int drawingCoinsTextYPos;
 }
 
+// INTERFACE SETTINGS
 namespace IN
 {
     // INTERFACE SETTINGS
@@ -122,4 +125,24 @@ namespace IN
     extern const int levelPassedTextSize;
     extern const int levelPassedSubstrateWidth;
     extern const int levelPassedSubstrateHeight;
+}
+
+// STRINGS TO TRANSLATE
+namespace STRING
+{
+    constexpr std::wstring_view Continue = L"Continue?";
+    constexpr std::wstring_view Yes = L"Yes";
+    constexpr std::wstring_view No = L"No";
+    constexpr std::wstring_view SureToExit = L"Are you shure you want to exit?";
+    constexpr std::wstring_view Level = L"Level ";
+    constexpr std::wstring_view LostResults = L"Your results will be lost!";
+    constexpr std::wstring_view NewGame = L"NEW GAME";
+    constexpr std::wstring_view ContinueGame = L"CONTINUE";
+    constexpr std::wstring_view ExitGame = L"EXIT";
+    constexpr std::wstring_view Menu = L"MENU";
+    constexpr std::wstring_view Levels = L"levels";
+    constexpr std::wstring_view Again = L"again";
+    constexpr std::wstring_view Next = L"next";
+    constexpr std::wstring_view LevelsLabel = L"Levels";
+    constexpr std::wstring_view LevelPassed = L"Level is passed!";
 }

@@ -64,7 +64,7 @@ private:
 
     std::shared_ptr<RenderWindow> window_;
 
-    std::unordered_map<std::string, RectangleShape> world_;
+    std::unordered_map<std::string_view, RectangleShape> world_;
 
     Button backButton_;
     Button restartButton_;
