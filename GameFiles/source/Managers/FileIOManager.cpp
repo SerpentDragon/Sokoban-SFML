@@ -1,7 +1,7 @@
 #include "FileIOManager.hpp"
 
 FileIOManager::FileIOManager()
-    : dir_("app_data/data/")
+    : dir_("app_data/.data/")
 {
     coinsPath_ = dir_ + "coins.ltx";
     recordsPath_ = dir_ + "records.ltx";
