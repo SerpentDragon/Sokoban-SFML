@@ -136,11 +136,12 @@ void Player::movement(int pressed_key)
     // this variable keep info if player moved or not
     int playerMoved = *ptr;
     
-    if (checkPosition(nextPos) != 1)
+    if (checkPosition(nextPos) != FIELD::WALL)
     {
         if (it)
         {
-            if (checkPosition(behindNextPos) != 1 && !checkBoxes(behindNextPos))
+            if (checkPosition(behindNextPos) != FIELD::WALL && 
+                checkBoxes(behindNextPos) == nullptr)
             {
                 (*ptr) += destination * speed_;
                 (*coord) += destination * speed_;
@@ -183,24 +184,24 @@ void Player::alignPlayer(int released_key, int param)
                 x_ -= gl::size / 2;
                 break;
             case Keyboard::S: case Keyboard::Down:
-                if (checkPosition(x_, y_ + next_ceil) != 1) 
+                if (checkPosition(x_, y_ + next_ceil) != FIELD::WALL) 
                 {
                     auto it = checkBoxes(x_, y_ + next_ceil);
                     if (it)
                     {
-                        if (checkPosition(x_, y_ + cell_through_next) != 1 && 
+                        if (checkPosition(x_, y_ + cell_through_next) != FIELD::WALL && 
                             !checkBoxes(x_, y_ + cell_through_next)) y_ += gl::size / 2;
                     }
                     else y_ += gl::size / 2; 
                 }
                 break;
             case Keyboard::D: case Keyboard::Right:
-                if (checkPosition(x_ + next_ceil, y_) != 1) 
+                if (checkPosition(x_ + next_ceil, y_) != FIELD::WALL) 
                 {
                     auto it = checkBoxes(x_ + next_ceil, y_);
                     if (it)
                     {
-                        if (checkPosition(x_ + cell_through_next, y_) != 1 && 
+                        if (checkPosition(x_ + cell_through_next, y_) != FIELD::WALL && 
                             !checkBoxes(x_ + cell_through_next, y_)) x_ += gl::size / 2;
                     }
                     else x_ += gl::size / 2;
@@ -309,6 +310,8 @@ std::pair<bool, bool> Player::drawPlayer()
             goals_counter++;
         }
     }
+
+    window_->display();
 
     bool result = goals_counter > prev_goals_counter;
     prev_goals_counter = goals_counter;

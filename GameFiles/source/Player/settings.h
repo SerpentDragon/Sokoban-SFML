@@ -26,9 +26,6 @@ namespace gl
     void initFont();
 }
 
-// field cells
-enum FIELD : unsigned int { NO_FIELD = 0, WALL, GRASS, AIM, BOX, PLAYER };
-
 // DRAWING SETTINGS
 namespace DR
 {

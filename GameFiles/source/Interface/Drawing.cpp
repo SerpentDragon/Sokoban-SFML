@@ -276,7 +276,9 @@ bool Drawing::drawWorld()
         std::pair<int, int> res = player_.drawPlayer();
 
         if (res.second)
+        {
             SoundManager::getManager().playSound("box_placed");
+        }
 
         if (backButton_.isPressed()) 
         {
