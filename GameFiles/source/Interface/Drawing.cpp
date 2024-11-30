@@ -162,7 +162,7 @@ Drawing::Drawing(std::shared_ptr<RenderWindow> window)
     : window_(window), coins_(0), player_(window),
     levelText_("", gl::font, DR::levelTextSize),
     coinsText_("", gl::font, DR::coinsTextSize),
-    background_(Vector2f(gl::Width, gl::Height))
+    background_(Vector2f(gl::Width, gl::Height)), level_(0)
 {
     loadTextures();
     createButtons();
@@ -174,20 +174,24 @@ Drawing::Drawing(std::shared_ptr<RenderWindow> window)
     coinsText_.setPosition(DR::drawingCoinsTextXPos, DR::drawingCoinsTextYPos);
 }
 
-bool Drawing::drawWorld(const int level)
+void Drawing::setLevel(const int level) { level_ = level; }
+
+int Drawing::getLevel() const { return level_; }
+
+bool Drawing::drawWorld()
 {
-    updateBackground(level);
-    updateLevelText(level);
+    updateBackground(level_);
+    updateLevelText(level_);
     updateCoinsText();
 
-    size_t mapHeight = levelsMap[level].size();
-    size_t mapWidth = levelsMap[level][0].size();
+    size_t mapHeight = levelsMap[level_].size();
+    size_t mapWidth = levelsMap[level_][0].size();
     int offset1 = (gl::Width - mapWidth * gl::size) / 2;
     int offset2 = (gl::Height - mapHeight * gl::size) / 2;
 
     int initialCoinsValue = coins_;
 
-    player_.setLevel(levelsMap[level]);
+    player_.setLevel(levelsMap[level_]);
 
     Event event;
 
@@ -263,15 +267,13 @@ bool Drawing::drawWorld(const int level)
         window_->draw(coinsText_);
         window_->draw(world_["coin"]);
         
-        drawMap(mapHeight, mapWidth, levelsMap[level], offset1, offset2);
+        drawMap(mapHeight, mapWidth, levelsMap[level_], offset1, offset2);
 
         backButton_.drawButton();
         restartButton_.drawButton();
         levelsButton_.drawButton();
 
         std::pair<int, int> res = player_.drawPlayer();
-
-        window_->display();
 
         if (res.second)
             SoundManager::getManager().playSound("box_placed");
@@ -303,6 +305,8 @@ bool Drawing::drawWorld(const int level)
                 Localizer::translate(L"Your results will be lost!"))) 
                     break;
         }
+
+        window_->display();
     }
 
     return false;

@@ -188,6 +188,8 @@ void Interface::showMenu()
     {
         pollEvents(window_);
     
+        window_->clear();
+
         window_->draw(img_["background"]);
         window_->draw(img_["logo"]);
 
@@ -244,6 +246,8 @@ void Interface::chooseLevel()
     while(window_->isOpen())
     {
         pollEvents(window_);
+
+        window_->clear();
         
         window_->draw(img_["levels_back"]);
         window_->draw(titleText_);
@@ -256,13 +260,9 @@ void Interface::chooseLevel()
             {
                 if (levelsButtons_[i].isPressed())
                 {
-                    drawing_.setCoins(getCoins());
-                    if (drawing_.drawWorld(i + 1)) 
-                    {
-                        currentMode_ = MODE::ChooseAction;
-                        passedLevel_ = i + 1;
-                    }
-                    coins_ = drawing_.getCoins();
+                    drawing_.setLevel(i + 1);
+                    currentMode_ = MODE::PlayLevelMode;
+                    break;
                 }
             }
         }
@@ -274,6 +274,20 @@ void Interface::chooseLevel()
 
         window_->display();
     }
+}
+
+void Interface::displayLevel()
+{
+    drawing_.setCoins(getCoins());
+
+    if (drawing_.drawWorld()) 
+    {
+        currentMode_ = MODE::ChooseAction;
+        passedLevel_ = drawing_.getLevel();
+    }
+    else currentMode_ = MODE::ChooseLevelMode;
+
+    coins_ = drawing_.getCoins();
 }
 
 void Interface::chooseFurtherAction()
@@ -297,6 +311,8 @@ void Interface::chooseFurtherAction()
     {
         pollEvents(window_);
 
+        window_->clear();
+
         window_->draw(background);
 
         window_->draw(levelPassedSubstrate_);
@@ -318,7 +334,7 @@ void Interface::chooseFurtherAction()
         {
             drawing_.setCoins(getCoins());
 
-            if (!drawing_.drawWorld(passedLevel_)) 
+            if (!drawing_.drawWorld()) 
                 currentMode_ = MODE::ChooseLevelMode;
 
             coins_ = drawing_.getCoins();
@@ -329,8 +345,9 @@ void Interface::chooseFurtherAction()
             && nextButton_.isPressed())
         {
             drawing_.setCoins(getCoins());
+            drawing_.setLevel(passedLevel_ + 1);
 
-            if (drawing_.drawWorld(passedLevel_ + 1)) 
+            if (drawing_.drawWorld())
                 passedLevel_++;
             else currentMode_ = MODE::ChooseLevelMode;
 

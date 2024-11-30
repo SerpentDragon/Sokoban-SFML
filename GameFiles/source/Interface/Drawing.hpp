@@ -35,7 +35,11 @@ public:
 
     ~Drawing() = default;
 
-    bool drawWorld(const int);
+    void setLevel(const int);
+
+    int getLevel() const;
+
+    bool drawWorld();
 
     void setCoins(int);
 
@@ -65,6 +69,8 @@ private:
     Button backButton_;
     Button restartButton_;
     Button levelsButton_;
+
+    unsigned int level_;
 
     Text levelText_;
     Text coinsText_;

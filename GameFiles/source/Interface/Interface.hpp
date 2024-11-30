@@ -18,7 +18,7 @@
 
 using namespace sf;
 
-enum MODE : unsigned int { MainMenuMode = 0, ChooseLevelMode, ExitMode, ChooseAction };
+enum MODE : unsigned int { MainMenuMode = 0, ChooseLevelMode, ExitMode, PlayLevelMode, ChooseAction };
 
 class Interface
 {
@@ -39,6 +39,8 @@ public:
     void showMenu();
 
     void chooseLevel();
+
+    void displayLevel();
 
     void chooseFurtherAction();
 
@@ -81,9 +83,9 @@ private:
     std::unordered_map<std::string, RectangleShape> img_;
 
     // info about current state of the interface
-    size_t currentMode_;
-    size_t currentLevel_;
-    size_t passedLevel_;
+    unsigned int currentMode_;
+    unsigned int currentLevel_;
+    unsigned int passedLevel_;
     int coins_;
 
     // main menu buttons

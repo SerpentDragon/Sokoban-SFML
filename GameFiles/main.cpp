@@ -28,6 +28,9 @@ int main()
             case MODE::ChooseAction:
                 interface.chooseFurtherAction();
                 break;
+            case MODE::PlayLevelMode:
+                interface.displayLevel();
+                break;
             case MODE::ExitMode:
                 interface.exitGame();
                 break;
