@@ -1,6 +1,6 @@
 #include "Player.hpp"
 
-Player::Player(std::shared_ptr<RenderWindow> window, int speed)
+Player::Player(std::shared_ptr<RenderWindow> window, int speed) noexcept
     : window_(window)
 {
     this->speed_ = speed > gl::size ? gl::size : speed;
@@ -15,7 +15,7 @@ Player::Player(std::shared_ptr<RenderWindow> window, int speed)
         TextureManager::getManager().getTexture("textures/player/gold_box"));
 }
 
-void Player::setLevel(const std::vector<std::vector<int>>& level)
+void Player::setLevel(const std::vector<std::vector<int>>& level) noexcept
 {
     level_ = level;
     boxes_.clear(); aims_.clear();
@@ -47,17 +47,17 @@ void Player::setLevel(const std::vector<std::vector<int>>& level)
     }
 }
 
-size_t Player::checkPosition(int xPos, int yPos)
+size_t Player::checkPosition(int xPos, int yPos) noexcept
 {
     return level_[(yPos - offset2_) / gl::size][(xPos - offset1_) / gl::size];
 }
 
-size_t Player::checkPosition(const Vector2i& vec)
+size_t Player::checkPosition(const Vector2i& vec) noexcept
 {
     return level_[(vec.y - offset2_) / gl::size][(vec.x - offset1_) / gl::size];
 }
 
-std::pair<int, int>* Player::checkBoxes(int first, int second)
+std::pair<int, int>* Player::checkBoxes(int first, int second) noexcept
 {
     for(auto& box : boxes_)
     {
@@ -68,7 +68,7 @@ std::pair<int, int>* Player::checkBoxes(int first, int second)
     return nullptr;
 }
 
-std::pair<int, int>* Player::checkBoxes(const Vector2i& vec)
+std::pair<int, int>* Player::checkBoxes(const Vector2i& vec) noexcept
 {
     for(auto& box : boxes_)
     {
@@ -79,7 +79,7 @@ std::pair<int, int>* Player::checkBoxes(const Vector2i& vec)
     return nullptr;
 }
 
-void Player::movement(int pressed_key)
+void Player::movement(int pressed_key) noexcept
 {    
     int dist, destination = 1, *ptr, *coord;
     Vector2i nextPos, behindNextPos;
@@ -167,7 +167,7 @@ void Player::movement(int pressed_key)
     img_["player"].setPosition(x_, y_);
 }
 
-void Player::alignPlayer(int released_key, int param) 
+void Player::alignPlayer(int released_key, int param) noexcept 
 {
     bool flag = false;
     const int next_ceil = 1.5 * gl::size;
@@ -290,7 +290,7 @@ void Player::alignPlayer(int released_key, int param)
     img_["player"].setPosition(x_, y_);
 }
 
-std::pair<bool, bool> Player::drawPlayer()
+std::pair<bool, bool> Player::drawPlayer() noexcept
 {
     static int prev_goals_counter = 0;
     int goals_counter = 0;
@@ -320,7 +320,7 @@ std::pair<bool, bool> Player::drawPlayer()
     return { goals_counter == aims_.size(), result };
 }   
 
-void Player::restartLevel()
+void Player::restartLevel() noexcept
 {
     aims_.clear();
     boxes_.clear();
@@ -352,7 +352,7 @@ void Player::restartLevel()
     while(!boxesMoves_.empty()) boxesMoves_.pop();
 }
 
-bool Player::cancelMove()
+bool Player::cancelMove() noexcept
 {
     if (!playerMoves_.empty())
     {

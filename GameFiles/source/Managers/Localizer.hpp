@@ -9,9 +9,9 @@ class Localizer
 {
 public:
 
-    static void initLocalizer(const std::string&);
+    static void initLocalizer(const std::string&) noexcept;
 
-    static std::wstring translate(std::wstring_view);
+    static std::wstring translate(std::wstring_view) noexcept;
 
 private:
 

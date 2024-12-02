@@ -25,7 +25,7 @@ namespace gl
 
     // fonts
     extern Font font;
-    void initFont();
+    void initFont() noexcept;
 }
 
 // DRAWING SETTINGS

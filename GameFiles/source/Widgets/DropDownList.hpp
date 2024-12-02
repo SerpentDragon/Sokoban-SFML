@@ -15,25 +15,25 @@ class DropDownList
 {
 public:
 
-    DropDownList(std::shared_ptr<RenderWindow>);
+    DropDownList(std::shared_ptr<RenderWindow>) noexcept;
 
-    void drawList();
+    void drawList() noexcept;
 
-    std::string_view isPressed();
+    std::string_view isPressed() noexcept;
 
 private:
 
-    bool onList(int, int) const;
+    bool onList(int, int) const noexcept;
 
-    void createItems();
+    void createItems() noexcept;
 
-    DropDownList(const DropDownList&) = delete;
+    DropDownList(const DropDownList&) noexcept = delete;
 
-    DropDownList(DropDownList&&) = delete;
+    DropDownList(DropDownList&&) noexcept = delete;
 
-    DropDownList& operator=(const DropDownList&) = delete;
+    DropDownList& operator=(const DropDownList&) noexcept = delete;
 
-    DropDownList& operator=(DropDownList&&) = delete;
+    DropDownList& operator=(DropDownList&&) noexcept = delete;
 
 private:
 
@@ -50,13 +50,13 @@ private:
     {
     public:
 
-        Item(int, int, const int, std::shared_ptr<Texture>, std::string_view);
+        Item(int, int, const int, std::shared_ptr<Texture>, std::string_view) noexcept;
 
-        bool onItem(int, int) const;
+        bool onItem(int, int) const noexcept;
 
-        void highlightItem(bool);
+        void highlightItem(bool) noexcept;
 
-        void swap(Item&);
+        void swap(Item&) noexcept;
 
     public:
 

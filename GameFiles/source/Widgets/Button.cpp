@@ -1,17 +1,11 @@
 #include "Button.hpp"
 
-bool Button::onButton(int x, int y)
-{
-    return xPos_ <= x && x <= xPos_ + width_ && yPos_ <= y && y <= yPos_ + height_;
-}
-
 Button::Button(std::shared_ptr<RenderWindow> window, const Text& text, 
     int x, int y, int width, int height, 
-    const Color& color, const Color& colorOn)
+    const Color& color, const Color& colorOn) noexcept
     : window_(window), text_(text), xPos_(x), yPos_(y),
     width_(width), height_(height), color_(color), colorOn_(colorOn),
     texture_(nullptr)
-
 {
     button_ = RectangleShape(Vector2f(width_, height_));
     button_.setPosition(x, y);
@@ -22,7 +16,7 @@ Button::Button(std::shared_ptr<RenderWindow> window, const Text& text,
 }
 
 Button::Button(std::shared_ptr<RenderWindow> window, int x, int y, 
-    int width, int height, std::shared_ptr<Texture> texture)
+    int width, int height, std::shared_ptr<Texture> texture) noexcept
     : window_(window), xPos_(x), yPos_(y), width_(width),
     height_(height)
 {
@@ -36,13 +30,13 @@ Button::Button(std::shared_ptr<RenderWindow> window, int x, int y,
     button_.setTexture(this->texture_.get());
 }
 
-void Button::drawButton()
+void Button::drawButton() noexcept
 {
     window_->draw(button_);
     window_->draw(text_);
 }
 
-bool Button::isPressed()
+bool Button::isPressed() noexcept
 {
     int x = Mouse::getPosition(*window_).x;
     int y = Mouse::getPosition(*window_).y;
@@ -66,20 +60,25 @@ bool Button::isPressed()
     return false;
 }
 
-void Button::setText(const std::wstring& text)
+void Button::setText(const std::wstring& text) noexcept
 {
     text_.setString(text);
     text_.setPosition(xPos_ + (width_ - text_.getGlobalBounds().width) / 2 , 
         yPos_ + (height_ - text_.getGlobalBounds().height) / 2 - gl::size / 5);
 }
 
-void Button::setTextColor(const Color& color_)
+void Button::setTextColor(const Color& color_) noexcept
 {
     text_.setFillColor(color_);
 }
 
-void Button::setButtonColor(const Color& color_)
+void Button::setButtonColor(const Color& color_) noexcept
 {
     this->color_ = color_;
     button_.setFillColor(color_);
+}
+
+bool Button::onButton(int x, int y) noexcept
+{
+    return xPos_ <= x && x <= xPos_ + width_ && yPos_ <= y && y <= yPos_ + height_;
 }

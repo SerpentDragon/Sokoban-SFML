@@ -1,13 +1,13 @@
 #include "FileIOManager.hpp"
 
-FileIOManager::FileIOManager()
+FileIOManager::FileIOManager() noexcept
     : dir_("app_data/.data/")
 {
     coinsPath_ = dir_ + "coins.ltx";
     recordsPath_ = dir_ + "records.ltx";
 }
 
-std::pair<int, int> FileIOManager::readDataFromFile()
+std::pair<int, int> FileIOManager::readDataFromFile() noexcept
 {
     if (!fs::exists(dir_)) 
         fs::create_directory(dir_);
@@ -57,7 +57,7 @@ std::pair<int, int> FileIOManager::readDataFromFile()
     return { coins_, record_ };
 }
 
-void FileIOManager::writeDataToFile(int coins_, int record_)
+void FileIOManager::writeDataToFile(int coins_, int record_) noexcept
 {
     std::fstream coinsFile(coinsPath_, ib::out | ib::binary);
     std::fstream recordsFile(recordsPath_, ib::out | ib::binary);

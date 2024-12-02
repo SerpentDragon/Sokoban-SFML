@@ -1,19 +1,19 @@
 #include "TextureManager.hpp"
 
-TextureManager& TextureManager::getManager()
+TextureManager& TextureManager::getManager() noexcept
 {
     static TextureManager manager;
     return manager;
 }
 
-const sf::Texture* TextureManager::getTexture(const std::string& name) const
+const sf::Texture* TextureManager::getTexture(const std::string& name) const noexcept
 {
     auto it = textures_.find(prefix_ + name);
     if (it != textures_.end()) return &(it->second);
     else return nullptr;
 }
 
-const sf::Texture* TextureManager::loadTextureFromFile(const std::string& filename)
+const sf::Texture* TextureManager::loadTextureFromFile(const std::string& filename) noexcept
 {
     sf::Texture texture;
     std::string file = prefix_ + filename;
@@ -26,7 +26,7 @@ const sf::Texture* TextureManager::loadTextureFromFile(const std::string& filena
     else return nullptr;
 }
 
-TextureManager::TextureManager()
+TextureManager::TextureManager() noexcept
     : prefix_("app_data/")
 {
     loadAllTexturesFromDirectory(prefix_ + "textures/buttons/");
@@ -36,7 +36,7 @@ TextureManager::TextureManager()
     loadAllTexturesFromDirectory(prefix_ + "textures/languages/");
 }
 
-void TextureManager::loadAllTexturesFromDirectory(const std::string& dir)
+void TextureManager::loadAllTexturesFromDirectory(const std::string& dir) noexcept
 {
     for(const auto& file : fs::directory_iterator(dir))
     {

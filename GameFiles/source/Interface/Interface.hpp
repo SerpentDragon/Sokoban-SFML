@@ -24,7 +24,7 @@ class Interface
 {
 public:
 
-    Interface(std::shared_ptr<RenderWindow>);
+    Interface(std::shared_ptr<RenderWindow>) noexcept;
 
     Interface(const Interface&) = delete;
 
@@ -34,45 +34,45 @@ public:
 
     Interface& operator=(Interface&&) noexcept = delete;
 
-    ~Interface();
+    ~Interface() noexcept;
 
-    void showMenu();
+    void showMenu() noexcept;
 
-    void chooseLevel();
+    void chooseLevel() noexcept;
 
-    void displayLevel();
+    void displayLevel() noexcept;
 
-    void chooseFurtherAction();
+    void chooseFurtherAction() noexcept;
 
-    void exitGame();
+    void exitGame() noexcept;
 
-    const size_t getCurrentMode() const;
+    const size_t getCurrentMode() const noexcept;
 
-    void setCurrentLevel(size_t);
+    void setCurrentLevel(size_t) noexcept;
 
 private:
 
-    void loadTextures();
+    void loadTextures() noexcept;
 
-    void createMainMenuButtons();
+    void createMainMenuButtons() noexcept;
 
-    void createLevelButtons();
+    void createLevelButtons() noexcept;
 
-    void createFurtherActionButtons();
+    void createFurtherActionButtons() noexcept;
 
-    void initTexts();
+    void initTexts() noexcept;
 
-    void initLevelPassedText();
+    void initLevelPassedText() noexcept;
 
-    void updateLevelButtonsColor();
+    void updateLevelButtonsColor() noexcept;
 
-    void updateCoinsText();
+    void updateCoinsText() noexcept;
 
-    void recreateTexts();
+    void recreateTexts() noexcept;
 
-    void setCoins(int);
+    void setCoins(int) noexcept;
 
-    const int getCoins() const;
+    const int getCoins() const noexcept;
 
 private:
 

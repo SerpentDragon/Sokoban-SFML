@@ -16,31 +16,39 @@ class Player
 {
 public:
 
-    Player(std::shared_ptr<RenderWindow>, int speed = gl::size / 7);
+    Player(std::shared_ptr<RenderWindow>, int speed = gl::size / 7) noexcept;
 
-    ~Player() = default;
+    Player(const Player&) noexcept = default;
 
-    void setLevel(const std::vector<std::vector<int>>&);
+    Player(Player&&) noexcept = default;
 
-    void movement(int);
+    Player& operator=(const Player&) noexcept = default;
 
-    void alignPlayer(int, int); // player and boxes must be aligned by cells
+    Player& operator=(Player&&) noexcept = default;
 
-    std::pair<bool, bool> drawPlayer();
+    ~Player() noexcept = default;
 
-    void restartLevel();
+    void setLevel(const std::vector<std::vector<int>>&) noexcept;
 
-    bool cancelMove();
+    void movement(int) noexcept;
+
+    void alignPlayer(int, int) noexcept; // player and boxes must be aligned by cells
+
+    std::pair<bool, bool> drawPlayer() noexcept;
+
+    void restartLevel() noexcept;
+
+    bool cancelMove() noexcept;
 
 private:
 
-    size_t checkPosition(int, int);
+    size_t checkPosition(int, int) noexcept;
 
-    size_t checkPosition(const Vector2i&);
+    size_t checkPosition(const Vector2i&) noexcept;
     
-    std::pair<int, int>* checkBoxes(int, int);
+    std::pair<int, int>* checkBoxes(int, int) noexcept;
 
-    std::pair<int, int>* checkBoxes(const Vector2i&);
+    std::pair<int, int>* checkBoxes(const Vector2i&) noexcept;
 
 private:
 

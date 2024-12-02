@@ -1,6 +1,6 @@
 #include "Interface.hpp"
 
-void Interface::loadTextures()
+void Interface::loadTextures() noexcept
 {
     img_.emplace("background", RectangleShape(Vector2f(gl::Width, gl::Height))).first->second.setTexture(
         TextureManager::getManager().getTexture("textures/interface/background"));
@@ -16,7 +16,7 @@ void Interface::loadTextures()
         TextureManager::getManager().getTexture("textures/player/coin")); 
 }
 
-void Interface::createMainMenuButtons()
+void Interface::createMainMenuButtons() noexcept
 {
     newGameButton_ = Button(window_, Text(Localizer::translate(STRING::NewGame), gl::font, 
         IN::mainMenuButtonsTextSize), IN::mainMenuButtonsXPos, IN::newGameButtonYPos, 
@@ -35,7 +35,7 @@ void Interface::createMainMenuButtons()
         IN::menuButtonWidth, IN::menuButtonHeight, gl::GREEN, gl::BLUE);
 }
 
-void Interface::createLevelButtons()
+void Interface::createLevelButtons() noexcept
 {
     size_t rows = 4;
     size_t columns = 4;
@@ -53,7 +53,7 @@ void Interface::createLevelButtons()
     }
 }
 
-void Interface::createFurtherActionButtons()
+void Interface::createFurtherActionButtons() noexcept
 {
     levelsButton_ = Button(window_, Text(Localizer::translate(STRING::Levels), gl::font, 
         IN::furtherActionButtonsTextSize), IN::levelButtonXPos, IN::furtherActionButtonsYPos, 
@@ -66,7 +66,7 @@ void Interface::createFurtherActionButtons()
         IN::furtherActionButtonWidth, IN::furtherActionButtonHeight, gl::GREEN, gl::BLUE);
 }
 
-void Interface::initTexts()
+void Interface::initTexts() noexcept
 {
     titleText_ = Text(Localizer::translate(STRING::LevelsLabel), gl::font, IN::titleTextSize);
     titleText_.setFillColor(gl::DARK_BLUE);
@@ -77,7 +77,7 @@ void Interface::initTexts()
     coinsText_.setFillColor(gl::GOLD);
 }
 
-void Interface::initLevelPassedText()
+void Interface::initLevelPassedText() noexcept
 {
     levelPassedSubstrate_.setPosition((gl::Width - 
         levelPassedSubstrate_.getGlobalBounds().width) / 2, IN::levelPassedSubstrateYPos);
@@ -92,7 +92,7 @@ void Interface::initLevelPassedText()
         levelPassedText_.getGlobalBounds().height) / 3);
 }
 
-void Interface::updateLevelButtonsColor()
+void Interface::updateLevelButtonsColor() noexcept
 {
     Color color;
     for(size_t i = 0; i < levelsButtons_.size(); i++)
@@ -102,7 +102,7 @@ void Interface::updateLevelButtonsColor()
     }
 }
 
-void Interface::updateCoinsText()
+void Interface::updateCoinsText() noexcept
 {
     switch(passedLevel_)
     {
@@ -139,7 +139,7 @@ void Interface::updateCoinsText()
         IN::coinTextureYPos + gl::size / 4);
 }
 
-void Interface::recreateTexts()
+void Interface::recreateTexts() noexcept
 {
     newGameButton_.setText(Localizer::translate(STRING::NewGame));
     continueButton_.setText(Localizer::translate(STRING::ContinueGame));
@@ -159,7 +159,7 @@ void Interface::recreateTexts()
         levelPassedText_.getGlobalBounds().height) / 3);
 }
 
-Interface::Interface(std::shared_ptr<RenderWindow> window)
+Interface::Interface(std::shared_ptr<RenderWindow> window) noexcept
     : window_(window), currentMode_(MODE::MainMenuMode), 
     currentLevel_(0), passedLevel_(0), coins_(0), 
     drawing_(window_), dropDownList_(window_),
@@ -177,12 +177,12 @@ Interface::Interface(std::shared_ptr<RenderWindow> window)
     std::tie(coins_, currentLevel_) = file_.readDataFromFile();
 }
 
-Interface::~Interface()
+Interface::~Interface() noexcept
 {
     file_.writeDataToFile(coins_, currentLevel_);
 }
 
-void Interface::showMenu()
+void Interface::showMenu() noexcept
 {
     while (window_->isOpen())
     {
@@ -239,7 +239,7 @@ void Interface::showMenu()
     }
 }
 
-void Interface::chooseLevel()
+void Interface::chooseLevel() noexcept
 {
     updateLevelButtonsColor();
     
@@ -276,7 +276,7 @@ void Interface::chooseLevel()
     }
 }
 
-void Interface::displayLevel()
+void Interface::displayLevel() noexcept
 {
     drawing_.setCoins(getCoins());
 
@@ -290,7 +290,7 @@ void Interface::displayLevel()
     coins_ = drawing_.getCoins();
 }
 
-void Interface::chooseFurtherAction()
+void Interface::chooseFurtherAction() noexcept
 {
     sleep(milliseconds(250));
 
@@ -359,7 +359,7 @@ void Interface::chooseFurtherAction()
     }
 }
 
-void Interface::exitGame()
+void Interface::exitGame() noexcept
 {
     if (!showWarning(window_, 
         Localizer::translate(STRING::SureToExit))) 
@@ -367,10 +367,10 @@ void Interface::exitGame()
     else window_->close();
 }
 
-void Interface::setCoins(int coins_num) { coins_ = coins_num; }
+void Interface::setCoins(int coins_num) noexcept { coins_ = coins_num; }
 
-const int Interface::getCoins() const { return coins_; }
+const int Interface::getCoins() const noexcept { return coins_; }
 
-const size_t Interface::getCurrentMode() const { return currentMode_; }
+const size_t Interface::getCurrentMode() const noexcept { return currentMode_; }
 
-void Interface::setCurrentLevel(size_t curr_level) { currentLevel_ = curr_level; }
+void Interface::setCurrentLevel(size_t curr_level) noexcept { currentLevel_ = curr_level; }

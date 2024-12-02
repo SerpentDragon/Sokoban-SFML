@@ -19,7 +19,7 @@ namespace gl
 
     // fonts
     Font font;
-    void initFont()
+    void initFont() noexcept
     {
         font.loadFromFile("app_data/fonts/arial_bold.ttf");
     }

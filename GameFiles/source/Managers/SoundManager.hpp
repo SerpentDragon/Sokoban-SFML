@@ -11,13 +11,13 @@ class SoundManager
 {
 public:
 
-    static SoundManager& getManager();
+    static SoundManager& getManager() noexcept;
 
-    void playSound(const std::string&);
+    void playSound(const std::string&) noexcept;
 
 private:
 
-    SoundManager();
+    SoundManager() noexcept;
 
     SoundManager(const SoundManager&) = delete;
 
@@ -27,9 +27,9 @@ private:
 
     SoundManager& operator=(SoundManager&&) noexcept = delete;
 
-    ~SoundManager() = default;
+    ~SoundManager() noexcept = default;
 
-    void loadAllSoundsFromDirectory();
+    void loadAllSoundsFromDirectory() noexcept;
 
 private:
 

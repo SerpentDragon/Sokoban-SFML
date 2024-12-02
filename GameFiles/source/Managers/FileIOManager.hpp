@@ -13,7 +13,7 @@ class FileIOManager
 {
 public:
 
-    FileIOManager();
+    FileIOManager() noexcept;
 
     FileIOManager(const FileIOManager&) = delete;
 
@@ -23,9 +23,9 @@ public:
 
     FileIOManager& operator=(FileIOManager&&) noexcept = delete;
 
-    std::pair<int, int> readDataFromFile();
+    std::pair<int, int> readDataFromFile() noexcept;
 
-    void writeDataToFile(int, int);
+    void writeDataToFile(int, int) noexcept;
 
 private:
 

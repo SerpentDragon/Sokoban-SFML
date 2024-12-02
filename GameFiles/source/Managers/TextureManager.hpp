@@ -12,15 +12,15 @@ class TextureManager
 {
 public:
 
-    static TextureManager& getManager();
+    static TextureManager& getManager() noexcept;
 
-    const sf::Texture* getTexture(const std::string&) const;
+    const sf::Texture* getTexture(const std::string&) const noexcept;
 
-    const sf::Texture* loadTextureFromFile(const std::string&);
+    const sf::Texture* loadTextureFromFile(const std::string&) noexcept;
 
 private:
 
-    TextureManager();
+    TextureManager() noexcept;
 
     TextureManager(const TextureManager&) = delete;
 
@@ -30,9 +30,9 @@ private:
 
     TextureManager& operator=(TextureManager&&) noexcept = delete;
 
-    ~TextureManager() = default;
+    ~TextureManager() noexcept = default;
 
-    void loadAllTexturesFromDirectory(const std::string&);
+    void loadAllTexturesFromDirectory(const std::string&) noexcept;
 
 private:
 

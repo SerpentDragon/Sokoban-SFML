@@ -1,24 +1,24 @@
 #include "SoundManager.hpp"
 
-SoundManager& SoundManager::getManager()
+SoundManager& SoundManager::getManager() noexcept
 {
     static SoundManager manager;
     return manager;
 }
 
-void SoundManager::playSound(const std::string& name)
+void SoundManager::playSound(const std::string& name) noexcept
 {
     sf::Sound sound(sounds_[name]);
     sound.play();
     sf::sleep(sf::milliseconds(700));
 }
 
-SoundManager::SoundManager()
+SoundManager::SoundManager() noexcept
 {
     loadAllSoundsFromDirectory();
 }
 
-void SoundManager::loadAllSoundsFromDirectory()
+void SoundManager::loadAllSoundsFromDirectory() noexcept
 {
     const std::string dir = "app_data/music/";
     for(const auto& entry : fs::directory_iterator(dir))

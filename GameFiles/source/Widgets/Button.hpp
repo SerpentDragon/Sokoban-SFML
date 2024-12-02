@@ -10,35 +10,35 @@ class Button
 {
 public:
 
-    Button() = default;
+    Button() noexcept = default;
     
-    Button(std::shared_ptr<RenderWindow>, const Text&, int, int, int, int, const Color&, const Color&);
+    Button(std::shared_ptr<RenderWindow>, const Text&, int, int, int, int, const Color&, const Color&) noexcept;
 
-    Button(std::shared_ptr<RenderWindow>, int, int, int, int, std::shared_ptr<Texture>);
+    Button(std::shared_ptr<RenderWindow>, int, int, int, int, std::shared_ptr<Texture>) noexcept;
 
-    Button(const Button&) = default;
+    Button(const Button&) noexcept = default;
 
     Button(Button&&) noexcept = default;
 
-    Button& operator=(const Button&) = default;
+    Button& operator=(const Button&) noexcept = default;
 
     Button& operator=(Button&&) noexcept = default;
 
-    ~Button() = default;
+    ~Button() noexcept = default;
 
-    void drawButton();
+    void drawButton() noexcept;
     
-    bool isPressed();
+    bool isPressed() noexcept;
 
-    void setText(const std::wstring&);
+    void setText(const std::wstring&) noexcept;
 
-    void setTextColor(const Color&);
+    void setTextColor(const Color&) noexcept;
 
-    void setButtonColor(const Color&);
+    void setButtonColor(const Color&) noexcept;
 
 private:
 
-    bool onButton(int, int);
+    bool onButton(int, int) noexcept;
 
 private:
 

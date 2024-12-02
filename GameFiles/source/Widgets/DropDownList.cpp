@@ -2,7 +2,7 @@
 
 // DropdownList class
 
-DropDownList::DropDownList(std::shared_ptr<RenderWindow> window)
+DropDownList::DropDownList(std::shared_ptr<RenderWindow> window) noexcept
     : window_(window), list_(Vector2f(gl::size, gl::size)),
     x_(window->getSize().x - gl::size * 1.5), y_(gl::size / 2),
     width_(gl::size), height_(gl::size)
@@ -13,7 +13,7 @@ DropDownList::DropDownList(std::shared_ptr<RenderWindow> window)
     createItems();
 }
 
-void DropDownList::drawList()
+void DropDownList::drawList() noexcept
 {
     int x = Mouse::getPosition(*window_).x;
     int y = Mouse::getPosition(*window_).y;
@@ -35,7 +35,7 @@ void DropDownList::drawList()
         window_->draw(items_[0].itemRect_);
 }
 
-std::string_view DropDownList::isPressed()
+std::string_view DropDownList::isPressed() noexcept
 {
     int x = Mouse::getPosition(*window_).x;
     int y = Mouse::getPosition(*window_).y;
@@ -68,13 +68,13 @@ std::string_view DropDownList::isPressed()
     return "";
 }
 
-bool DropDownList::onList(int x, int y) const
+bool DropDownList::onList(int x, int y) const noexcept
 {
     return x_ <= x && x <= x_ + width_ 
         && y_ <= y && y <= y_ + height_;
 }
 
-void DropDownList::createItems()
+void DropDownList::createItems() noexcept
 {
     const int itemSize = gl::size - Item::itemOutlineThickness * 2;
     
@@ -113,7 +113,7 @@ void DropDownList::createItems()
 int DropDownList::Item::itemOutlineThickness = gl::Width / 400;
 
 DropDownList::Item::Item(int x, int y, const int size, 
-    std::shared_ptr<Texture> texture, std::string_view locale)
+    std::shared_ptr<Texture> texture, std::string_view locale) noexcept
     : itemRect_(Vector2f(size, size)), locale_(locale), texture_(texture)
 {   
     itemRect_.setPosition(x, y);
@@ -121,7 +121,7 @@ DropDownList::Item::Item(int x, int y, const int size,
     itemRect_.setOutlineThickness(Item::itemOutlineThickness);
 }
 
-bool DropDownList::Item::onItem(int x, int y) const
+bool DropDownList::Item::onItem(int x, int y) const noexcept
 {
     auto bounds = itemRect_.getGlobalBounds();
 
@@ -129,13 +129,13 @@ bool DropDownList::Item::onItem(int x, int y) const
         bounds.top < y && y < bounds.top + bounds.height;
 }
 
-void DropDownList::Item::highlightItem(bool highlight)
+void DropDownList::Item::highlightItem(bool highlight) noexcept
 {
     Color outlineColor = highlight ? gl::BLUE : gl::GREEN;
     itemRect_.setOutlineColor(outlineColor);
 }
 
-void DropDownList::Item::swap(Item& other)
+void DropDownList::Item::swap(Item& other) noexcept
 {
     std::swap(this->locale_, other.locale_);
     std::swap(this->texture_, other.texture_);

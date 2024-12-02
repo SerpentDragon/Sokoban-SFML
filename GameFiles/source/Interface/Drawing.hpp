@@ -15,15 +15,15 @@
 
 using namespace sf;
 
-bool showWarning(std::shared_ptr<RenderWindow>, const String&);
+bool showWarning(std::shared_ptr<RenderWindow>, const String&) noexcept;
 
-void pollEvents(std::shared_ptr<RenderWindow>);
+void pollEvents(std::shared_ptr<RenderWindow>) noexcept;
 
 class Drawing
 {
 public:
 
-    Drawing(std::shared_ptr<RenderWindow>);
+    Drawing(std::shared_ptr<RenderWindow>) noexcept;
 
     Drawing(const Drawing&) = delete;
     
@@ -33,32 +33,32 @@ public:
 
     Drawing& operator=(Drawing&&) noexcept = delete;
 
-    ~Drawing() = default;
+    ~Drawing() noexcept = default;
 
-    void setLevel(const int);
+    void setLevel(const int) noexcept;
 
-    int getLevel() const;
+    int getLevel() const noexcept;
 
-    bool drawWorld();
+    bool drawWorld() noexcept;
 
-    void setCoins(int);
+    void setCoins(int) noexcept;
 
-    const int getCoins() const;
+    const int getCoins() const noexcept;
 
 private:
 
-    void loadTextures();
+    void loadTextures() noexcept;
 
-    void createButtons();
+    void createButtons() noexcept;
 
-    void updateLevelText(int);
+    void updateLevelText(int) noexcept;
 
-    void updateCoinsText();
+    void updateCoinsText() noexcept;
 
-    void updateBackground(int);
+    void updateBackground(int) noexcept;
 
     void drawMap(size_t, size_t, 
-        const std::vector<std::vector<int>>&, int, int);
+        const std::vector<std::vector<int>>&, int, int) noexcept;
 
 private:
 
