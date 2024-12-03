@@ -14,6 +14,8 @@ set(SOURCE_FILE
     GameFiles/source/Managers/SoundManager.cpp
     GameFiles/source/Player/Player.cpp
     GameFiles/source/Player/settings.cpp
+    GameFiles/source/VersionControl/VersionControlSystem.cpp
+    GameFiles/source/VersionControl/CommitTree.cpp
     GameFiles/source/Widgets/Button.cpp
     GameFiles/source/Widgets/DropDownList.cpp
     GameFiles/main.cpp
