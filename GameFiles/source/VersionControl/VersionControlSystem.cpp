@@ -1,7 +1,8 @@
 #include "VersionControlSystem.h"
 
 VersionControlSystem::VersionControlSystem(int level) noexcept 
-    : level_(level), currentCommitState_(0), dir_("app_data/.vcs/")
+    : level_(level), currentCommitState_(0), currentBranch_(0), 
+    branchesCounter_(0), dir_("app_data/.vcs/")
 {
     dir_ += std::to_string(level);
 
@@ -28,7 +29,7 @@ void VersionControlSystem::commit(unsigned int money,
     auto commitNum = tree_.getSize() + 1;
 
     CommitTree::Commit commit{ commitNum, currentCommitState_, 
-        money, coordinates };
+        currentBranch_, money, coordinates };
 
     /* 
         before createing a new commit we must:
@@ -48,7 +49,8 @@ void VersionControlSystem::commit(unsigned int money,
                 2.2.1 it equals -> it's just an already existing state (no new commit) 
                 (may be we should jump to it - change currentCommitState_)
 
-                2.2.2 it doesn't -> we create a new branch!
+                2.2.2 it doesn't -> we create a new branch! (change currentBranch_
+                and branchesCounter_)
 
         Furtheremore: everey single move of our player we should check if the current
         state of the game is equal one of the 'children' (if they exist) of current commit
@@ -68,8 +70,9 @@ void VersionControlSystem::loadCommitTreeFromFile() noexcept
     if(!treeFile.is_open()) return;
 
     // commit info
-    unsigned int commit = 0;
-    unsigned int parent = 0;
+    std::size_t commit = 0;
+    std::size_t parent = 0;
+    std::size_t branch = 0;
 
     // amount of money
     unsigned int money = 0;
@@ -82,7 +85,7 @@ void VersionControlSystem::loadCommitTreeFromFile() noexcept
     {
         std::stringstream commit_(line);
 
-        commit_ >> commit >> parent;
+        commit_ >> commit >> parent >> branch;
         commit_ >> money;
         
         while(commit_ >> x)
@@ -92,9 +95,11 @@ void VersionControlSystem::loadCommitTreeFromFile() noexcept
             coordinates.emplace_back(std::pair{ x, y });
         }
 
-        CommitTree::Commit newCommit{ commit, parent, money, coordinates };
+        CommitTree::Commit newCommit{ commit, parent, branch, money, coordinates };
 
         tree_.addCommit(newCommit);
+
+        branchesCounter_ = std::max(branchesCounter_, branch);
     }
 
     treeFile.close();
@@ -115,6 +120,17 @@ void VersionControlSystem::loadCurrentStateFromFile() noexcept
     stateFile >> currentCommitState_;
 
     stateFile.close();
+
+    // here we get branch number of current commit
+    try
+    {
+        currentBranch_ = tree_.getCommits().at(currentCommitState_).getBranch();
+    }
+    catch(const std::out_of_range& e)
+    {
+        currentBranch_ = 0;
+        currentCommitState_ = 0;
+    }
 }
 
 void VersionControlSystem::saveCommitToFile(const CommitTree::Commit& commit) const noexcept

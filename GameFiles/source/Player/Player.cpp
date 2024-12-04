@@ -6,13 +6,13 @@ Player::Player(std::shared_ptr<RenderWindow> window, int speed) noexcept
     this->speed_ = speed > gl::size ? gl::size : speed;
 
     img_.emplace("player", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
-        TextureManager::getManager().getTexture("textures/player/player"));
+        TextureManager::getManager().getTexture("textures/player/player").get());
 
     img_.emplace("box", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
-        TextureManager::getManager().getTexture("textures/player/box"));
+        TextureManager::getManager().getTexture("textures/player/box").get());
 
     img_.emplace("gold_box", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
-        TextureManager::getManager().getTexture("textures/player/gold_box"));
+        TextureManager::getManager().getTexture("textures/player/gold_box").get());
 }
 
 void Player::setLevel(const std::vector<std::vector<int>>& level) noexcept

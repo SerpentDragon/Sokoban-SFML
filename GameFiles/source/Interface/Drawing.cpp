@@ -1,172 +1,5 @@
 #include "Drawing.hpp"
 
-bool showWarning(std::shared_ptr<RenderWindow> window, const String& str) noexcept
-{
-    RectangleShape warningWindow(
-            Vector2f(DR::warningWindowWidth, DR::warningWindowHeight));
-    warningWindow.setFillColor(gl::DARK_BLUE);
-    warningWindow.setPosition(DR::warningWindowXPos, 
-        DR::warningWindowYPos);
-
-    String continueText = Localizer::translate(STRING::Continue);
-
-    Text mainMessage(str, gl::font, DR::warningTextSize);
-    mainMessage.setPosition(DR::warningWindowXPos + 
-        (DR::warningWindowWidth - mainMessage.getGlobalBounds().width) / 2, 
-        DR::warningWindowYPos + gl::size / 3);
-    
-    Text continueMessage(continueText, gl::font, DR::warningTextSize);
-    continueMessage.setPosition(DR::warningWindowXPos + 
-        (DR::warningWindowWidth - continueMessage.getGlobalBounds().width) / 2,
-        mainMessage.getGlobalBounds().top + mainMessage.getGlobalBounds().height + gl::size / 4);
-
-    Button yesButton(window, Text(Localizer::translate(STRING::Yes), gl::font, 
-        0.0225 * gl::Width), DR::yesButtonXPos, DR::yesButtonYPos, 
-        DR::warningButtonWidth, DR::warningButtonHeight, gl::WHITE, gl::BLUE);
-    yesButton.setTextColor(gl::DARK_BLUE);
-    
-    Button noButton(window, Text(Localizer::translate(STRING::No), gl::font, 
-        0.0225 * gl::Width), DR::noButtonXPos, DR::noButtonYPos, 
-        DR::warningButtonWidth, DR::warningButtonHeight, gl::WHITE, gl::BLUE);
-    noButton.setTextColor(gl::DARK_BLUE);
-
-    Event event;
-
-    while(true)
-    {
-        while(window->pollEvent(event))
-        {
-            switch(event.type)
-            {
-                case Event::Closed: // we shouldn't process these events because otherwise a lot of warning windows will be opened
-                case Event::KeyPressed:
-                    break;
-            }
-        }
-
-        window->draw(warningWindow);
-        window->draw(mainMessage);
-        window->draw(continueMessage);
-        yesButton.drawButton();
-        noButton.drawButton();
-
-        if (yesButton.isPressed()) return true;
-        else if (noButton.isPressed()) return false;
-
-        window->display();
-    }
-}
-
-void pollEvents(std::shared_ptr<RenderWindow> window) noexcept
-{
-    Event event;
-
-    while(window->pollEvent(event))
-    {
-        switch(event.type)
-        {
-            case Event::Closed:
-                    if (showWarning(window, 
-                        Localizer::translate(STRING::SureToExit))) window->close();
-                break;
-            case Event::KeyPressed:
-                if (event.key.code == Keyboard::Escape)
-                    if (showWarning(window, 
-                        Localizer::translate(STRING::SureToExit))) window->close();
-                return;
-        }
-        window->clear();
-    }
-}
-
-void Drawing::loadTextures() noexcept
-{
-    world_.emplace("wall", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
-        TextureManager::getManager().getTexture("textures/cell/wall"));
-
-    world_.emplace("floor", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
-        TextureManager::getManager().getTexture("textures/cell/floor"));
-
-    world_.emplace("cross", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
-        TextureManager::getManager().getTexture("textures/cell/cross"));
-
-    world_.emplace("coin", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
-        TextureManager::getManager().getTexture("textures/player/coin"));
-    world_["coin"].setPosition(0.759 * gl::Width, gl::size / 2);
-}
-
-void Drawing::createButtons() noexcept
-{
-    backButton_ = Button(window_, DR::backButtonXPos, gl::size / 2, gl::size, gl::size, 
-        std::make_shared<Texture>(*TextureManager::getManager().getTexture("textures/buttons/back")));
-
-    restartButton_ = Button(window_, DR::restartButtonXPos, gl::size / 2, gl::size, gl::size, 
-        std::make_shared<Texture>(*TextureManager::getManager().getTexture("textures/buttons/restart")));
-
-    levelsButton_ = Button(window_, DR::levelsButtonXPos, gl::size / 2, gl::size, gl::size, 
-        std::make_shared<Texture>(*TextureManager::getManager().getTexture("textures/buttons/levels")));
-
-    saveButton_ = Button(window_, DR::saveButtonXPos, gl::size / 2, gl::size, gl::size, 
-        std::make_shared<Texture>(*TextureManager::getManager().getTexture("textures/buttons/save")));
-
-    showCommitTreeButton_ = Button(window_, DR::showCommitTreeButtonXPos, gl::size / 2, gl::size, gl::size, 
-        std::make_shared<Texture>(*TextureManager::getManager().getTexture("textures/buttons/fork")));
-}
-
-void Drawing::updateLevelText(int level) noexcept
-{
-    levelText_.setString(Localizer::translate(STRING::Level) 
-        + std::to_string(level));
-
-    const int levelTextXPos = (gl::Width - levelText_.getGlobalBounds().width) / 2;
-    levelText_.setPosition(levelTextXPos, DR::levelTextYPos);
-}
-
-void Drawing::updateCoinsText() noexcept
-{
-    coinsText_.setString(std::to_string(coins_));
-    coinsText_.setPosition(world_["coin"].getGlobalBounds().left - 
-        coinsText_.getGlobalBounds().width - gl::size / 2, DR::drawingCoinsTextYPos);
-}
-
-void Drawing::updateBackground(int level) noexcept
-{
-    background_.setTexture(TextureManager::getManager().
-        loadTextureFromFile("textures/levels/" + 
-        std::to_string(level) + "-1.png"));
-}
-
-void Drawing::drawMap(size_t height, size_t width, 
-    const std::vector<std::vector<int>>& map,
-    int offset1, int offset2) noexcept
-{
-    for(size_t i = 0; i < height; i++)
-    {
-        for(size_t j = 0; j < width; j++)
-        {
-            switch(map[i][j])
-            {
-                case FIELD::NO_FIELD:
-                    break;
-                case FIELD::WALL:
-                    world_["wall"].setPosition(j * gl::size + offset1, i * gl::size + offset2);
-                    window_->draw(world_["wall"]);
-                    break;
-                default:
-                    world_["floor"].setPosition(j * gl::size + offset1, i * gl::size + offset2);
-                    window_->draw(world_["floor"]);
-
-                    if (map[i][j] == FIELD::AIM)
-                    {
-                        world_["cross"].setPosition(j * gl::size + offset1, i * gl::size + offset2);
-                        window_->draw(world_["cross"]);
-                    }
-                    break;
-            }
-        }
-    }
-}
-
 Drawing::Drawing(std::shared_ptr<RenderWindow> window) noexcept 
     : window_(window), coins_(0), player_(window),
     levelText_("", gl::font, DR::levelTextSize),
@@ -319,9 +152,8 @@ bool Drawing::drawWorld() noexcept
         }
         else if (levelsButton_.isPressed()) 
         {
-            if (showWarning(window_, 
-                Localizer::translate(STRING::LostResults))) 
-                    break;
+            if (showWarning(window_, Localizer::translate(STRING::LostResults))) 
+                break;
         }
         else if (saveButton_.isPressed())
         {
@@ -329,7 +161,7 @@ bool Drawing::drawWorld() noexcept
         }
         else if (showCommitTreeButton_.isPressed())
         {
-            
+            displayVCSWindow();
         }
 
         window_->display();
@@ -341,3 +173,177 @@ bool Drawing::drawWorld() noexcept
 void Drawing::setCoins(int coins_num) noexcept { coins_ = coins_num; }
 
 const int Drawing::getCoins() const noexcept { return coins_; }
+
+bool showWarning(std::shared_ptr<RenderWindow> window, const String& str) noexcept
+{
+    RectangleShape warningWindow(
+            Vector2f(DR::warningWindowWidth, DR::warningWindowHeight));
+    warningWindow.setFillColor(gl::DARK_BLUE);
+    warningWindow.setPosition(DR::warningWindowXPos, 
+        DR::warningWindowYPos);
+
+    String continueText = Localizer::translate(STRING::Continue);
+
+    Text mainMessage(str, gl::font, DR::warningTextSize);
+    mainMessage.setPosition(DR::warningWindowXPos + 
+        (DR::warningWindowWidth - mainMessage.getGlobalBounds().width) / 2, 
+        DR::warningWindowYPos + gl::size / 3);
+    
+    Text continueMessage(continueText, gl::font, DR::warningTextSize);
+    continueMessage.setPosition(DR::warningWindowXPos + 
+        (DR::warningWindowWidth - continueMessage.getGlobalBounds().width) / 2,
+        mainMessage.getGlobalBounds().top + mainMessage.getGlobalBounds().height + gl::size / 4);
+
+    Button yesButton(window, Text(Localizer::translate(STRING::Yes), gl::font, 
+        0.0225 * gl::Width), DR::yesButtonXPos, DR::yesButtonYPos, 
+        DR::warningButtonWidth, DR::warningButtonHeight, gl::WHITE, gl::BLUE);
+    yesButton.setTextColor(gl::DARK_BLUE);
+    
+    Button noButton(window, Text(Localizer::translate(STRING::No), gl::font, 
+        0.0225 * gl::Width), DR::noButtonXPos, DR::noButtonYPos, 
+        DR::warningButtonWidth, DR::warningButtonHeight, gl::WHITE, gl::BLUE);
+    noButton.setTextColor(gl::DARK_BLUE);
+
+    Event event;
+
+    while(true)
+    {
+        while(window->pollEvent(event))
+        {
+            switch(event.type)
+            {
+                case Event::Closed: // we shouldn't process these events because otherwise a lot of warning windows will be opened
+                case Event::KeyPressed:
+                    break;
+            }
+        }
+
+        window->draw(warningWindow);
+        window->draw(mainMessage);
+        window->draw(continueMessage);
+        yesButton.drawButton();
+        noButton.drawButton();
+
+        if (yesButton.isPressed()) return true;
+        else if (noButton.isPressed()) return false;
+
+        window->display();
+    }
+}
+
+void pollEvents(std::shared_ptr<RenderWindow> window) noexcept
+{
+    Event event;
+
+    while(window->pollEvent(event))
+    {
+        switch(event.type)
+        {
+            case Event::Closed:
+                    if (showWarning(window, 
+                        Localizer::translate(STRING::SureToExit))) window->close();
+                break;
+            case Event::KeyPressed:
+                if (event.key.code == Keyboard::Escape)
+                    if (showWarning(window, 
+                        Localizer::translate(STRING::SureToExit))) window->close();
+                return;
+        }
+        window->clear();
+    }
+}
+
+void Drawing::loadTextures() noexcept
+{
+    world_.emplace("wall", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
+        TextureManager::getManager().getTexture("textures/cell/wall").get());
+
+    world_.emplace("floor", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
+        TextureManager::getManager().getTexture("textures/cell/floor").get());
+
+    world_.emplace("cross", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
+        TextureManager::getManager().getTexture("textures/cell/cross").get());
+
+    world_.emplace("coin", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
+        TextureManager::getManager().getTexture("textures/player/coin").get());
+    world_["coin"].setPosition(0.759 * gl::Width, gl::size / 2);
+}
+
+void Drawing::createButtons() noexcept
+{
+    backButton_ = Button(window_, DR::backButtonXPos, gl::size / 2, gl::size, gl::size, 
+        TextureManager::getManager().getTexture("textures/buttons/back"));
+
+    restartButton_ = Button(window_, DR::restartButtonXPos, gl::size / 2, gl::size, gl::size, 
+        TextureManager::getManager().getTexture("textures/buttons/restart"));
+
+    levelsButton_ = Button(window_, DR::levelsButtonXPos, gl::size / 2, gl::size, gl::size, 
+        TextureManager::getManager().getTexture("textures/buttons/levels"));
+
+    saveButton_ = Button(window_, DR::saveButtonXPos, gl::size / 2, gl::size, gl::size, 
+        TextureManager::getManager().getTexture("textures/buttons/save"));
+
+    showCommitTreeButton_ = Button(window_, DR::showCommitTreeButtonXPos, gl::size / 2, gl::size, gl::size, 
+        TextureManager::getManager().getTexture("textures/buttons/fork"));
+}
+
+void Drawing::updateLevelText(int level) noexcept
+{
+    levelText_.setString(Localizer::translate(STRING::Level) 
+        + std::to_string(level));
+
+    const int levelTextXPos = (gl::Width - levelText_.getGlobalBounds().width) / 2;
+    levelText_.setPosition(levelTextXPos, DR::levelTextYPos);
+}
+
+void Drawing::updateCoinsText() noexcept
+{
+    coinsText_.setString(std::to_string(coins_));
+    coinsText_.setPosition(world_["coin"].getGlobalBounds().left - 
+        coinsText_.getGlobalBounds().width - gl::size / 2, DR::drawingCoinsTextYPos);
+}
+
+void Drawing::updateBackground(int level) noexcept
+{
+    background_.setTexture(TextureManager::getManager().
+        loadTextureFromFile("textures/levels/" + 
+        std::to_string(level) + "-1.png").get());
+}
+
+void Drawing::drawMap(size_t height, size_t width, 
+    const std::vector<std::vector<int>>& map,
+    int offset1, int offset2) noexcept
+{
+    for(size_t i = 0; i < height; i++)
+    {
+        for(size_t j = 0; j < width; j++)
+        {
+            switch(map[i][j])
+            {
+                case FIELD::NO_FIELD:
+                    break;
+                case FIELD::WALL:
+                    world_["wall"].setPosition(j * gl::size + offset1, i * gl::size + offset2);
+                    window_->draw(world_["wall"]);
+                    break;
+                default:
+                    world_["floor"].setPosition(j * gl::size + offset1, i * gl::size + offset2);
+                    window_->draw(world_["floor"]);
+
+                    if (map[i][j] == FIELD::AIM)
+                    {
+                        world_["cross"].setPosition(j * gl::size + offset1, i * gl::size + offset2);
+                        window_->draw(world_["cross"]);
+                    }
+                    break;
+            }
+        }
+    }
+}
+
+void Drawing::displayVCSWindow() noexcept
+{
+    VCSWindow vcsWindow(window_);
+
+    vcsWindow.displayVCSWIndow();
+}

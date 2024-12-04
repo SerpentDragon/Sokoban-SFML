@@ -3,6 +3,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "../Player/settings.h"
+#include "../Managers/TextureManager.hpp"
 
 using namespace sf;
 

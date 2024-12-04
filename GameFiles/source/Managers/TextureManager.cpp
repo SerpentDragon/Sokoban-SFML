@@ -1,27 +1,29 @@
 #include "TextureManager.hpp"
 
+#include <cassert>
+
 TextureManager& TextureManager::getManager() noexcept
 {
     static TextureManager manager;
     return manager;
 }
 
-const sf::Texture* TextureManager::getTexture(const std::string& name) const noexcept
+TexturePtr TextureManager::getTexture(const std::string& name) const noexcept
 {
     auto it = textures_.find(prefix_ + name);
-    if (it != textures_.end()) return &(it->second);
+    if (it != textures_.end()) return it->second;
     else return nullptr;
 }
 
-const sf::Texture* TextureManager::loadTextureFromFile(const std::string& filename) noexcept
+TexturePtr TextureManager::loadTextureFromFile(const std::string& filename) noexcept
 {
     sf::Texture texture;
     std::string file = prefix_ + filename;
 
     if (texture.loadFromFile(file))
     {
-        textures_[file] = texture;
-        return &textures_[file];
+        textures_[file] = std::make_shared<sf::Texture>(texture);
+        return textures_[file];
     }
     else return nullptr;
 }
@@ -44,8 +46,12 @@ void TextureManager::loadAllTexturesFromDirectory(const std::string& dir) noexce
         {
             std::string filename = file.path().filename();
             std::string texture_name = file.path().stem();
+
+            sf::Texture texture;
+            texture.loadFromFile(dir + filename);
             
-            textures_[dir + texture_name].loadFromFile(dir + filename);
+            textures_[dir + texture_name] 
+                = std::shared_ptr<sf::Texture>(new sf::Texture(texture));
         }
     }
 }

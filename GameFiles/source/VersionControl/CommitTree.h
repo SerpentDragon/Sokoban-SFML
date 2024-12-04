@@ -29,7 +29,7 @@ public:
     {
     public:
 
-        Commit(std::size_t, std::size_t, UI, const std::vector<COORDINATE>&) noexcept;
+        Commit(std::size_t, std::size_t, std::size_t, UI, const std::vector<COORDINATE>&) noexcept;
 
         Commit(const Commit&) noexcept = default;
 
@@ -47,10 +47,15 @@ public:
 
         bool operator=(const Commit&) const noexcept;
 
+    public:
+
+        UI getBranch() const noexcept;
+
     private:
 
-        UI commit_;
-        UI parent_;
+        std::size_t commit_;
+        std::size_t parent_;
+        std::size_t branch_;
 
         UI money_;
 
@@ -61,7 +66,7 @@ public:
 
     void addCommit(const Commit&) noexcept;
 
-    std::unordered_map<UI, CommitTree::Commit> getCommits() const noexcept;
+    const std::unordered_map<UI, CommitTree::Commit>& getCommits() const noexcept;
 
     std::size_t getSize() const noexcept;
 

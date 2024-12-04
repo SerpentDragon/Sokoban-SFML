@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
+#include "VCSWindow.hpp"
 #include <SFML/Audio.hpp>
 #include "../Player/map.h"
 #include <SFML/Graphics.hpp>
@@ -59,6 +60,8 @@ private:
 
     void drawMap(size_t, size_t, 
         const std::vector<std::vector<int>>&, int, int) noexcept;
+
+    void displayVCSWindow() noexcept;
 
 private:
 

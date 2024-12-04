@@ -3,17 +3,17 @@
 void Interface::loadTextures() noexcept
 {
     img_.emplace("background", RectangleShape(Vector2f(gl::Width, gl::Height))).first->second.setTexture(
-        TextureManager::getManager().getTexture("textures/interface/background"));
+        TextureManager::getManager().getTexture("textures/interface/background").get());
 
     img_.emplace("logo", RectangleShape(Vector2f(IN::logoWidth, IN::logoHeight))).first->second.setTexture(
-        TextureManager::getManager().getTexture("textures/interface/logo"));
+        TextureManager::getManager().getTexture("textures/interface/logo").get());
     img_["logo"].setPosition((gl::Width - img_["logo"].getGlobalBounds().width) / 2, IN::logoYPos);
 
     img_.emplace("levels_back", RectangleShape(Vector2f(gl::Width, gl::Height))).first->second.setTexture(
-        TextureManager::getManager().getTexture("textures/interface/levels_back"));  
+        TextureManager::getManager().getTexture("textures/interface/levels_back").get());  
 
     img_.emplace("coin", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
-        TextureManager::getManager().getTexture("textures/player/coin")); 
+        TextureManager::getManager().getTexture("textures/player/coin").get()); 
 }
 
 void Interface::createMainMenuButtons() noexcept

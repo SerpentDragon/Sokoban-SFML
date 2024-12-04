@@ -80,23 +80,19 @@ void DropDownList::createItems() noexcept
     
     items_ = {
         { 0, 0, itemSize, 
-            std::make_shared<Texture>(*TextureManager::getManager().
-                getTexture("textures/languages/en_UK")),
+            TextureManager::getManager().getTexture("textures/languages/en_UK"),
             "en_UK" },
 
         { 0, 0, itemSize, 
-            std::make_shared<Texture>(*TextureManager::getManager().
-                getTexture("textures/languages/ru_RU")),
+            TextureManager::getManager().getTexture("textures/languages/ru_RU"),
             "ru_RU" },
 
         { 0, 0, itemSize, 
-            std::make_shared<Texture>(*TextureManager::getManager().
-                getTexture("textures/languages/de_DE")),
+            TextureManager::getManager().getTexture("textures/languages/de_DE"),
             "de_DE" },
 
         { 0, 0, itemSize, 
-            std::make_shared<Texture>(*TextureManager::getManager().
-                getTexture("textures/languages/fr_FR")),
+            TextureManager::getManager().getTexture("textures/languages/fr_FR"),
             "fr_FR" }
     };
 

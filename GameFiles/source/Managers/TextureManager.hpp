@@ -8,15 +8,17 @@
 
 namespace fs = std::filesystem;
 
+using TexturePtr = std::shared_ptr<sf::Texture>;
+
 class TextureManager
 {
 public:
 
     static TextureManager& getManager() noexcept;
 
-    const sf::Texture* getTexture(const std::string&) const noexcept;
+    TexturePtr getTexture(const std::string&) const noexcept;
 
-    const sf::Texture* loadTextureFromFile(const std::string&) noexcept;
+    TexturePtr loadTextureFromFile(const std::string&) noexcept;
 
 private:
 
@@ -38,5 +40,5 @@ private:
 
     std::string prefix_;
 
-    mutable std::unordered_map<std::string, sf::Texture> textures_;
+    mutable std::unordered_map<std::string, TexturePtr> textures_;
 };

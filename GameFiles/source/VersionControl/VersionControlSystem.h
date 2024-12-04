@@ -43,7 +43,11 @@ private:
 
     unsigned int level_;
 
+    // these fields must be updated during game process!
     unsigned int currentCommitState_;
+    std::size_t currentBranch_;
+
+    std::size_t branchesCounter_;
 
     std::string dir_;
     std::string treeFilename_;
