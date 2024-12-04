@@ -20,37 +20,21 @@ std::pair<int, int> FileIOManager::readDataFromFile() noexcept
 
     if (coinsFile.is_open())
     {
-        try
-        {
-            coinsFile >> coins_;
+        coinsFile >> coins_;
 
-            if (coins_ < 0) coins_ = 0;
+        if (coins_ < 0) coins_ = 0;
 
-            coinsFile.close();
-        }
-        catch(const std::exception& ex)
-        {
-            coins_ = 0;
-        }
+        coinsFile.close();
     }
     else coins_ = default_coins_;
 
     if (recordsFile.is_open())
     {
-        try
-        {
-            recordsFile >> record_;
+        recordsFile >> record_;
 
-            if (record_ < 0 || record_ >= levelsMap.size())
-                record_ = 0;
+        if (record_ < 0 || record_ >= levelsMap.size()) record_ = 0;
 
-            recordsFile.close();
-        }
-        catch(const std::exception& ex)
-        {
-            record_ = 0;
-        }
-        
+        recordsFile.close();
     }
     else record_ = 0;
 
