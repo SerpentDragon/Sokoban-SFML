@@ -6,6 +6,7 @@
 #include "../Widgets/Button.hpp"
 
 using namespace sf;
+namespace vcsw = VCSWIN;
 
 class VCSWindow
 {

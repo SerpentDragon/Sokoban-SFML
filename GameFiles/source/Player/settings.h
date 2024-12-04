@@ -127,6 +127,21 @@ namespace IN
     extern const int levelPassedSubstrateHeight;
 }
 
+// VERSION CONTROL SYSTEM (VCS) WINDOW SETTINGS   
+namespace VCSWIN
+{
+    // VCS Window params
+    extern const int VCSWindowWidth;
+    extern const int VCSWindowHeight;
+    extern const int VCSWIndowXPos;
+    extern const int VCSWIndowYPos;
+
+    // Close VCS Window button params
+    extern const int closeButtonSize;
+    extern const int closeButtonXPos;
+    extern const int closeButtonYPos;
+}
+
 // STRINGS TO TRANSLATE
 namespace STRING
 {

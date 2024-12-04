@@ -4,7 +4,8 @@
 
 VCSWindow::VCSWindow(std::shared_ptr<RenderWindow> window) noexcept
     : window_(window), windowRect_(Vector2f(gl::Width / 3, gl::Height)),
-    closeButton_(window_, gl::Width - gl::size / 2, 0, gl::size / 2, gl::size / 2, 
+    closeButton_(window_, vcsw::closeButtonXPos, vcsw::closeButtonYPos, 
+        vcsw::closeButtonSize, vcsw::closeButtonSize, 
         TextureManager::getManager().getTexture("textures/buttons/close"))
 {
     windowRect_.setFillColor(gl::WHITE);

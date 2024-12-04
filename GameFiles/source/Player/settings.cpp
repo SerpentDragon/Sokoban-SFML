@@ -109,3 +109,17 @@ namespace IN
     const int levelPassedSubstrateWidth = 8 * gl::size;
 const int levelPassedSubstrateHeight = 1.3 * gl::size;
 }
+
+namespace VCSWIN
+{
+    // VCS Window params
+    extern const int VCSWindowWidth = gl::Width / 3;
+    extern const int VCSWindowHeight = gl::Height;
+    extern const int VCSWIndowXPos = gl::Width - VCSWindowWidth;
+    extern const int VCSWIndowYPos = 0;
+
+    // Close VCS Window button params
+    extern const int closeButtonSize= gl::size / 2;
+    extern const int closeButtonXPos = gl::Width - closeButtonSize;
+    extern const int closeButtonYPos = 0;
+}
