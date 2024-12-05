@@ -2,11 +2,12 @@
 
 #include <string>
 #include <memory>
+#include "pollEvent.hpp"
 #include <unordered_map>
-#include "VCSWindow.hpp"
 #include <SFML/Audio.hpp>
 #include "../Player/map.h"
 #include <SFML/Graphics.hpp>
+#include "VCS/VCSWindow.hpp"
 #include "../Player/settings.h"
 #include "../Player/Player.hpp"
 #include "../Widgets/Button.hpp"
@@ -15,10 +16,6 @@
 #include "../Managers/TextureManager.hpp"
 
 using namespace sf;
-
-bool showWarning(std::shared_ptr<RenderWindow>, const String&) noexcept;
-
-void pollEvents(std::shared_ptr<RenderWindow>) noexcept;
 
 class Drawing
 {

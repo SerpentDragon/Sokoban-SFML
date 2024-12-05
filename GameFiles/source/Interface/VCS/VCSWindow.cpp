@@ -1,7 +1,5 @@
 #include "VCSWindow.hpp"
 
-#include <cassert>
-
 VCSWindow::VCSWindow(std::shared_ptr<RenderWindow> window) noexcept
     : window_(window), windowRect_(Vector2f(gl::Width / 3, gl::Height)),
     closeButton_(window_, vcsw::closeButtonXPos, vcsw::closeButtonYPos, 

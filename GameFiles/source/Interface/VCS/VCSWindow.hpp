@@ -1,9 +1,10 @@
 #pragma once
 
 #include <memory>
+#include "GraphicsTree.hpp"
 #include <SFML/Graphics.hpp>
-#include "../Player/settings.h"
-#include "../Widgets/Button.hpp"
+#include "../../Player/settings.h"
+#include "../../Widgets/Button.hpp"
 
 using namespace sf;
 namespace vcsw = VCSWIN;
@@ -35,4 +36,6 @@ private:
     RectangleShape windowRect_;
 
     Button closeButton_;
+
+    GraphicsTree tree_;
 };
