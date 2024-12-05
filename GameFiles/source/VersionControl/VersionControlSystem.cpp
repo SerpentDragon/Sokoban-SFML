@@ -1,4 +1,4 @@
-#include "VersionControlSystem.h"
+#include "VersionControlSystem.hpp"
 
 VersionControlSystem::VersionControlSystem(int level) noexcept 
     : level_(level), currentCommitState_(0), currentBranch_(0), 
@@ -28,7 +28,7 @@ void VersionControlSystem::commit(unsigned int money,
 {
     auto commitNum = tree_.getSize() + 1;
 
-    CommitTree::Commit commit{ commitNum, currentCommitState_, 
+    Commit commit{ commitNum, currentCommitState_, 
         currentBranch_, money, coordinates };
 
     /* 
@@ -95,7 +95,7 @@ void VersionControlSystem::loadCommitTreeFromFile() noexcept
             coordinates.emplace_back(std::pair{ x, y });
         }
 
-        CommitTree::Commit newCommit{ commit, parent, branch, money, coordinates };
+        Commit newCommit{ commit, parent, branch, money, coordinates };
 
         tree_.addCommit(newCommit);
 
@@ -124,7 +124,7 @@ void VersionControlSystem::loadCurrentStateFromFile() noexcept
     // here we get branch number of current commit
     try
     {
-        currentBranch_ = tree_.getCommits().at(currentCommitState_).getBranch();
+        currentBranch_ = tree_.getCommits().at(currentCommitState_).branch_;
     }
     catch(const std::out_of_range& e)
     {
@@ -133,7 +133,7 @@ void VersionControlSystem::loadCurrentStateFromFile() noexcept
     }
 }
 
-void VersionControlSystem::saveCommitToFile(const CommitTree::Commit& commit) const noexcept
+void VersionControlSystem::saveCommitToFile(const Commit& commit) const noexcept
 {
     std::fstream treeFile(treeFilename_, std::ios_base::app);
     if(!treeFile.is_open()) return;
