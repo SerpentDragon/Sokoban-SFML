@@ -1,13 +1,11 @@
 #include "CommitTree.hpp"
 
-// CommitTree class
-
 void CommitTree::addCommit(const Commit& commit) noexcept
 {
     tree_.insert({ commit.commit_, commit });
 }
 
-const std::unordered_map<UI, Commit>& CommitTree::getCommits() const noexcept 
+const std::unordered_map<std::size_t, Commit>& CommitTree::getCommits() const noexcept 
 { 
     return tree_; 
 }

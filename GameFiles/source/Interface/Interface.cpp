@@ -1,5 +1,217 @@
 #include "Interface.hpp"
 
+Interface::Interface(std::shared_ptr<RenderWindow> window) noexcept
+    : window_(window), currentMode_(MODE::MainMenuMode), 
+    currentLevel_(0), passedLevel_(0), coins_(0), 
+    drawing_(window_), dropDownList_(window_),
+    levelPassedText_("", gl::font, IN::levelPassedTextSize),
+    levelPassedSubstrate_(Vector2f(IN::levelPassedSubstrateWidth, 
+        IN::levelPassedSubstrateHeight))    
+{
+    initTexts();
+    loadTextures();
+    createLevelButtons();
+    initLevelPassedText();
+    createMainMenuButtons();
+    createFurtherActionButtons();
+
+    std::tie(coins_, currentLevel_) = file_.readDataFromFile();
+}
+
+Interface::~Interface() noexcept
+{
+    file_.writeDataToFile(coins_, currentLevel_);
+}
+
+void Interface::showMenu() noexcept
+{
+    while (window_->isOpen())
+    {
+        pollEvents(window_);
+    
+        window_->clear();
+
+        window_->draw(img_["background"]);
+        window_->draw(img_["logo"]);
+
+        newGameButton_.drawButton();
+        continueButton_.drawButton();
+        exitButton_.drawButton();
+
+        dropDownList_.drawList();
+
+        if (newGameButton_.isPressed())
+        {
+            if (currentLevel_)
+            {
+                if (showWarning(window_, 
+                    Localizer::translate(STRING::LostResults)))
+                {
+                    currentLevel_ = 0;
+                    currentMode_ = MODE::ChooseLevelMode;
+                    break;
+                }
+            }
+            else 
+            {
+                currentMode_ = MODE::ChooseLevelMode;
+                break;
+            }
+        }
+        else if (continueButton_.isPressed())
+        {
+            currentMode_ = MODE::ChooseLevelMode;
+            break;
+        }
+        else if (exitButton_.isPressed())
+        {
+            currentMode_ = MODE::ExitMode;
+            break;
+        }
+        
+        std::string_view locale = dropDownList_.isPressed();
+        if (locale.size())
+        {
+            Localizer::initLocalizer(locale.data());
+            recreateTexts();
+        }
+
+        window_->display();
+    }
+}
+
+void Interface::chooseLevel() noexcept
+{
+    updateLevelButtonsColor();
+    
+    while(window_->isOpen())
+    {
+        pollEvents(window_);
+
+        window_->clear();
+        
+        window_->draw(img_["levels_back"]);
+        window_->draw(titleText_);
+        menuButton_.drawButton();
+
+        for(size_t i = 0; i < levelsButtons_.size(); i++) 
+        { 
+            levelsButtons_[i].drawButton();
+            if (i <= currentLevel_)
+            {
+                if (levelsButtons_[i].isPressed())
+                {
+                    drawing_.setLevel(i + 1);
+                    currentMode_ = MODE::PlayLevelMode;
+                    break;
+                }
+            }
+        }
+
+        if (menuButton_.isPressed())
+            currentMode_ = MODE::MainMenuMode;
+
+        if (currentMode_ != ChooseLevelMode) break;
+
+        window_->display();
+    }
+}
+
+void Interface::displayLevel() noexcept
+{
+    drawing_.setCoins(this->getCoins());
+
+    if (drawing_.drawWorld()) 
+    {
+        currentMode_ = MODE::ChooseAction;
+        passedLevel_ = drawing_.getLevel();
+    }
+    else currentMode_ = MODE::ChooseLevelMode;
+
+    coins_ = drawing_.getCoins();
+}
+
+void Interface::chooseFurtherAction() noexcept
+{
+    sleep(milliseconds(250));
+
+    SoundManager::getManager().playSound("level_complete");
+    
+    updateCoinsText();
+
+    if (passedLevel_ > currentLevel_) currentLevel_ = passedLevel_;
+
+    Sprite background(*TextureManager::getManager().loadTextureFromFile(
+        "textures/levels/" + std::to_string(passedLevel_) + "-2.png"), 
+        { 0, 0, gl::Width, gl::Height });
+
+    if (passedLevel_ == levelsMap.size()) 
+        nextButton_.setButtonColor(gl::GREY);
+
+    while(window_->isOpen())
+    {
+        pollEvents(window_);
+
+        window_->clear();
+
+        window_->draw(background);
+
+        window_->draw(levelPassedSubstrate_);
+        window_->draw(levelPassedText_);
+        window_->draw(img_["coin"]);
+        window_->draw(coinsText_);
+
+        levelsButton_.drawButton();
+        repeatButton_.drawButton();
+        nextButton_.drawButton();
+
+        if (levelsButton_.isPressed()) 
+        {
+            currentMode_ = MODE::ChooseLevelMode;
+            break;
+        }
+
+        else if (repeatButton_.isPressed())
+        {
+            drawing_.setCoins(getCoins());
+
+            if (!drawing_.drawWorld()) 
+                currentMode_ = MODE::ChooseLevelMode;
+
+            coins_ = drawing_.getCoins();
+            break;
+        }
+
+        else if (passedLevel_ != levelsMap.size() 
+            && nextButton_.isPressed())
+        {
+            drawing_.setCoins(getCoins());
+            drawing_.setLevel(passedLevel_ + 1);
+
+            if (drawing_.drawWorld())
+                passedLevel_++;
+            else currentMode_ = MODE::ChooseLevelMode;
+
+            coins_ = drawing_.getCoins();
+            break;
+        }
+
+        window_->display();
+    }
+}
+
+void Interface::exitGame() noexcept
+{
+    if (!showWarning(window_, 
+        Localizer::translate(STRING::SureToExit))) 
+            currentMode_ = MainMenuMode;
+    else window_->close();
+}
+
+const size_t Interface::getCurrentMode() const noexcept { return currentMode_; }
+
+void Interface::setCurrentLevel(size_t curr_level) noexcept { currentLevel_ = curr_level; }
+
 void Interface::loadTextures() noexcept
 {
     img_.emplace("background", RectangleShape(Vector2f(gl::Width, gl::Height))).first->second.setTexture(
@@ -159,218 +371,6 @@ void Interface::recreateTexts() noexcept
         levelPassedText_.getGlobalBounds().height) / 3);
 }
 
-Interface::Interface(std::shared_ptr<RenderWindow> window) noexcept
-    : window_(window), currentMode_(MODE::MainMenuMode), 
-    currentLevel_(0), passedLevel_(0), coins_(0), 
-    drawing_(window_), dropDownList_(window_),
-    levelPassedText_("", gl::font, IN::levelPassedTextSize),
-    levelPassedSubstrate_(Vector2f(IN::levelPassedSubstrateWidth, 
-        IN::levelPassedSubstrateHeight))    
-{
-    initTexts();
-    loadTextures();
-    createLevelButtons();
-    initLevelPassedText();
-    createMainMenuButtons();
-    createFurtherActionButtons();
-
-    std::tie(coins_, currentLevel_) = file_.readDataFromFile();
-}
-
-Interface::~Interface() noexcept
-{
-    file_.writeDataToFile(coins_, currentLevel_);
-}
-
-void Interface::showMenu() noexcept
-{
-    while (window_->isOpen())
-    {
-        pollEvents(window_);
-    
-        window_->clear();
-
-        window_->draw(img_["background"]);
-        window_->draw(img_["logo"]);
-
-        newGameButton_.drawButton();
-        continueButton_.drawButton();
-        exitButton_.drawButton();
-
-        dropDownList_.drawList();
-
-        if (newGameButton_.isPressed())
-        {
-            if (currentLevel_)
-            {
-                if (showWarning(window_, 
-                    Localizer::translate(STRING::LostResults)))
-                {
-                    currentLevel_ = 0;
-                    currentMode_ = MODE::ChooseLevelMode;
-                    break;
-                }
-            }
-            else 
-            {
-                currentMode_ = MODE::ChooseLevelMode;
-                break;
-            }
-        }
-        else if (continueButton_.isPressed())
-        {
-            currentMode_ = MODE::ChooseLevelMode;
-            break;
-        }
-        else if (exitButton_.isPressed())
-        {
-            currentMode_ = MODE::ExitMode;
-            break;
-        }
-        
-        std::string_view locale = dropDownList_.isPressed();
-        if (locale.size())
-        {
-            Localizer::initLocalizer(locale.data());
-            recreateTexts();
-        }
-
-        window_->display();
-    }
-}
-
-void Interface::chooseLevel() noexcept
-{
-    updateLevelButtonsColor();
-    
-    while(window_->isOpen())
-    {
-        pollEvents(window_);
-
-        window_->clear();
-        
-        window_->draw(img_["levels_back"]);
-        window_->draw(titleText_);
-        menuButton_.drawButton();
-
-        for(size_t i = 0; i < levelsButtons_.size(); i++) 
-        { 
-            levelsButtons_[i].drawButton();
-            if (i <= currentLevel_)
-            {
-                if (levelsButtons_[i].isPressed())
-                {
-                    drawing_.setLevel(i + 1);
-                    currentMode_ = MODE::PlayLevelMode;
-                    break;
-                }
-            }
-        }
-
-        if (menuButton_.isPressed())
-            currentMode_ = MODE::MainMenuMode;
-
-        if (currentMode_ != ChooseLevelMode) break;
-
-        window_->display();
-    }
-}
-
-void Interface::displayLevel() noexcept
-{
-    drawing_.setCoins(getCoins());
-
-    if (drawing_.drawWorld()) 
-    {
-        currentMode_ = MODE::ChooseAction;
-        passedLevel_ = drawing_.getLevel();
-    }
-    else currentMode_ = MODE::ChooseLevelMode;
-
-    coins_ = drawing_.getCoins();
-}
-
-void Interface::chooseFurtherAction() noexcept
-{
-    sleep(milliseconds(250));
-
-    SoundManager::getManager().playSound("level_complete");
-    
-    updateCoinsText();
-
-    if (passedLevel_ > currentLevel_) currentLevel_ = passedLevel_;
-
-    Sprite background(*TextureManager::getManager().loadTextureFromFile(
-        "textures/levels/" + std::to_string(passedLevel_) + "-2.png"), 
-        { 0, 0, gl::Width, gl::Height });
-
-    if (passedLevel_ == levelsMap.size()) 
-        nextButton_.setButtonColor(gl::GREY);
-
-    while(window_->isOpen())
-    {
-        pollEvents(window_);
-
-        window_->clear();
-
-        window_->draw(background);
-
-        window_->draw(levelPassedSubstrate_);
-        window_->draw(levelPassedText_);
-        window_->draw(img_["coin"]);
-        window_->draw(coinsText_);
-
-        levelsButton_.drawButton();
-        repeatButton_.drawButton();
-        nextButton_.drawButton();
-
-        if (levelsButton_.isPressed()) 
-        {
-            currentMode_ = MODE::ChooseLevelMode;
-            break;
-        }
-
-        else if (repeatButton_.isPressed())
-        {
-            drawing_.setCoins(getCoins());
-
-            if (!drawing_.drawWorld()) 
-                currentMode_ = MODE::ChooseLevelMode;
-
-            coins_ = drawing_.getCoins();
-            break;
-        }
-
-        else if (passedLevel_ != levelsMap.size() 
-            && nextButton_.isPressed())
-        {
-            drawing_.setCoins(getCoins());
-            drawing_.setLevel(passedLevel_ + 1);
-
-            if (drawing_.drawWorld())
-                passedLevel_++;
-            else currentMode_ = MODE::ChooseLevelMode;
-
-            coins_ = drawing_.getCoins();
-            break;
-        }
-
-        window_->display();
-    }
-}
-
-void Interface::exitGame() noexcept
-{
-    if (!showWarning(window_, 
-        Localizer::translate(STRING::SureToExit))) 
-            currentMode_ = MainMenuMode;
-    else window_->close();
-}
-
 void Interface::setCoins(int coins_num) noexcept { coins_ = coins_num; }
 
 const int Interface::getCoins() const noexcept { return coins_; }
-
-const size_t Interface::getCurrentMode() const noexcept { return currentMode_; }
-
-void Interface::setCurrentLevel(size_t curr_level) noexcept { currentLevel_ = curr_level; }

@@ -23,7 +23,7 @@ public:
 
     void addCommit(const Commit&) noexcept;
 
-    const std::unordered_map<UI, Commit>& getCommits() const noexcept;
+    const std::unordered_map<std::size_t, Commit>& getCommits() const noexcept;
 
     std::size_t getSize() const noexcept;
 
@@ -31,5 +31,6 @@ public:
 
 private:
 
-    std::unordered_map<UI, Commit> tree_;
+    // commitNumber and Commit itself
+    std::unordered_map<std::size_t, Commit> tree_;
 };

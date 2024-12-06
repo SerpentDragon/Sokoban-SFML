@@ -264,7 +264,7 @@ void Drawing::drawMap(size_t height, size_t width,
 
 void Drawing::displayVCSWindow() noexcept
 {
-    VCSWindow vcsWindow(window_);
+    // VCSWindow vcsWindow(window_);
 
-    vcsWindow.displayVCSWIndow();
+    // vcsWindow.displayVCSWIndow();
 }

@@ -14,6 +14,7 @@
 #include "../Managers/Localizer.hpp"
 #include "../Managers/SoundManager.hpp"
 #include "../Managers/TextureManager.hpp"
+#include "../VersionControl/VersionControlSystem.hpp"
 
 using namespace sf;
 
