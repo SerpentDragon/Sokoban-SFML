@@ -12,6 +12,8 @@
 
 using namespace sf;
 
+using COORDINATE = std::pair<int, int>;
+
 class Player
 {
 public:
@@ -34,6 +36,8 @@ public:
 
     void alignPlayer(int, int) noexcept; // player and boxes must be aligned by cells
 
+    std::vector<COORDINATE> getBoxes() const noexcept;
+
     std::pair<bool, bool> drawPlayer() noexcept;
 
     void restartLevel() noexcept;
@@ -46,9 +50,9 @@ private:
 
     size_t checkPosition(const Vector2i&) noexcept;
     
-    std::pair<int, int>* checkBoxes(int, int) noexcept;
+    COORDINATE* checkBoxes(int, int) noexcept;
 
-    std::pair<int, int>* checkBoxes(const Vector2i&) noexcept;
+    COORDINATE* checkBoxes(const Vector2i&) noexcept;
 
 private:
 
@@ -57,11 +61,11 @@ private:
     std::map<std::string_view, RectangleShape> img_; // textures
 
     std::vector<std::vector<int>> level_; // info about level structure 
-    std::vector<std::pair<int, int>> boxes_; // info about boxes locations
-    std::vector<std::pair<int, int>> aims_; // info about positions where boxes should be placed 
+    std::vector<COORDINATE> boxes_; // info about boxes locations
+    std::vector<COORDINATE> aims_; // info about positions where boxes should be placed 
 
-    std::stack<std::pair<int, int>> playerMoves_;
-    std::stack<std::pair<int, int>> boxesMoves_;
+    std::stack<COORDINATE> playerMoves_;
+    std::stack<COORDINATE> boxesMoves_;
     
     // the values by which position of level map was moved relative to the point (0, 0)
     int offset1_; 

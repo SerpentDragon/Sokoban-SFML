@@ -10,6 +10,8 @@ struct Commit
 {
 public:
 
+    Commit() noexcept = default;
+
     Commit(std::size_t, std::size_t, std::size_t, UI, const std::vector<COORDINATE>&) noexcept;
 
     Commit(const Commit&) noexcept = default;

@@ -1,26 +1,27 @@
 #include "VersionControlSystem.hpp"
 
-VersionControlSystem::VersionControlSystem(int level) noexcept 
-    : level_(level), currentCommitState_(1), currentBranch_(1), 
-    branchesCounter_(0), dir_("app_data/.vcs/")
+VersionControlSystem::~VersionControlSystem()
 {
-    dir_ += std::to_string(level);
+    saveCurrentStateToFile();
+}
 
-    treeFilename_ = dir_ + "/tree";
-    stateFilename_ = dir_ + "/commit";
+void VersionControlSystem::init(int level) noexcept
+{
+    this->level_ = level;
+    this->currentCommitState_ = 1;
+    this->currentBranch_ = 1;
+    this->branchesCounter_ = 0;
+    this->dir_ = "app_data/.vcs/" + std::to_string(level_);
+    this->treeFilename_ = dir_ + "/tree";
+    this->stateFilename_ = dir_ + "/commit";
 
     if (!fs::exists(dir_))
     {
-        fs::create_directory(dir_);
+        fs::create_directories(dir_);
     }
 
     loadCommitTreeFromFile();
     loadCurrentStateFromFile();
-}
-
-VersionControlSystem::~VersionControlSystem()
-{
-    saveCurrentStateToFile();
 }
 
 void VersionControlSystem::commit(unsigned int money, 
@@ -62,6 +63,21 @@ void VersionControlSystem::commit(unsigned int money,
     tree_.addCommit(commit);
 
     saveCommitToFile(commit);
+}
+
+std::vector<Commit> VersionControlSystem::getCommits() const noexcept
+{
+    auto commitTree = tree_.getCommits();
+
+    std::vector<Commit> commits(commitTree.size());
+
+    std::size_t i = 0;
+    for(auto it = commitTree.cbegin(); it != commitTree.cend(); it++, i++)
+    {
+        commits[i] = it->second;
+    }
+
+    return commits;
 }
 
 void VersionControlSystem::loadCommitTreeFromFile() noexcept
@@ -112,7 +128,7 @@ void VersionControlSystem::loadCurrentStateFromFile() noexcept
     {
         // if we face error opening file, we need to fill 
         // this parameter manually
-        currentCommitState_ = tree_.getSize() ? tree_.getSize() : 0;
+        currentCommitState_ = tree_.getSize() ? tree_.getSize() : 1;
         return;
     }
 
@@ -128,8 +144,8 @@ void VersionControlSystem::loadCurrentStateFromFile() noexcept
     }
     catch(const std::out_of_range& e)
     {
-        currentBranch_ = 0;
-        currentCommitState_ = 0;
+        currentBranch_ = 1;
+        currentCommitState_ = 1;
     }
 }
 

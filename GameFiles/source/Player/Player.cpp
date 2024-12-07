@@ -47,38 +47,6 @@ void Player::setLevel(const std::vector<std::vector<int>>& level) noexcept
     }
 }
 
-size_t Player::checkPosition(int xPos, int yPos) noexcept
-{
-    return level_[(yPos - offset2_) / gl::size][(xPos - offset1_) / gl::size];
-}
-
-size_t Player::checkPosition(const Vector2i& vec) noexcept
-{
-    return level_[(vec.y - offset2_) / gl::size][(vec.x - offset1_) / gl::size];
-}
-
-std::pair<int, int>* Player::checkBoxes(int first, int second) noexcept
-{
-    for(auto& box : boxes_)
-    {
-        if (box.first == first && (box.second < second && second < box.second + gl::size) 
-            || box.second == second && (box.first < first && first < box.first + gl::size))
-            return &box;
-    }
-    return nullptr;
-}
-
-std::pair<int, int>* Player::checkBoxes(const Vector2i& vec) noexcept
-{
-    for(auto& box : boxes_)
-    {
-        if (box.first == vec.x && (box.second < vec.y && vec.y < box.second + gl::size) 
-            || box.second == vec.y && (box.first < vec.x && vec.x < box.first + gl::size))
-            return &box;
-    }
-    return nullptr;
-}
-
 void Player::movement(int pressed_key) noexcept
 {    
     int dist, destination = 1, *ptr, *coord;
@@ -290,6 +258,8 @@ void Player::alignPlayer(int released_key, int param) noexcept
     img_["player"].setPosition(x_, y_);
 }
 
+std::vector<COORDINATE> Player::getBoxes() const noexcept { return boxes_; }
+
 std::pair<bool, bool> Player::drawPlayer() noexcept
 {
     static int prev_goals_counter = 0;
@@ -377,4 +347,36 @@ bool Player::cancelMove() noexcept
         return true;
     }
     return false;
+}
+
+size_t Player::checkPosition(int xPos, int yPos) noexcept
+{
+    return level_[(yPos - offset2_) / gl::size][(xPos - offset1_) / gl::size];
+}
+
+size_t Player::checkPosition(const Vector2i& vec) noexcept
+{
+    return level_[(vec.y - offset2_) / gl::size][(vec.x - offset1_) / gl::size];
+}
+
+std::pair<int, int>* Player::checkBoxes(int first, int second) noexcept
+{
+    for(auto& box : boxes_)
+    {
+        if (box.first == first && (box.second < second && second < box.second + gl::size) 
+            || box.second == second && (box.first < first && first < box.first + gl::size))
+            return &box;
+    }
+    return nullptr;
+}
+
+std::pair<int, int>* Player::checkBoxes(const Vector2i& vec) noexcept
+{
+    for(auto& box : boxes_)
+    {
+        if (box.first == vec.x && (box.second < vec.y && vec.y < box.second + gl::size) 
+            || box.second == vec.y && (box.first < vec.x && vec.x < box.first + gl::size))
+            return &box;
+    }
+    return nullptr;
 }

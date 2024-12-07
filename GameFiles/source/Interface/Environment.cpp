@@ -4,7 +4,8 @@ Environment::Environment(std::shared_ptr<RenderWindow> window) noexcept
     : window_(window), coins_(0), player_(window),
     levelText_("", gl::font, DR::levelTextSize),
     coinsText_("", gl::font, DR::coinsTextSize),
-    background_(Vector2f(gl::Width, gl::Height)), level_(0)
+    background_(Vector2f(gl::Width, gl::Height)), level_(0),
+    vcsWindow(window_)
 {
     loadTextures();
     createButtons();
@@ -15,7 +16,13 @@ Environment::Environment(std::shared_ptr<RenderWindow> window) noexcept
     coinsText_.setPosition(DR::drawingCoinsTextXPos, DR::drawingCoinsTextYPos);
 }
 
-void Environment::setLevel(const int level) noexcept { level_ = level; }
+void Environment::setLevel(int level) noexcept 
+{
+    level_ = level; 
+
+    vcs.init(level);
+    vcsWindow.setCommits(vcs.getCommits());
+}
 
 int Environment::getLevel() const noexcept { return level_; }
 
@@ -157,7 +164,7 @@ bool Environment::drawWorld() noexcept
         }
         else if (saveButton_.isPressed())
         {
-
+            vcs.commit(coins_, player_.getBoxes());
         }
         else if (showCommitTreeButton_.isPressed())
         {
@@ -264,7 +271,25 @@ void Environment::drawMap(size_t height, size_t width,
 
 void Environment::displayVCSWindow() noexcept
 {
-    // VCSWindow vcsWindow(window_);
+    vcsWindow.displayVCSWIndow();
 
-    // vcsWindow.displayVCSWIndow();
+    /*
+    debug info
+    std::vector<Commit> vec = 
+    {
+        Commit{ 1, 1, 1, 0, {} },
+        Commit{ 2, 1, 1, 0, {} },
+        Commit{ 3, 1, 2, 0, {} },
+        Commit{ 4, 1, 3, 0, {} },
+        Commit{ 5, 3, 2, 0, {} },
+        Commit{ 6, 2, 1, 0, {} },
+        Commit{ 7, 6, 1, 0, {} },
+        Commit{ 8, 6, 4, 0, {} },
+        Commit{ 9, 5, 2, 0, {} },
+        Commit{ 10, 4, 3, 0, {} },
+        Commit{ 11, 10, 3, 0, {} },
+        Commit{ 12, 10, 5, 0, {} }
+    };
+
+    GraphicsTree gt(vec);*/
 }

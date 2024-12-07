@@ -13,7 +13,7 @@ class VersionControlSystem
 {
 public:
 
-    VersionControlSystem(int) noexcept;
+    VersionControlSystem() noexcept = default;
 
     VersionControlSystem(const VersionControlSystem&) = delete;
 
@@ -27,7 +27,11 @@ public:
 
 public:
 
+    void init(int) noexcept;
+
     void commit(UI, const std::vector<COORDINATE>&) noexcept;
+
+    std::vector<Commit> getCommits() const noexcept;
 
 private:
 

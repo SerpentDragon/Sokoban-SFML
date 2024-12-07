@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <map>
+#include <vector>
 #include <SFML/Graphics.hpp>
 #include "../../VersionControl/Commit.hpp"
 
@@ -12,6 +12,8 @@ using HIERARCHY = std::map<std::size_t, std::vector<std::size_t>>;
 class GraphicsTree
 {
 public:
+
+    GraphicsTree() noexcept = default;
 
     GraphicsTree(const std::vector<Commit>&) noexcept;
 
@@ -25,18 +27,31 @@ public:
 
     ~GraphicsTree() noexcept = default;
 
-public:
-
-    void processTree() noexcept;
+private:
 
     void generateBranchesHierarchy(const std::vector<Commit>&) noexcept;
 
     void defineBranchesDrawOrder(std::size_t) noexcept;
 
+    void processTree() noexcept;
+
+public:
+
+
+
 private:
 
-    // branchNumber and Commits of this branch
-    std::map<std::size_t, std::vector<Commit>> tree_;
+    struct CommitInfo
+    {
+        std::size_t parent;
+        std::size_t branch;
+        unsigned int level; // 'level' on which the commit will be drawn
+    };
+
+private:
+
+    // commit and it's info
+    std::map<std::size_t, CommitInfo> tree_;
 
     // defines which branch creates which branches
     // format = branch_id : <list_of_child_branches>

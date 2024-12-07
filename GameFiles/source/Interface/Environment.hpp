@@ -34,7 +34,7 @@ public:
 
     ~Environment() noexcept = default;
 
-    void setLevel(const int) noexcept;
+    void setLevel(int) noexcept;
 
     int getLevel() const noexcept;
 
@@ -86,4 +86,9 @@ private:
     const int price_ = 10;  // coins amount you need to cancel your move
 
     Player player_;
+
+    VersionControlSystem vcs;
+
+    // window to display commits tree
+    VCSWindow vcsWindow;
 };

@@ -13,7 +13,7 @@ class VCSWindow
 {
 public:
 
-    VCSWindow(std::shared_ptr<RenderWindow>, const std::vector<Commit>&) noexcept;
+    VCSWindow(std::shared_ptr<RenderWindow>) noexcept;
 
     VCSWindow(const VCSWindow&) noexcept = default;
 
@@ -26,6 +26,8 @@ public:
     ~VCSWindow() noexcept = default;
 
 public:
+
+    void setCommits(const std::vector<Commit>&) noexcept;
 
     void displayVCSWIndow() noexcept;
 

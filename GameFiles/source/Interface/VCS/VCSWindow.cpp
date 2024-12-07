@@ -1,9 +1,7 @@
 #include "VCSWindow.hpp"
 
-VCSWindow::VCSWindow(std::shared_ptr<RenderWindow> window,
-    const std::vector<Commit>& commits) noexcept
+VCSWindow::VCSWindow(std::shared_ptr<RenderWindow> window) noexcept
     : window_(window), windowRect_(Vector2f(gl::Width / 3, gl::Height)),
-    tree_(commits),
     closeButton_(window_, vcsw::closeButtonXPos, vcsw::closeButtonYPos, 
         vcsw::closeButtonSize, vcsw::closeButtonSize, 
         TextureManager::getManager().getTexture("textures/buttons/close"))
@@ -11,6 +9,11 @@ VCSWindow::VCSWindow(std::shared_ptr<RenderWindow> window,
     windowRect_.setFillColor(gl::WHITE);
     windowRect_.setPosition(
         gl::Width - windowRect_.getGlobalBounds().width, 0);
+}
+
+void VCSWindow::setCommits(const std::vector<Commit>& commits) noexcept
+{
+    tree_ = GraphicsTree(commits);
 }
 
 void VCSWindow::displayVCSWIndow() noexcept

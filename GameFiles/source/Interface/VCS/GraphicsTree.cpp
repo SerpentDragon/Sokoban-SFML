@@ -1,7 +1,5 @@
 #include "GraphicsTree.hpp"
 
-#include <iostream>
-
 GraphicsTree::GraphicsTree(const std::vector<Commit>& commits) noexcept
 {
     if (!commits.size()) return;
@@ -13,6 +11,20 @@ GraphicsTree::GraphicsTree(const std::vector<Commit>& commits) noexcept
     order_.emplace_back(1);
 
     defineBranchesDrawOrder(1);
+
+    // remember the most important info about commits
+    for(std::size_t i = 0; i < commits.size(); i++)
+    {
+        const auto& commit = commits[i];
+
+        tree_[commits[i].commit_] = { 
+            .parent = commit.parent_, 
+            .branch = commit.branch_, 
+            .level = 0 
+        };
+    }
+
+    processTree();
 }
 
 void GraphicsTree::generateBranchesHierarchy(const std::vector<Commit>& commits) noexcept
@@ -52,5 +64,16 @@ void GraphicsTree::defineBranchesDrawOrder(std::size_t branch) noexcept
         {
             defineBranchesDrawOrder(*it);
         }
+    }
+}
+
+void GraphicsTree::processTree() noexcept
+{
+    // the 1st commit is always placed on the 0 level
+    tree_[1].level = 0;
+
+    for(std::size_t i = 2; i <= tree_.size(); i++)
+    {
+        tree_[i].level = tree_[tree_[i].parent].level + 1;
     }
 }
