@@ -1,7 +1,7 @@
 #include "VersionControlSystem.hpp"
 
 VersionControlSystem::VersionControlSystem(int level) noexcept 
-    : level_(level), currentCommitState_(0), currentBranch_(0), 
+    : level_(level), currentCommitState_(1), currentBranch_(1), 
     branchesCounter_(0), dir_("app_data/.vcs/")
 {
     dir_ += std::to_string(level);

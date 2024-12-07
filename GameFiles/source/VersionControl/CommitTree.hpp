@@ -1,7 +1,7 @@
 #pragma once
 
+#include <map>
 #include "Commit.hpp"
-#include <unordered_map>
 
 class CommitTree
 {
@@ -23,7 +23,7 @@ public:
 
     void addCommit(const Commit&) noexcept;
 
-    const std::unordered_map<std::size_t, Commit>& getCommits() const noexcept;
+    const std::map<std::size_t, Commit>& getCommits() const noexcept;
 
     std::size_t getSize() const noexcept;
 
@@ -32,5 +32,5 @@ public:
 private:
 
     // commitNumber and Commit itself
-    std::unordered_map<std::size_t, Commit> tree_;
+    std::map<std::size_t, Commit> tree_;
 };
