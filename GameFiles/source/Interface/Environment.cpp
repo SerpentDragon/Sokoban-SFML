@@ -1,6 +1,6 @@
-#include "Drawing.hpp"
+#include "Environment.hpp"
 
-Drawing::Drawing(std::shared_ptr<RenderWindow> window) noexcept 
+Environment::Environment(std::shared_ptr<RenderWindow> window) noexcept 
     : window_(window), coins_(0), player_(window),
     levelText_("", gl::font, DR::levelTextSize),
     coinsText_("", gl::font, DR::coinsTextSize),
@@ -15,11 +15,11 @@ Drawing::Drawing(std::shared_ptr<RenderWindow> window) noexcept
     coinsText_.setPosition(DR::drawingCoinsTextXPos, DR::drawingCoinsTextYPos);
 }
 
-void Drawing::setLevel(const int level) noexcept { level_ = level; }
+void Environment::setLevel(const int level) noexcept { level_ = level; }
 
-int Drawing::getLevel() const noexcept { return level_; }
+int Environment::getLevel() const noexcept { return level_; }
 
-bool Drawing::drawWorld() noexcept
+bool Environment::drawWorld() noexcept
 {
     updateBackground(level_);
     updateLevelText(level_);
@@ -170,11 +170,11 @@ bool Drawing::drawWorld() noexcept
     return false;
 }
 
-void Drawing::setCoins(int coins_num) noexcept { coins_ = coins_num; }
+void Environment::setCoins(int coins_num) noexcept { coins_ = coins_num; }
 
-const int Drawing::getCoins() const noexcept { return coins_; }
+const int Environment::getCoins() const noexcept { return coins_; }
 
-void Drawing::loadTextures() noexcept
+void Environment::loadTextures() noexcept
 {
     world_.emplace("wall", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
         TextureManager::getManager().getTexture("textures/cell/wall").get());
@@ -190,7 +190,7 @@ void Drawing::loadTextures() noexcept
     world_["coin"].setPosition(0.759 * gl::Width, gl::size / 2);
 }
 
-void Drawing::createButtons() noexcept
+void Environment::createButtons() noexcept
 {
     backButton_ = Button(window_, DR::backButtonXPos, gl::size / 2, gl::size, gl::size, 
         TextureManager::getManager().getTexture("textures/buttons/back"));
@@ -208,7 +208,7 @@ void Drawing::createButtons() noexcept
         TextureManager::getManager().getTexture("textures/buttons/fork"));
 }
 
-void Drawing::updateLevelText(int level) noexcept
+void Environment::updateLevelText(int level) noexcept
 {
     levelText_.setString(Localizer::translate(STRING::Level) 
         + std::to_string(level));
@@ -217,21 +217,21 @@ void Drawing::updateLevelText(int level) noexcept
     levelText_.setPosition(levelTextXPos, DR::levelTextYPos);
 }
 
-void Drawing::updateCoinsText() noexcept
+void Environment::updateCoinsText() noexcept
 {
     coinsText_.setString(std::to_string(coins_));
     coinsText_.setPosition(world_["coin"].getGlobalBounds().left - 
         coinsText_.getGlobalBounds().width - gl::size / 2, DR::drawingCoinsTextYPos);
 }
 
-void Drawing::updateBackground(int level) noexcept
+void Environment::updateBackground(int level) noexcept
 {
     background_.setTexture(TextureManager::getManager().
         loadTextureFromFile("textures/levels/" + 
         std::to_string(level) + "-1.png").get());
 }
 
-void Drawing::drawMap(size_t height, size_t width, 
+void Environment::drawMap(size_t height, size_t width, 
     const std::vector<std::vector<int>>& map,
     int offset1, int offset2) noexcept
 {
@@ -262,7 +262,7 @@ void Drawing::drawMap(size_t height, size_t width,
     }
 }
 
-void Drawing::displayVCSWindow() noexcept
+void Environment::displayVCSWindow() noexcept
 {
     // VCSWindow vcsWindow(window_);
 

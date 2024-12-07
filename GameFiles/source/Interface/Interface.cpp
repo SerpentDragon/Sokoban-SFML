@@ -3,7 +3,7 @@
 Interface::Interface(std::shared_ptr<RenderWindow> window) noexcept
     : window_(window), currentMode_(MODE::MainMenuMode), 
     currentLevel_(0), passedLevel_(0), coins_(0), 
-    drawing_(window_), dropDownList_(window_),
+    environment_(window_), dropDownList_(window_),
     levelPassedText_("", gl::font, IN::levelPassedTextSize),
     levelPassedSubstrate_(Vector2f(IN::levelPassedSubstrateWidth, 
         IN::levelPassedSubstrateHeight))    
@@ -101,7 +101,7 @@ void Interface::chooseLevel() noexcept
             {
                 if (levelsButtons_[i].isPressed())
                 {
-                    drawing_.setLevel(i + 1);
+                    environment_.setLevel(i + 1);
                     currentMode_ = MODE::PlayLevelMode;
                     break;
                 }
@@ -119,16 +119,16 @@ void Interface::chooseLevel() noexcept
 
 void Interface::displayLevel() noexcept
 {
-    drawing_.setCoins(this->getCoins());
+    environment_.setCoins(this->getCoins());
 
-    if (drawing_.drawWorld()) 
+    if (environment_.drawWorld()) 
     {
         currentMode_ = MODE::ChooseAction;
-        passedLevel_ = drawing_.getLevel();
+        passedLevel_ = environment_.getLevel();
     }
     else currentMode_ = MODE::ChooseLevelMode;
 
-    coins_ = drawing_.getCoins();
+    coins_ = environment_.getCoins();
 }
 
 void Interface::chooseFurtherAction() noexcept
@@ -173,26 +173,26 @@ void Interface::chooseFurtherAction() noexcept
 
         else if (repeatButton_.isPressed())
         {
-            drawing_.setCoins(getCoins());
+            environment_.setCoins(getCoins());
 
-            if (!drawing_.drawWorld()) 
+            if (!environment_.drawWorld()) 
                 currentMode_ = MODE::ChooseLevelMode;
 
-            coins_ = drawing_.getCoins();
+            coins_ = environment_.getCoins();
             break;
         }
 
         else if (passedLevel_ != levelsMap.size() 
             && nextButton_.isPressed())
         {
-            drawing_.setCoins(getCoins());
-            drawing_.setLevel(passedLevel_ + 1);
+            environment_.setCoins(getCoins());
+            environment_.setLevel(passedLevel_ + 1);
 
-            if (drawing_.drawWorld())
+            if (environment_.drawWorld())
                 passedLevel_++;
             else currentMode_ = MODE::ChooseLevelMode;
 
-            coins_ = drawing_.getCoins();
+            coins_ = environment_.getCoins();
             break;
         }
 

@@ -5,9 +5,9 @@
 #include <memory>
 #include <fstream>
 #include <filesystem>
-#include "Drawing.hpp"
 #include <unordered_map>
 #include <SFML/Audio.hpp>
+#include "Environment.hpp"
 #include <SFML/Graphics.hpp>
 #include "../Player/settings.h"
 #include "../Widgets/Button.hpp"
@@ -114,7 +114,7 @@ private:
     RectangleShape levelPassedSubstrate_;
 
     // object to draw levels
-    Drawing drawing_;
+    Environment environment_;
 
     // object to keep progress of the player
     FileIOManager file_;

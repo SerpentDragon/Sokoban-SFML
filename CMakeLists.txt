@@ -7,7 +7,7 @@ find_package(SFML 2.5 COMPONENTS graphics audio window system REQUIRED)
 
 set(SOURCE_FILE
     GameFiles/source/Interface/Interface.cpp
-    GameFiles/source/Interface/Drawing.cpp
+    GameFiles/source/Interface/Environment.cpp
     GameFiles/source/Interface/VCS/VCSWindow.cpp
     GameFiles/source/Interface/VCS/GraphicsTree.cpp
     GameFiles/source/Interface/pollEvent.cpp

@@ -18,21 +18,21 @@
 
 using namespace sf;
 
-class Drawing
+class Environment
 {
 public:
 
-    Drawing(std::shared_ptr<RenderWindow>) noexcept;
+    Environment(std::shared_ptr<RenderWindow>) noexcept;
 
-    Drawing(const Drawing&) = delete;
+    Environment(const Environment&) = delete;
     
-    Drawing(Drawing&&) noexcept = delete;
+    Environment(Environment&&) noexcept = delete;
 
-    Drawing& operator=(const Drawing&) = delete;
+    Environment& operator=(const Environment&) = delete;
 
-    Drawing& operator=(Drawing&&) noexcept = delete;
+    Environment& operator=(Environment&&) noexcept = delete;
 
-    ~Drawing() noexcept = default;
+    ~Environment() noexcept = default;
 
     void setLevel(const int) noexcept;
 
