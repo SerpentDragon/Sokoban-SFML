@@ -3,8 +3,8 @@
 #include <memory>
 #include "GraphicsTree.hpp"
 #include <SFML/Graphics.hpp>
-#include "../../Player/settings.h"
 #include "../../Widgets/Button.hpp"
+#include "../../settings/settings.h"
 
 using namespace sf;
 namespace vcsw = VCSWIN;

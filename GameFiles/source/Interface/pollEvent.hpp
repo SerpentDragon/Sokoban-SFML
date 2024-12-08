@@ -2,8 +2,8 @@
 
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "../Player/settings.h"
 #include "../Widgets/Button.hpp"
+#include "../settings/settings.h"
 #include "../Managers/Localizer.hpp"
 
 using namespace sf;

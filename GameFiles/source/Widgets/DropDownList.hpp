@@ -5,7 +5,7 @@
 #include <string_view>
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
-#include "../Player/settings.h"
+#include "../settings/settings.h"
 #include "../Managers/TextureManager.hpp"
 
 

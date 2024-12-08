@@ -8,9 +8,9 @@
 #include "../Player/map.h"
 #include <SFML/Graphics.hpp>
 #include "VCS/VCSWindow.hpp"
-#include "../Player/settings.h"
 #include "../Player/Player.hpp"
 #include "../Widgets/Button.hpp"
+#include "../settings/settings.h"
 #include "../Managers/Localizer.hpp"
 #include "../Managers/SoundManager.hpp"
 #include "../Managers/TextureManager.hpp"

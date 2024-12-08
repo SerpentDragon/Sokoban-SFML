@@ -4,10 +4,10 @@
 #include <tuple>
 #include <stack>
 #include <vector>
-#include "settings.h"
 #include <string_view>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+#include "../settings/settings.h"
 #include "../Managers/TextureManager.hpp"
 
 using namespace sf;

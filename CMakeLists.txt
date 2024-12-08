@@ -16,7 +16,7 @@ set(SOURCE_FILE
     GameFiles/source/Managers/TextureManager.cpp
     GameFiles/source/Managers/SoundManager.cpp
     GameFiles/source/Player/Player.cpp
-    GameFiles/source/Player/settings.cpp
+    GameFiles/source/settings/settings.cpp
     GameFiles/source/VersionControl/VersionControlSystem.cpp
     GameFiles/source/VersionControl/CommitTree.cpp
     GameFiles/source/VersionControl/Commit.cpp
