@@ -13,7 +13,7 @@ VCSWindow::VCSWindow(std::shared_ptr<RenderWindow> window) noexcept
 
 void VCSWindow::setCommits(const std::vector<Commit>& commits) noexcept
 {
-    tree_ = GraphicsTree(commits);
+    tree_ = GraphicsTree(window_, commits);
 }
 
 void VCSWindow::displayVCSWIndow() noexcept
@@ -34,6 +34,8 @@ void VCSWindow::displayVCSWIndow() noexcept
         }
         
         window_->draw(windowRect_);
+
+        tree_.displayTree();
 
         closeButton_.drawButton();
 

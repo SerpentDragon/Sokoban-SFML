@@ -113,13 +113,25 @@ const int levelPassedSubstrateHeight = 1.3 * gl::size;
 namespace VCSWIN
 {
     // VCS Window params
-    extern const int VCSWindowWidth = gl::Width / 3;
-    extern const int VCSWindowHeight = gl::Height;
-    extern const int VCSWIndowXPos = gl::Width - VCSWindowWidth;
-    extern const int VCSWIndowYPos = 0;
+    const int VCSWindowWidth = gl::Width / 3;
+    const int VCSWindowHeight = gl::Height;
+    const int VCSWindowXPos = gl::Width - VCSWindowWidth;
+    const int VCSWindowYPos = 0;
 
     // Close VCS Window button params
-    extern const int closeButtonSize= gl::size / 2;
-    extern const int closeButtonXPos = gl::Width - closeButtonSize;
-    extern const int closeButtonYPos = 0;
+    const int closeButtonSize= gl::size / 2;
+    const int closeButtonXPos = gl::Width - closeButtonSize;
+    const int closeButtonYPos = 0;
+    
+    // Graphics tree params
+    namespace GT
+    {
+        const int commitSize = gl::size / 6;
+        const int commitInterval = commitSize * 4;
+
+        const int branchInterval = commitInterval;
+
+        int zeroLevelYPos = VCSWindowHeight - gl::size;
+        int zeroLevelXPos = VCSWindowWidth / 2 - commitSize;
+    }
 }

@@ -5,6 +5,8 @@ using namespace sf;
 
 int main()
 {
+    srand(time(nullptr));
+    
     gl::initFont();
     
     auto window = std::make_shared<RenderWindow>(

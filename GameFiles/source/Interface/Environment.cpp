@@ -271,10 +271,7 @@ void Environment::drawMap(size_t height, size_t width,
 
 void Environment::displayVCSWindow() noexcept
 {
-    vcsWindow.displayVCSWIndow();
-
-    /*
-    debug info
+    // debug info
     std::vector<Commit> vec = 
     {
         Commit{ 1, 1, 1, 0, {} },
@@ -291,5 +288,11 @@ void Environment::displayVCSWindow() noexcept
         Commit{ 12, 10, 5, 0, {} }
     };
 
-    GraphicsTree gt(vec);*/
+    vcsWindow.setCommits(vec);
+
+    // GraphicsTree gt(window_, vec);
+
+
+    
+    vcsWindow.displayVCSWIndow();
 }

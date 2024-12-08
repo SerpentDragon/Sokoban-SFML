@@ -133,13 +133,25 @@ namespace VCSWIN
     // VCS Window params
     extern const int VCSWindowWidth;
     extern const int VCSWindowHeight;
-    extern const int VCSWIndowXPos;
-    extern const int VCSWIndowYPos;
+    extern const int VCSWindowXPos;
+    extern const int VCSWindowYPos;
 
     // Close VCS Window button params
     extern const int closeButtonSize;
     extern const int closeButtonXPos;
     extern const int closeButtonYPos;
+
+    // Graphics tree params
+    namespace GT
+    {
+        extern const int commitSize;
+        extern const int commitInterval;
+
+        extern const int branchInterval;
+
+        extern int zeroLevelYPos;
+        extern int zeroLevelXPos;
+    };
 }
 
 // STRINGS TO TRANSLATE
