@@ -33,7 +33,9 @@ private:
 
     void generateBranchesHierarchy(const std::vector<Commit>&) noexcept;
 
-    void defineBranchesDrawOrder(std::size_t) noexcept;
+    void defineBranchesDrawOrder(std::vector<std::size_t>&, std::size_t) noexcept;
+
+    void defineBranchesDrawOrder() noexcept;
 
     void processTree() noexcept;
 
@@ -56,6 +58,7 @@ private:
     {
         std::vector<std::size_t> children; // list of 'child' branches
         Color color; // the color of the branch
+        unsigned int position; // number of the branch, counting from the left side
     };
 
     using HIERARCHY = std::map<std::size_t, BranchInfo>;
@@ -70,11 +73,10 @@ private:
 
     // graphic representation of commits
     std::map<std::size_t, CircleShape> tree_;
+    // lines between commits
+    std::vector<std::pair<Vertex, Vertex>> lines_;
 
     // defines which branch creates which branches
     // format = branch_id : <BranchInfo>
     HIERARCHY hierarchy_;
-
-    // order in which branches must be drawn
-    std::vector<std::size_t> order_;
 };
