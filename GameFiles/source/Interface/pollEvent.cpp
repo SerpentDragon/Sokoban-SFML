@@ -21,12 +21,12 @@ bool showWarning(std::shared_ptr<RenderWindow> window, const String& str) noexce
         mainMessage.getGlobalBounds().top + mainMessage.getGlobalBounds().height + gl::size / 4);
 
     Button yesButton(window, Text(Localizer::translate(STRING::Yes), gl::font, 
-        0.0225 * gl::Width), DR::yesButtonXPos, DR::yesButtonYPos, 
+        0.0225 * gl::GameScreenWidth), DR::yesButtonXPos, DR::yesButtonYPos, 
         DR::warningButtonWidth, DR::warningButtonHeight, gl::WHITE, gl::BLUE);
     yesButton.setTextColor(gl::DARK_BLUE);
     
     Button noButton(window, Text(Localizer::translate(STRING::No), gl::font, 
-        0.0225 * gl::Width), DR::noButtonXPos, DR::noButtonYPos, 
+        0.0225 * gl::GameScreenWidth), DR::noButtonXPos, DR::noButtonYPos, 
         DR::warningButtonWidth, DR::warningButtonHeight, gl::WHITE, gl::BLUE);
     noButton.setTextColor(gl::DARK_BLUE);
 

@@ -24,7 +24,7 @@ class Interface
 {
 public:
 
-    Interface(std::shared_ptr<RenderWindow>) noexcept;
+    Interface() noexcept;
 
     Interface(const Interface&) = delete;
 
@@ -35,6 +35,8 @@ public:
     Interface& operator=(Interface&&) noexcept = delete;
 
     ~Interface() noexcept;
+
+    bool isRunning() const noexcept;
 
     void showMenu() noexcept;
 
@@ -51,6 +53,8 @@ public:
     void setCurrentLevel(size_t) noexcept;
 
 private:
+
+    void createWindow(int, int) noexcept;
 
     void loadTextures() noexcept;
 

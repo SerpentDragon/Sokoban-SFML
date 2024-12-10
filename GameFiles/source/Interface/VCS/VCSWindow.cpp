@@ -1,14 +1,11 @@
 #include "VCSWindow.hpp"
 
 VCSWindow::VCSWindow(std::shared_ptr<RenderWindow> window) noexcept
-    : window_(window), windowRect_(Vector2f(gl::Width / 3, gl::Height)),
-    closeButton_(window_, vcsw::closeButtonXPos, vcsw::closeButtonYPos, 
-        vcsw::closeButtonSize, vcsw::closeButtonSize, 
-        TextureManager::getManager().getTexture("textures/buttons/close"))
+    : window_(window), 
+    windowRect_(Vector2f(vcsw::VCSWindowWidth, vcsw::VCSWindowHeight))
 {
     windowRect_.setFillColor(gl::WHITE);
-    windowRect_.setPosition(
-        gl::Width - windowRect_.getGlobalBounds().width, 0);
+    windowRect_.setPosition(vcsw::VCSWindowXPos, vcsw::VCSWindowYPos);
 }
 
 void VCSWindow::setCommits(const std::vector<Commit>& commits) noexcept
@@ -18,32 +15,7 @@ void VCSWindow::setCommits(const std::vector<Commit>& commits) noexcept
 
 void VCSWindow::displayVCSWIndow() noexcept
 {
-    Event event;
+    window_->draw(windowRect_);
 
-    while(window_->isOpen())
-    {
-        while(window_->pollEvent(event))
-        {
-            switch(event.type)
-            {
-                case Event::Closed:
-                {
-                    break;
-                }
-            }   
-        }
-        
-        window_->draw(windowRect_);
-
-        tree_.displayTree();
-
-        closeButton_.drawButton();
-
-        if(closeButton_.isPressed())
-        {
-            break;
-        }
-
-        window_->display();
-    }
+    tree_.displayTree();
 }

@@ -39,7 +39,5 @@ private:
 
     RectangleShape windowRect_;
 
-    Button closeButton_;
-
     GraphicsTree tree_;
 };

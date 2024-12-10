@@ -133,7 +133,7 @@ void GraphicsTree::calculatePositions() noexcept
         // setting current position for the commit
         tree_[i].setPosition(
             VCSWIN::VCSWindowXPos + leftBranchXPos + hierarchy_[commits_[i].branch].position * GT::branchInterval, 
-            VCSWIN::VCSWindowYPos +  GT::zeroLevelYPos - commits_[i].level * GT::commitInterval);
+            VCSWIN::VCSWindowYPos + GT::zeroLevelYPos - commits_[i].level * GT::commitInterval);
 
         // setting color to commit  according to the branch it belongs
         tree_[i].setOutlineColor(hierarchy_[commits_[i].branch].color);

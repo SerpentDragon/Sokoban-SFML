@@ -11,8 +11,12 @@ namespace gl
     // global parameters
     extern const int ScreenWidth; // screen dimensions
     extern const int ScreenHeight;
-    extern const int Width; // game window width
-    extern const int Height; // game window height
+
+    extern const int WindowWidth;
+    extern const int WindowHeight;
+
+    extern const int GameScreenWidth; // game window width
+    extern const int GameScreenHeight; // game window height
     extern const int size; // size of cells
 
     // colors
@@ -70,8 +74,6 @@ namespace DR
 // INTERFACE SETTINGS
 namespace IN
 {
-    // INTERFACE SETTINGS
-
     // logo & coins textures settings
     extern const int coinTextureYPos;
     extern const int logoWidth;
@@ -87,23 +89,27 @@ namespace IN
     extern const int continueButtonYPos;
     extern const int exitButtonYPos;
 
+    // main menu buttons text size & menu button text size
+    extern const int mainMenuButtonsTextSize;
+    extern const int menuButtonTextSize;
+
+    // rows and columns
+    constexpr int rows = 4;
+    constexpr int columns = 4;
+
+    // levels buttons settings
+    extern const int levelsButtonsSize;
+    extern const int betweenButtonsXPos;
+    extern const int betweenButtonsYPos;
+    extern const int levelsButtonsXOffset;
+    extern const int levelsButtonsYOffset;
+    extern const int levelsButtonsTextSize;
+
     // menu button settings
     extern const int menuButtonWidth;
     extern const int menuButtonHeight;
     extern const int menuButtonXPos;
     extern const int menuButtonYPos;
-
-    // main menu buttons text size & menu button text size
-    extern const int mainMenuButtonsTextSize;
-    extern const int menuButtonTextSize;
-
-    // levels buttons settings
-    extern const int levelsButtonSize;
-    extern const int levelsButtonsXOffset;
-    extern const int betweenButtonsXPos;
-    extern const int levelsButtonsYOffset;
-    extern const int betweenButtonsYPos;
-    extern const int levelsButtonTextSize;
 
     // further action buttons settings
     extern const int furtherActionButtonWidth;
@@ -125,6 +131,12 @@ namespace IN
     extern const int levelPassedTextSize;
     extern const int levelPassedSubstrateWidth;
     extern const int levelPassedSubstrateHeight;
+
+    // drop down list settings
+    extern const int dropDownListXPos;
+    extern const int dropDownListYPos;
+    extern const int dropDownListWidth;
+    extern const int dropDownListHeight;
 }
 
 // VERSION CONTROL SYSTEM (VCS) WINDOW SETTINGS   

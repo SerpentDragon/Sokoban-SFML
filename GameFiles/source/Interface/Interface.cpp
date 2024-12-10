@@ -1,13 +1,15 @@
 #include "Interface.hpp"
 
-Interface::Interface(std::shared_ptr<RenderWindow> window) noexcept
-    : window_(window), currentMode_(MODE::MainMenuMode), 
+Interface::Interface() noexcept
+    : window_(new RenderWindow()), currentMode_(MODE::MainMenuMode), 
     currentLevel_(0), passedLevel_(0), coins_(0), 
     environment_(window_), dropDownList_(window_),
     levelPassedText_("", gl::font, IN::levelPassedTextSize),
     levelPassedSubstrate_(Vector2f(IN::levelPassedSubstrateWidth, 
         IN::levelPassedSubstrateHeight))    
 {
+    createWindow(gl::GameScreenWidth, gl::GameScreenHeight);
+
     initTexts();
     loadTextures();
     createLevelButtons();
@@ -22,6 +24,8 @@ Interface::~Interface() noexcept
 {
     file_.writeDataToFile(coins_, currentLevel_);
 }
+
+bool Interface::isRunning() const noexcept { return window_->isOpen(); }
 
 void Interface::showMenu() noexcept
 {
@@ -121,6 +125,8 @@ void Interface::displayLevel() noexcept
 {
     environment_.setCoins(this->getCoins());
 
+    createWindow(gl::WindowWidth, gl::WindowHeight);
+
     if (environment_.drawWorld()) 
     {
         currentMode_ = MODE::ChooseAction;
@@ -129,6 +135,8 @@ void Interface::displayLevel() noexcept
     else currentMode_ = MODE::ChooseLevelMode;
 
     coins_ = environment_.getCoins();
+
+    createWindow(gl::GameScreenWidth, gl::GameScreenHeight);
 }
 
 void Interface::chooseFurtherAction() noexcept
@@ -141,9 +149,9 @@ void Interface::chooseFurtherAction() noexcept
 
     if (passedLevel_ > currentLevel_) currentLevel_ = passedLevel_;
 
-    Sprite background(*TextureManager::getManager().loadTextureFromFile(
-        "textures/levels/" + std::to_string(passedLevel_) + "-2.png"), 
-        { 0, 0, gl::Width, gl::Height });
+    RectangleShape background(Vector2f(gl::GameScreenWidth, gl::GameScreenHeight));
+    background.setTexture(TextureManager::getManager().loadTextureFromFile(
+        "textures/levels/" + std::to_string(passedLevel_) + "-2.png").get());
 
     if (passedLevel_ == levelsMap.size()) 
         nextButton_.setButtonColor(gl::GREY);
@@ -212,16 +220,24 @@ const size_t Interface::getCurrentMode() const noexcept { return currentMode_; }
 
 void Interface::setCurrentLevel(size_t curr_level) noexcept { currentLevel_ = curr_level; }
 
+void Interface::createWindow(int width, int height) noexcept
+{
+    window_->create(VideoMode(width, height), "Sokoban", Style::Close);
+    window_->setPosition(Vector2i(
+        (gl::ScreenWidth - width) / 2, 
+        (gl::ScreenHeight - height) / 2));
+}
+
 void Interface::loadTextures() noexcept
 {
-    img_.emplace("background", RectangleShape(Vector2f(gl::Width, gl::Height))).first->second.setTexture(
+    img_.emplace("background", RectangleShape(Vector2f(gl::GameScreenWidth, gl::GameScreenHeight))).first->second.setTexture(
         TextureManager::getManager().getTexture("textures/interface/background").get());
 
     img_.emplace("logo", RectangleShape(Vector2f(IN::logoWidth, IN::logoHeight))).first->second.setTexture(
         TextureManager::getManager().getTexture("textures/interface/logo").get());
-    img_["logo"].setPosition((gl::Width - img_["logo"].getGlobalBounds().width) / 2, IN::logoYPos);
+    img_["logo"].setPosition((gl::GameScreenWidth - img_["logo"].getGlobalBounds().width) / 2, IN::logoYPos);
 
-    img_.emplace("levels_back", RectangleShape(Vector2f(gl::Width, gl::Height))).first->second.setTexture(
+    img_.emplace("levels_back", RectangleShape(Vector2f(gl::GameScreenWidth, gl::GameScreenHeight))).first->second.setTexture(
         TextureManager::getManager().getTexture("textures/interface/levels_back").get());  
 
     img_.emplace("coin", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
@@ -249,18 +265,15 @@ void Interface::createMainMenuButtons() noexcept
 
 void Interface::createLevelButtons() noexcept
 {
-    size_t rows = 4;
-    size_t columns = 4;
-
-    for(size_t i = 0; i < rows; i++)
+    for(size_t i = 0; i < IN::rows; i++)
     {   
-        for(size_t j = 0; j < columns; j++)
+        for(size_t j = 0; j < IN::columns; j++)
         {
             levelsButtons_.emplace_back(Button(window_, 
-                Text(std::to_string(i * rows + j + 1), gl::font, IN::levelsButtonTextSize), 
-                IN::levelsButtonsXOffset + j * (IN::levelsButtonSize + IN::betweenButtonsXPos), 
-                IN::levelsButtonsYOffset + i * (IN::levelsButtonSize + IN::betweenButtonsYPos), 
-                IN::levelsButtonSize, IN::levelsButtonSize, gl::GREY, gl::BLUE));
+                Text(std::to_string(i * IN::rows + j + 1), gl::font, IN::levelsButtonsTextSize), 
+                IN::levelsButtonsXOffset + j * (IN::levelsButtonsSize + IN::betweenButtonsXPos), 
+                IN::levelsButtonsYOffset + i * (IN::levelsButtonsSize + IN::betweenButtonsYPos), 
+                IN::levelsButtonsSize, IN::levelsButtonsSize, gl::GREY, gl::BLUE));
         }
     }
 }
@@ -282,7 +295,7 @@ void Interface::initTexts() noexcept
 {
     titleText_ = Text(Localizer::translate(STRING::LevelsLabel), gl::font, IN::titleTextSize);
     titleText_.setFillColor(gl::DARK_BLUE);
-    titleText_.setPosition((gl::Width - titleText_.getGlobalBounds().width) / 2, 
+    titleText_.setPosition((gl::GameScreenWidth - titleText_.getGlobalBounds().width) / 2, 
         IN::titleTextYPos);
 
     coinsText_ = Text("", gl::font, IN::interfaceCoinsTextSize);
@@ -291,7 +304,7 @@ void Interface::initTexts() noexcept
 
 void Interface::initLevelPassedText() noexcept
 {
-    levelPassedSubstrate_.setPosition((gl::Width - 
+    levelPassedSubstrate_.setPosition((gl::GameScreenWidth - 
         levelPassedSubstrate_.getGlobalBounds().width) / 2, IN::levelPassedSubstrateYPos);
     levelPassedSubstrate_.setFillColor(gl::BLUE);
 
@@ -342,7 +355,7 @@ void Interface::updateCoinsText() noexcept
     int coinsTextWidth = coinsText_.getGlobalBounds().width;
     int coinsTextureWidth = img_["coin"].getGlobalBounds().width;
 
-    coinsText_.setPosition((gl::Width - 
+    coinsText_.setPosition((gl::GameScreenWidth - 
         (coinsTextWidth + coinsTextureWidth + gl::size / 3)) / 2, IN::coinTextureYPos);
 
     int coinsTextXPos = coinsText_.getGlobalBounds().left;

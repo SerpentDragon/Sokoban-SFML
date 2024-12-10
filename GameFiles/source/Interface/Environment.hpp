@@ -63,30 +63,38 @@ private:
 
 private:
 
+    // window on which levels will be displayed
     std::shared_ptr<RenderWindow> window_;
 
+    // textures of the level
     std::unordered_map<std::string_view, RectangleShape> world_;
 
+    // buttons
     Button backButton_;
     Button restartButton_;
     Button levelsButton_;
-
-    // version control system
     Button saveButton_;
-    Button showCommitTreeButton_;
 
+    // level to display
     unsigned int level_;
 
+    // labels text
     Text levelText_;
     Text coinsText_;
 
+    // background
     RectangleShape background_;
 
-    int coins_; // coins amount you have 
-    const int price_ = 10;  // coins amount you need to cancel your move
+    // coins amount you have 
+    int coins_;
 
+    // coins amount you need to cancel your move
+    const int price_ = 10;
+
+    // player object
     Player player_;
 
+    // version control system
     VersionControlSystem vcs;
 
     // window to display commits tree

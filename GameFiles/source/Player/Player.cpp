@@ -22,8 +22,8 @@ void Player::setLevel(const std::vector<std::vector<int>>& level) noexcept
     while(!playerMoves_.empty()) playerMoves_.pop();
     while(!boxesMoves_.empty()) boxesMoves_.pop();
 
-    offset1_ = (gl::Width - level_[0].size() * gl::size) / 2;
-    offset2_ = (gl::Height - level_.size() * gl::size) / 2;
+    offset1_ = (gl::GameScreenWidth - level_[0].size() * gl::size) / 2;
+    offset2_ = (gl::GameScreenHeight - level_.size() * gl::size) / 2;
 
     for(size_t i = 0; i < level_.size(); i++)
     {

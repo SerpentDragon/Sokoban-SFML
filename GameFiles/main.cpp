@@ -8,15 +8,10 @@ int main()
     srand(time(nullptr));
     
     gl::initFont();
-    
-    auto window = std::make_shared<RenderWindow>(
-        VideoMode(gl::Width, gl::Height), "Sokoban", Style::Close);
-    window->setPosition(Vector2i((gl::ScreenWidth - gl::Width) / 2, 
-        (gl::ScreenHeight - gl::Height) / 2));
 
-    Interface interface(window);
+    Interface interface;
 
-    while (window->isOpen())
+    while(interface.isRunning())
     {
         switch(interface.getCurrentMode())
         {

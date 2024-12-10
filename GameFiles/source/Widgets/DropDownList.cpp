@@ -3,10 +3,13 @@
 // DropdownList class
 
 DropDownList::DropDownList(std::shared_ptr<RenderWindow> window) noexcept
-    : window_(window), list_(Vector2f(gl::size, gl::size)),
-    x_(window->getSize().x - gl::size * 1.5), y_(gl::size / 2),
-    width_(gl::size), height_(gl::size)
+    : window_(window), 
+    list_(Vector2f(IN::dropDownListWidth, IN::dropDownListHeight)),
+    x_(IN::dropDownListXPos), y_(IN::dropDownListYPos)
 {
+    width_ = list_.getSize().x;
+    height_ = list_.getSize().y;
+
     list_.setFillColor(gl::GREEN);
     list_.setPosition(x_, y_);
 
@@ -106,7 +109,7 @@ void DropDownList::createItems() noexcept
 
 // Items class
 
-int DropDownList::Item::itemOutlineThickness = gl::Width / 400;
+int DropDownList::Item::itemOutlineThickness = gl::GameScreenWidth / 400;
 
 DropDownList::Item::Item(int x, int y, const int size, 
     std::shared_ptr<Texture> texture, std::string_view locale) noexcept

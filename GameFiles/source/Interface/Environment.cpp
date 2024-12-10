@@ -4,7 +4,7 @@ Environment::Environment(std::shared_ptr<RenderWindow> window) noexcept
     : window_(window), coins_(0), player_(window),
     levelText_("", gl::font, DR::levelTextSize),
     coinsText_("", gl::font, DR::coinsTextSize),
-    background_(Vector2f(gl::Width, gl::Height)), level_(0),
+    background_(Vector2f(gl::GameScreenWidth, gl::GameScreenHeight)), level_(0),
     vcsWindow(window_)
 {
     loadTextures();
@@ -28,14 +28,33 @@ int Environment::getLevel() const noexcept { return level_; }
 
 bool Environment::drawWorld() noexcept
 {
+    // debug info
+    std::vector<Commit> vec = 
+    {
+        Commit{ 1, 1, 1, 0, {} },
+        Commit{ 2, 1, 1, 0, {} },
+        Commit{ 3, 1, 2, 0, {} },
+        Commit{ 4, 1, 3, 0, {} },
+        Commit{ 5, 3, 2, 0, {} },
+        Commit{ 6, 2, 1, 0, {} },
+        Commit{ 7, 6, 1, 0, {} },
+        Commit{ 8, 6, 4, 0, {} },
+        Commit{ 9, 5, 2, 0, {} },
+        Commit{ 10, 4, 3, 0, {} },
+        Commit{ 11, 10, 3, 0, {} },
+        Commit{ 12, 10, 5, 0, {} }
+    };
+
+    vcsWindow.setCommits(vec);
+
     updateBackground(level_);
     updateLevelText(level_);
     updateCoinsText();
 
     size_t mapHeight = levelsMap[level_].size();
     size_t mapWidth = levelsMap[level_][0].size();
-    int offset1 = (gl::Width - mapWidth * gl::size) / 2;
-    int offset2 = (gl::Height - mapHeight * gl::size) / 2;
+    int offset1 = (gl::GameScreenWidth - mapWidth * gl::size) / 2;
+    int offset2 = (gl::GameScreenHeight - mapHeight * gl::size) / 2;
 
     int initialCoinsValue = coins_;
 
@@ -120,6 +139,8 @@ bool Environment::drawWorld() noexcept
         window_->draw(levelText_);
         window_->draw(coinsText_);
         window_->draw(world_["coin"]);
+
+        displayVCSWindow();
         
         drawMap(mapHeight, mapWidth, levelsMap[level_], offset1, offset2);
 
@@ -128,7 +149,6 @@ bool Environment::drawWorld() noexcept
         levelsButton_.drawButton();
 
         saveButton_.drawButton();
-        showCommitTreeButton_.drawButton();
 
         std::pair<int, int> res = player_.drawPlayer();
 
@@ -166,10 +186,6 @@ bool Environment::drawWorld() noexcept
         {
             vcs.commit(coins_, player_.getBoxes());
         }
-        else if (showCommitTreeButton_.isPressed())
-        {
-            displayVCSWindow();
-        }
 
         window_->display();
     }
@@ -194,7 +210,7 @@ void Environment::loadTextures() noexcept
 
     world_.emplace("coin", RectangleShape(Vector2f(gl::size, gl::size))).first->second.setTexture(
         TextureManager::getManager().getTexture("textures/player/coin").get());
-    world_["coin"].setPosition(0.759 * gl::Width, gl::size / 2);
+    world_["coin"].setPosition(0.759 * gl::GameScreenWidth, gl::size / 2);
 }
 
 void Environment::createButtons() noexcept
@@ -210,9 +226,6 @@ void Environment::createButtons() noexcept
 
     saveButton_ = Button(window_, DR::saveButtonXPos, gl::size / 2, gl::size, gl::size, 
         TextureManager::getManager().getTexture("textures/buttons/save"));
-
-    showCommitTreeButton_ = Button(window_, DR::showCommitTreeButtonXPos, gl::size / 2, gl::size, gl::size, 
-        TextureManager::getManager().getTexture("textures/buttons/fork"));
 }
 
 void Environment::updateLevelText(int level) noexcept
@@ -220,7 +233,7 @@ void Environment::updateLevelText(int level) noexcept
     levelText_.setString(Localizer::translate(STRING::Level) 
         + std::to_string(level));
 
-    const int levelTextXPos = (gl::Width - levelText_.getGlobalBounds().width) / 2;
+    const int levelTextXPos = (gl::GameScreenWidth - levelText_.getGlobalBounds().width) / 2;
     levelText_.setPosition(levelTextXPos, DR::levelTextYPos);
 }
 
@@ -271,25 +284,6 @@ void Environment::drawMap(size_t height, size_t width,
 
 void Environment::displayVCSWindow() noexcept
 {
-    // debug info
-    std::vector<Commit> vec = 
-    {
-        Commit{ 1, 1, 1, 0, {} },
-        Commit{ 2, 1, 1, 0, {} },
-        Commit{ 3, 1, 2, 0, {} },
-        Commit{ 4, 1, 3, 0, {} },
-        Commit{ 5, 3, 2, 0, {} },
-        Commit{ 6, 2, 1, 0, {} },
-        Commit{ 7, 6, 1, 0, {} },
-        Commit{ 8, 6, 4, 0, {} },
-        Commit{ 9, 5, 2, 0, {} },
-        Commit{ 10, 4, 3, 0, {} },
-        Commit{ 11, 10, 3, 0, {} },
-        Commit{ 12, 10, 5, 0, {} }
-    };
-
-    vcsWindow.setCommits(vec);
-
     // GraphicsTree gt(window_, vec);
 
 
