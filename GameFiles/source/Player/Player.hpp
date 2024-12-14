@@ -36,9 +36,11 @@ public:
 
     void alignPlayer(int, int) noexcept; // player and boxes must be aligned by cells
 
-    std::vector<COORDINATE> getBoxes() const noexcept;
+    std::vector<COORDINATE> getObjects() const noexcept;
 
     std::pair<bool, bool> drawPlayer() noexcept;
+
+    void setObjects(const std::vector<COORDINATE>&) noexcept;
 
     void restartLevel() noexcept;
 

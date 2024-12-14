@@ -23,7 +23,7 @@ std::ostream& operator<<(std::ostream& os, const Commit& commit)
     return os;
 }
 
-bool Commit::operator=(const Commit& oth) const noexcept
+bool Commit::operator==(const Commit& oth) const noexcept
 {
     return this->money_ == oth.money_ && this->branch_ == oth.branch_ 
         && this->coordinates_ == oth.coordinates_;

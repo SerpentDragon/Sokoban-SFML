@@ -258,14 +258,65 @@ void Player::alignPlayer(int released_key, int param) noexcept
     img_["player"].setPosition(x_, y_);
 }
 
-std::vector<COORDINATE> Player::getBoxes() const noexcept { return boxes_; }
+std::vector<COORDINATE> Player::getObjects() const noexcept 
+{ 
+    std::vector<COORDINATE> coordinates;
+    coordinates.emplace_back(std::pair{ x_, y_ });
+    coordinates.insert(coordinates.end(), boxes_.begin(), boxes_.end());
+
+    return coordinates; 
+}
+
+#include <iostream>
+
+void Player::setObjects(const std::vector<COORDINATE>& coordinates) noexcept
+{
+    if (coordinates.size() != boxes_.size() + 1)
+    {
+        std::cout << "EXIT PL\n";
+        return;
+    }
+
+    // x_, y_ = coordinates[0].first, coordinates[0].second;
+
+    std::cout << "try: ";
+    for(auto it = coordinates.cbegin();
+        it != coordinates.cend(); it++)
+        {
+            std::cout << it->first << ':' << it->second << ' ';
+        }
+        std::cout << std::endl;
+
+    std::cout << "000: " << coordinates[0].first << 
+        ' ' << coordinates[0].second << '\n';
+
+    x_ = coordinates[0].first;
+    y_ = coordinates[0].second;
+    
+    std::cout << "PLL: " << x_ << ' ' << y_ << '\n';
+
+    for(std::size_t i = 1; i < coordinates.size(); i++)
+    {
+        boxes_[i - 1] = coordinates[i];
+    }
+
+    while(!playerMoves_.empty()) playerMoves_.pop();
+    while(!boxesMoves_.empty()) boxesMoves_.pop();
+
+    // window_->draw(img_["player"]);
+}
+
+
 
 std::pair<bool, bool> Player::drawPlayer() noexcept
 {
     static int prev_goals_counter = 0;
     int goals_counter = 0;
 
+    img_["player"].setPosition(x_, y_);
+    std::cout << "PLAYER: " << x_ << ' ' << y_ << '\n';
     window_->draw(img_["player"]);
+
     for(const auto& box : boxes_)
     {
         if (std::find(aims_.begin(), aims_.end(), box) == aims_.end()) 
@@ -356,7 +407,7 @@ size_t Player::checkPosition(int xPos, int yPos) noexcept
 
 size_t Player::checkPosition(const Vector2i& vec) noexcept
 {
-    return level_[(vec.y - offset2_) / gl::size][(vec.x - offset1_) / gl::size];
+    return checkPosition(vec.x, vec.y);
 }
 
 std::pair<int, int>* Player::checkBoxes(int first, int second) noexcept
@@ -372,11 +423,5 @@ std::pair<int, int>* Player::checkBoxes(int first, int second) noexcept
 
 std::pair<int, int>* Player::checkBoxes(const Vector2i& vec) noexcept
 {
-    for(auto& box : boxes_)
-    {
-        if (box.first == vec.x && (box.second < vec.y && vec.y < box.second + gl::size) 
-            || box.second == vec.y && (box.first < vec.x && vec.x < box.first + gl::size))
-            return &box;
-    }
-    return nullptr;
+    return checkBoxes(vec.x, vec.y);
 }

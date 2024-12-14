@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <cmath>
 #include <ctime>
 #include <vector>
 #include <memory>
@@ -17,7 +18,7 @@ public:
 
     GraphicsTree() noexcept = default;
 
-    GraphicsTree(std::shared_ptr<RenderWindow>, const std::vector<Commit>&) noexcept;
+    GraphicsTree(std::shared_ptr<RenderWindow>, const std::vector<Commit>& = {}) noexcept;
 
     GraphicsTree(const GraphicsTree&) noexcept = default;
 
@@ -41,9 +42,15 @@ private:
 
     void calculatePositions() noexcept;
 
+    static Color generateRandomColor() noexcept;
+
 public:
 
+    void addCommit(const Commit&) noexcept;
+
     void displayTree() noexcept;
+
+    std::size_t commitIsPressed(int, int) noexcept;
 
 private:
 
@@ -73,10 +80,14 @@ private:
 
     // graphic representation of commits
     std::map<std::size_t, CircleShape> tree_;
+
     // lines between commits
     std::vector<std::pair<Vertex, Vertex>> lines_;
 
     // defines which branch creates which branches
     // format = branch_id : <BranchInfo>
     HIERARCHY hierarchy_;
+
+    // current commit to be marked
+    std::size_t currentState_;
 };

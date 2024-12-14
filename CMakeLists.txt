@@ -37,6 +37,6 @@ target_link_libraries(sokoban PRIVATE sfml-graphics sfml-audio sfml-window sfml-
 target_include_directories(sokoban PRIVATE ${CMAKE_BINARY_DIR})
 
 set_target_properties(sokoban PROPERTIES
-    CXX_STANDARD 17
+    CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
 )

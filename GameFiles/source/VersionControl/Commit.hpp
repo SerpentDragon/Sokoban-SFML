@@ -26,7 +26,7 @@ public:
 
     friend std::ostream& operator<<(std::ostream& os, const Commit& commit);
 
-    bool operator=(const Commit&) const noexcept;
+    bool operator==(const Commit&) const noexcept;
 
 public:
 

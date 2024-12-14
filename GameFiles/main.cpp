@@ -5,6 +5,8 @@ using namespace sf;
 
 int main()
 {
+    std::cout << VCSWIN::VCSWindowXPos + VCSWIN::GT::zeroLevelXPos << ' ' << VCSWIN::GT::zeroLevelYPos << '\n';
+
     srand(time(nullptr));
     
     gl::initFont();

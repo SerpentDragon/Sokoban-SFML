@@ -1,8 +1,10 @@
 #include "CommitTree.hpp"
 
-void CommitTree::addCommit(const Commit& commit) noexcept
+const Commit* CommitTree::addCommit(const Commit& commit) noexcept
 {
-    tree_.insert({ commit.commit_, commit });
+    auto [it, res] = tree_.insert({ commit.commit_, commit });
+
+    return res ? &(*it).second : nullptr;
 }
 
 const std::map<std::size_t, Commit>& CommitTree::getCommits() const noexcept 

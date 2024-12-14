@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 #include <filesystem>
 #include <string_view>
 #include "CommitTree.hpp"
@@ -29,9 +30,11 @@ public:
 
     void init(int) noexcept;
 
-    void commit(UI, const std::vector<COORDINATE>&) noexcept;
+    const Commit* commit(UI, const std::vector<COORDINATE>&) noexcept;
 
     std::vector<Commit> getCommits() const noexcept;
+
+    const Commit* setNewCurrentState(std::size_t) noexcept;
 
 private:
 
@@ -48,7 +51,7 @@ private:
     unsigned int level_;
 
     // these fields must be updated during game process!
-    unsigned int currentCommitState_;
+    std::size_t currentCommitState_;
     std::size_t currentBranch_;
 
     std::size_t branchesCounter_;
@@ -58,4 +61,7 @@ private:
     std::string stateFilename_;
 
     CommitTree tree_;
+
+    // list of 'child'-commits for every commit
+    std::map<std::size_t, std::vector<std::size_t>> children_;
 };

@@ -1,7 +1,8 @@
 #include "GraphicsTree.hpp"
 
 GraphicsTree::GraphicsTree(std::shared_ptr<RenderWindow> window, 
-    const std::vector<Commit>& commits) noexcept : window_(window)
+    const std::vector<Commit>& commits) noexcept : window_(window),
+    currentState_(0)
 {
     if (!commits.size()) return;
 
@@ -24,11 +25,7 @@ GraphicsTree::GraphicsTree(std::shared_ptr<RenderWindow> window,
 
     for(std::size_t i = 1; i < hierarchy_.size(); i++)
     {
-        hierarchy_[i].color = { 
-            static_cast<Uint8>(rand() % 101 + 100),
-            static_cast<Uint8>(rand() % 101 + 100),
-            static_cast<Uint8>(rand() % 101 + 100)
-        };
+        hierarchy_[i].color = generateRandomColor();
     }
 
     // set default values for graphic tree
@@ -38,6 +35,10 @@ GraphicsTree::GraphicsTree(std::shared_ptr<RenderWindow> window,
         tree_[i].setOutlineThickness(3);
         tree_[i].setOutlineColor(hierarchy_[commits_[i].branch].color);
     }
+
+    // !!!!
+    tree_[tree_.size()].setFillColor(tree_[tree_.size()].getOutlineColor());
+    currentState_ = tree_.size();
     
     lines_.resize(commits_.size() - 1);
     for(std::size_t i = 0; i < lines_.size(); i++)
@@ -118,15 +119,30 @@ void GraphicsTree::processTree() noexcept
     }
 }
 
+#include <iostream>
+
 void GraphicsTree::calculatePositions() noexcept
 {
     static int leftBranchXPos;
 
     leftBranchXPos = GT::zeroLevelXPos - (hierarchy_.size() / 2) * GT::branchInterval;
 
+    if (tree_.empty()) 
+    {
+        std::cout << "RETURN\n";
+        return;
+    }
+
     tree_[1].setPosition(
         VCSWIN::VCSWindowXPos + GT::zeroLevelXPos, 
         GT::zeroLevelYPos);
+
+    std::cout << "OK: ";
+    for(auto it = tree_.cbegin(); it != tree_.cend(); it++)
+    {
+        std::cout << it->first;
+    }
+    std::cout << std::endl;
     
     for(std::size_t i = 2; i <= tree_.size(); i++)
     {
@@ -134,9 +150,6 @@ void GraphicsTree::calculatePositions() noexcept
         tree_[i].setPosition(
             VCSWIN::VCSWindowXPos + leftBranchXPos + hierarchy_[commits_[i].branch].position * GT::branchInterval, 
             VCSWIN::VCSWindowYPos + GT::zeroLevelYPos - commits_[i].level * GT::commitInterval);
-
-        // setting color to commit  according to the branch it belongs
-        tree_[i].setOutlineColor(hierarchy_[commits_[i].branch].color);
     }
 
     for(std::size_t i = 0; i < lines_.size(); i++)
@@ -149,12 +162,86 @@ void GraphicsTree::calculatePositions() noexcept
     }
 }
 
+Color GraphicsTree::generateRandomColor() noexcept
+{
+    return { 
+            static_cast<Uint8>(rand() % 101 + 100),
+            static_cast<Uint8>(rand() % 101 + 100),
+            static_cast<Uint8>(rand() % 101 + 100)
+        };
+}
+
+void GraphicsTree::addCommit(const Commit& commit) noexcept
+{
+    std::cout << "Before add: " << tree_.size() << std::endl;
+    CommitInfo cmti { 
+        .parent = commit.parent_,
+        .branch = commit.branch_,
+        .level = commits_[commit.parent_].level + 1
+        };
+
+    commits_.insert(std::pair{ commit.commit_, cmti });
+
+    std::cout << "compare " << cmti.branch << ' ' << hierarchy_.size() << std::endl;
+
+    // here we should check whether new commit is in new branch
+    // if it is, we should create that branch
+    if (cmti.branch > hierarchy_.size())
+    {
+        if (!hierarchy_.empty())
+        {
+            hierarchy_[commits_[commit.parent_].branch]
+                .children.emplace_back(commit.branch_);
+        }
+
+        defineBranchesDrawOrder();
+
+        hierarchy_[commit.branch_].children = {};
+        hierarchy_[commit.branch_].color = generateRandomColor();
+
+        // for(auto it = hierarchy_.cbegin(); it != hierarchy_.cend(); it++)
+        // {
+        //     std::cout << it->first << ' ' << 
+        //         (int)it->second.color.r << ' ' << (int)it->second.color.g << ' ' 
+        //         << (int)it->second.color.b << ' ' <<std::endl;
+        // }
+        // std::cout << "H END\n";
+    }
+
+    if (!tree_.empty())
+    {
+        lines_.emplace_back(std::pair{ Vertex(), Vertex() });
+        lines_.back().first.color = hierarchy_[commit.branch_].color;
+        lines_.back().second.color = lines_.back().first.color;
+    }
+
+    CircleShape cs(GT::commitSize);
+    cs.setOutlineThickness(3);
+    cs.setOutlineColor(hierarchy_[commit.branch_].color);
+    tree_[commit.commit_] = cs;
+
+    if (tree_.contains(currentState_))
+    {
+        tree_[currentState_].setFillColor(Color::White);
+    }
+    currentState_ = commit.commit_;
+    tree_[currentState_].setFillColor(hierarchy_[commit.branch_].color);
+    
+    std::cout << "CALCULATE: " << tree_.size() << std::endl;
+
+    calculatePositions();
+
+    std::cout << "After add: " << tree_.size() << std::endl;
+}
+
 void GraphicsTree::displayTree() noexcept
 {
     // OPTIMIZATION: it should only be called 
     // when a player 'moves' tree on the screen
     // or a new commit has been added
+    std::cout << "pupupu: " << tree_.size() << std::endl;
     calculatePositions();
+    std::cout << "pupupu2: " << tree_.size() << std::endl;
 
     for(auto line : lines_)
     {
@@ -164,6 +251,26 @@ void GraphicsTree::displayTree() noexcept
 
     for(auto it = tree_.cbegin(); it != tree_.cend(); it++)
     {
+        // std::cout << it->first << ' ' << it->second;
+        // std::cout << "hs: " << hierarchy_.size() << std::endl;
+        auto [x, y] = it->second.getPosition();
+        std::cout << x << ' ' << y << '\n';
         window_->draw(it->second);
     }
+}
+
+std::size_t GraphicsTree::commitIsPressed(int x, int y) noexcept
+{
+    for(auto it = tree_.cbegin(); it != tree_.cend(); it++)
+    {
+        if (it->second.getGlobalBounds().contains(x, y))
+        {
+            tree_[currentState_].setFillColor(Color::White);
+            currentState_ = it->first;
+            tree_[currentState_].setFillColor(it->second.getOutlineColor());
+            return it->first;
+        }
+    }
+
+    return 0;
 }

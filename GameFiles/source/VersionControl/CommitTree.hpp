@@ -3,6 +3,8 @@
 #include <map>
 #include "Commit.hpp"
 
+using CommitList = std::map<std::size_t, Commit>;
+
 class CommitTree
 {
 public:
@@ -21,9 +23,9 @@ public:
 
 public:
 
-    void addCommit(const Commit&) noexcept;
+    const Commit* addCommit(const Commit&) noexcept;
 
-    const std::map<std::size_t, Commit>& getCommits() const noexcept;
+    const CommitList& getCommits() const noexcept;
 
     std::size_t getSize() const noexcept;
 
@@ -32,5 +34,5 @@ public:
 private:
 
     // commitNumber and Commit itself
-    std::map<std::size_t, Commit> tree_;
+    CommitList tree_;
 };

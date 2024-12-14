@@ -29,9 +29,11 @@ public:
 
     void setCommits(const std::vector<Commit>&) noexcept;
 
+    void addCommit(const Commit&) noexcept;
+
     void displayVCSWIndow() noexcept;
 
-    void setupTree() noexcept;
+    std::size_t checkCommitIsPressed(int, int) noexcept;
 
 private:
 
