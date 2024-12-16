@@ -1,7 +1,5 @@
 #include "VersionControlSystem.hpp"
 
-#include <iostream>
-
 VersionControlSystem::~VersionControlSystem()
 {
     saveCurrentStateToFile();
@@ -16,11 +14,14 @@ void VersionControlSystem::init(int level) noexcept
     this->dir_ = "app_data/.vcs/" + std::to_string(level_);
     this->treeFilename_ = dir_ + "/tree";
     this->stateFilename_ = dir_ + "/commit";
+    children_.clear();
 
     if (!fs::exists(dir_))
     {
         fs::create_directories(dir_);
     }
+
+    tree_ = CommitTree();
 
     loadCommitTreeFromFile();
     loadCurrentStateFromFile();
@@ -42,25 +43,24 @@ const Commit* VersionControlSystem::commit(unsigned int money,
         {
             if(commit == tree.at(currentCommitState_)) return nullptr;
 
+            // info about 'children' of current state
             const auto& currentStateChildren = children_[tree.at(currentCommitState_).commit_];
 
             // has 'children' 
             if(!currentStateChildren.empty())
             {
-                if(std::find(currentStateChildren.begin(), 
-                            currentStateChildren.end(), 
-                            commit.commit_) != currentStateChildren.end())
+                for(std::size_t i = 0; i < currentStateChildren.size(); i++)
                 {
-                    // may be we chould jump to that commit
-                    return nullptr;
+                    if (commit == *currentStateChildren[i])
+                    {
+                        // may be we chould jump to that commit
+                        return nullptr;
+                    }
                 }
-                else
-                {
-                    // here we chould create a new branch
-                    branchesCounter_++;
-                    commit.branch_ = branchesCounter_;
-                    currentBranch_ = branchesCounter_;
-                }
+
+                branchesCounter_++;
+                commit.branch_ = branchesCounter_;
+                currentBranch_ = branchesCounter_;
             }
             // has no 'children'
             else
@@ -72,6 +72,7 @@ const Commit* VersionControlSystem::commit(unsigned int money,
         else
         {
             currentBranch_ = commit.branch_;
+            branchesCounter_++;
         }
     }
     catch(const std::out_of_range& ex)
@@ -84,15 +85,16 @@ const Commit* VersionControlSystem::commit(unsigned int money,
 
     currentCommitState_ = commit.commit_;
 
-    if (!tree.empty()) children_[commit.parent_].emplace_back(commit.commit_);
+    auto ptr = tree_.addCommit(commit);
+
+    if (!tree.empty() && ptr != nullptr && commit.commit_ != 1) 
+    {
+        children_[commit.parent_].emplace_back(ptr);
+    }
 
     saveCommitToFile(commit);
 
-    std::cout << "here\n";
-
-    return tree_.addCommit(commit);
-    
-    // children_[parent].emplace_back(commit);
+    return ptr;
 
     /* 
         before createing a new commit we must:
@@ -151,6 +153,18 @@ const Commit* VersionControlSystem::setNewCurrentState(std::size_t newState) noe
     }
 }
 
+const Commit* VersionControlSystem::getCurrentState() const noexcept
+{
+    try
+    {
+        return &tree_.getCommits().at(currentCommitState_);
+    }
+    catch(const std::out_of_range&)
+    {
+        return nullptr;
+    }
+}
+
 void VersionControlSystem::loadCommitTreeFromFile() noexcept
 {
     std::fstream treeFile(treeFilename_, std::ios_base::in);
@@ -170,7 +184,6 @@ void VersionControlSystem::loadCommitTreeFromFile() noexcept
     std::string line;
     while(std::getline(treeFile, line))
     {
-        // std::cout << "GOT " << line << std::endl;
         std::stringstream commit_(line);
 
         commit_ >> commit >> parent >> branch;
@@ -184,12 +197,11 @@ void VersionControlSystem::loadCommitTreeFromFile() noexcept
         }
 
         Commit newCommit{ commit, parent, branch, money, coordinates };
-        children_[parent].emplace_back(commit);
-
-        std::cout << "LOAD " << coordinates[0].first << ' ' 
-        << coordinates[0].second << '\n';
-
-        tree_.addCommit(newCommit);
+    
+        if (auto ptr = tree_.addCommit(newCommit); ptr != nullptr)
+        {
+            children_[parent].emplace_back(ptr);
+        }
 
         branchesCounter_ = std::max(branchesCounter_, branch);
 

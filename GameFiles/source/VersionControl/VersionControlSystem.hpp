@@ -36,6 +36,8 @@ public:
 
     const Commit* setNewCurrentState(std::size_t) noexcept;
 
+    const Commit* getCurrentState() const noexcept;
+
 private:
 
     void loadCommitTreeFromFile() noexcept;
@@ -63,5 +65,5 @@ private:
     CommitTree tree_;
 
     // list of 'child'-commits for every commit
-    std::map<std::size_t, std::vector<std::size_t>> children_;
+    std::map<std::size_t, std::vector<const Commit*>> children_;
 };

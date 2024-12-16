@@ -267,33 +267,12 @@ std::vector<COORDINATE> Player::getObjects() const noexcept
     return coordinates; 
 }
 
-#include <iostream>
-
 void Player::setObjects(const std::vector<COORDINATE>& coordinates) noexcept
 {
-    if (coordinates.size() != boxes_.size() + 1)
-    {
-        std::cout << "EXIT PL\n";
-        return;
-    }
-
-    // x_, y_ = coordinates[0].first, coordinates[0].second;
-
-    std::cout << "try: ";
-    for(auto it = coordinates.cbegin();
-        it != coordinates.cend(); it++)
-        {
-            std::cout << it->first << ':' << it->second << ' ';
-        }
-        std::cout << std::endl;
-
-    std::cout << "000: " << coordinates[0].first << 
-        ' ' << coordinates[0].second << '\n';
+    if (coordinates.size() != boxes_.size() + 1) return;
 
     x_ = coordinates[0].first;
     y_ = coordinates[0].second;
-    
-    std::cout << "PLL: " << x_ << ' ' << y_ << '\n';
 
     for(std::size_t i = 1; i < coordinates.size(); i++)
     {
@@ -302,11 +281,7 @@ void Player::setObjects(const std::vector<COORDINATE>& coordinates) noexcept
 
     while(!playerMoves_.empty()) playerMoves_.pop();
     while(!boxesMoves_.empty()) boxesMoves_.pop();
-
-    // window_->draw(img_["player"]);
 }
-
-
 
 std::pair<bool, bool> Player::drawPlayer() noexcept
 {
@@ -314,7 +289,6 @@ std::pair<bool, bool> Player::drawPlayer() noexcept
     int goals_counter = 0;
 
     img_["player"].setPosition(x_, y_);
-    std::cout << "PLAYER: " << x_ << ' ' << y_ << '\n';
     window_->draw(img_["player"]);
 
     for(const auto& box : boxes_)

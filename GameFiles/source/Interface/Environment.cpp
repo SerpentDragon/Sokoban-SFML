@@ -30,27 +30,6 @@ int Environment::getLevel() const noexcept { return level_; }
 
 bool Environment::drawWorld() noexcept
 {
-    // debug info
-    // std::vector<Commit> vec = 
-    // {
-    //     Commit{ 1, 1, 1, 0, {} },
-    //     Commit{ 2, 1, 1, 0, {} },
-    //     Commit{ 3, 1, 2, 0, {} },
-    //     Commit{ 4, 1, 3, 0, {} },
-    //     Commit{ 5, 3, 2, 0, {} },
-    //     Commit{ 6, 2, 1, 0, {} },
-    //     Commit{ 7, 6, 1, 0, {} },
-    //     Commit{ 8, 6, 4, 0, {} },
-    //     Commit{ 9, 5, 2, 0, {} },
-    //     Commit{ 10, 4, 3, 0, {} },
-    //     Commit{ 11, 10, 3, 0, {} },
-    //     Commit{ 12, 10, 5, 0, {} }
-    // };
-
-    // vcsWindow.setCommits(vec);
-
-    // vcsWindow.setCommits(vcs.getCommits());
-
     updateBackground(level_);
     updateLevelText(level_);
     updateCoinsText();
@@ -63,6 +42,11 @@ bool Environment::drawWorld() noexcept
     int initialCoinsValue = coins_;
 
     player_.setLevel(levelsMap[level_]);
+
+    if (auto currentCommit = vcs.getCurrentState(); currentCommit != nullptr)
+    {
+        player_.setObjects(currentCommit->coordinates_);
+    }
 
     Event event;
 
@@ -190,22 +174,13 @@ bool Environment::drawWorld() noexcept
         {
             auto commit = vcs.commit(coins_, player_.getObjects());
 
-            assert(commit);
-
             if (commit != nullptr)
             {
-                std::cout << "try to load\n";
                 vcsWindow.addCommit(*commit);
-                std::cout << "done\n";
             }
-            // update GraphicsTree
         }
 
-        std::cout << "cycle\n";
-
         window_->display();
-
-        std::cout << "displayed\n";
     }
 
     return false;
@@ -302,8 +277,6 @@ void Environment::drawMap(size_t height, size_t width,
 
 void Environment::displayVCSWindow() noexcept
 {
-    // GraphicsTree gt(window_, vec);
-
     vcsWindow.displayVCSWIndow();
 
     if (Mouse::isButtonPressed(Mouse::Left))
@@ -312,19 +285,11 @@ void Environment::displayVCSWindow() noexcept
 
         auto commit = vcsWindow.checkCommitIsPressed(x, y);
 
-        std::cout << "COMMIT: " << commit << std::endl;
-
         if (commit)
         {
             auto commitState = vcs.setNewCurrentState(commit);
             
             player_.setObjects(commitState->coordinates_);
-            for(auto it = commitState->coordinates_.cbegin();
-            it != commitState->coordinates_.cend(); it++)
-            {
-                std::cout << it->first << ':' << it->second << ' ';
-            }
-            std::cout << std::endl;
             coins_ = commitState->money_;
         }
     }
