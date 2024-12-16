@@ -52,6 +52,8 @@ public:
 
     std::size_t commitIsPressed(int, int) noexcept;
 
+    void updateCurrentState(std::size_t) noexcept;
+
 private:
 
     struct CommitInfo

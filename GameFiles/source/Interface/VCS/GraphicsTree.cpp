@@ -241,3 +241,10 @@ std::size_t GraphicsTree::commitIsPressed(int x, int y) noexcept
 
     return 0;
 }
+
+void GraphicsTree::updateCurrentState(std::size_t newState) noexcept
+{
+    tree_[currentState_].setFillColor(Color::White);
+    currentState_ = newState;
+    tree_[currentState_].setFillColor(hierarchy_[commits_[newState].branch].color);
+}

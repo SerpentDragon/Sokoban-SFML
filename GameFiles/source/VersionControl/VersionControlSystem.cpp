@@ -1,5 +1,7 @@
 #include "VersionControlSystem.hpp"
 
+#include <iostream>
+
 VersionControlSystem::~VersionControlSystem()
 {
     saveCurrentStateToFile();
@@ -27,7 +29,7 @@ void VersionControlSystem::init(int level) noexcept
     loadCurrentStateFromFile();
 }
 
-const Commit* VersionControlSystem::commit(unsigned int money, 
+std::pair<const Commit*, bool> VersionControlSystem::commit(unsigned int money, 
     const std::vector<COORDINATE>& coordinates) noexcept
 {
     auto commitNum = tree_.getSize() + 1;
@@ -41,7 +43,7 @@ const Commit* VersionControlSystem::commit(unsigned int money,
     {
         if (!tree.empty())
         {
-            if(commit == tree.at(currentCommitState_)) return nullptr;
+            if(commit == tree.at(currentCommitState_)) return { nullptr, false };
 
             // info about 'children' of current state
             const auto& currentStateChildren = children_[tree.at(currentCommitState_).commit_];
@@ -54,7 +56,7 @@ const Commit* VersionControlSystem::commit(unsigned int money,
                     if (commit == *currentStateChildren[i])
                     {
                         // may be we chould jump to that commit
-                        return nullptr;
+                        return { currentStateChildren[i], false };
                     }
                 }
 
@@ -80,7 +82,7 @@ const Commit* VersionControlSystem::commit(unsigned int money,
         currentCommitState_ = 1;
         currentBranch_ = 1;
 
-        return nullptr;
+        return { nullptr, false };
     }
 
     currentCommitState_ = commit.commit_;
@@ -94,7 +96,7 @@ const Commit* VersionControlSystem::commit(unsigned int money,
 
     saveCommitToFile(commit);
 
-    return ptr;
+    return { ptr, true };
 
     /* 
         before createing a new commit we must:

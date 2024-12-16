@@ -35,6 +35,8 @@ public:
 
     std::size_t checkCommitIsPressed(int, int) noexcept;
 
+    void updateCurrentState(std::size_t) noexcept;
+
 private:
 
     std::shared_ptr<RenderWindow> window_;

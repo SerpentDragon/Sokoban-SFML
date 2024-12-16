@@ -30,7 +30,8 @@ public:
 
     void init(int) noexcept;
 
-    const Commit* commit(UI, const std::vector<COORDINATE>&) noexcept;
+    std::pair<const Commit*, bool> commit(UI, 
+        const std::vector<COORDINATE>&) noexcept;
 
     std::vector<Commit> getCommits() const noexcept;
 

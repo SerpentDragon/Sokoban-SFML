@@ -29,3 +29,8 @@ std::size_t VCSWindow::checkCommitIsPressed(int x, int y) noexcept
 {
     return tree_.commitIsPressed(x, y);
 }
+
+void VCSWindow::updateCurrentState(std::size_t newState) noexcept
+{
+    tree_.updateCurrentState(newState);
+}

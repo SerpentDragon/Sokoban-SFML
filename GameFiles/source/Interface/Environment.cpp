@@ -46,6 +46,7 @@ bool Environment::drawWorld() noexcept
     if (auto currentCommit = vcs.getCurrentState(); currentCommit != nullptr)
     {
         player_.setObjects(currentCommit->coordinates_);
+        coins_ = currentCommit->money_;
     }
 
     Event event;
@@ -172,11 +173,22 @@ bool Environment::drawWorld() noexcept
         }
         else if (saveButton_.isPressed())
         {
-            auto commit = vcs.commit(coins_, player_.getObjects());
+            auto [commit, res] = vcs.commit(coins_, player_.getObjects());
 
-            if (commit != nullptr)
+            if (res && commit != nullptr)
             {
-                vcsWindow.addCommit(*commit);
+                if (commit != nullptr)
+                {
+                    vcsWindow.addCommit(*commit);
+                }
+            }
+            else if (!res && commit != nullptr)
+            {
+                vcs.setNewCurrentState(commit->commit_);
+                vcsWindow.updateCurrentState(commit->commit_);
+
+                player_.setObjects(commit->coordinates_);
+                coins_ = commit->money_;
             }
         }
 
