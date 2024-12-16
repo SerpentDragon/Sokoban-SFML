@@ -34,6 +34,8 @@ public:
 
     ~Environment() noexcept = default;
 
+    void resetVCS() noexcept;
+
     void setLevel(int) noexcept;
 
     int getLevel() const noexcept;

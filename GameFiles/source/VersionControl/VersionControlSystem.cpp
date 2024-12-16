@@ -1,7 +1,5 @@
 #include "VersionControlSystem.hpp"
 
-#include <iostream>
-
 VersionControlSystem::~VersionControlSystem()
 {
     saveCurrentStateToFile();
@@ -13,20 +11,32 @@ void VersionControlSystem::init(int level) noexcept
     this->currentCommitState_ = 1;
     this->currentBranch_ = 1;
     this->branchesCounter_ = 0;
-    this->dir_ = "app_data/.vcs/" + std::to_string(level_);
+    this->root_ = "app_data/.vcs/";
+    this->dir_ = root_ + std::to_string(level_);
     this->treeFilename_ = dir_ + "/tree";
     this->stateFilename_ = dir_ + "/commit";
-    children_.clear();
+    this->children_.clear();
 
     if (!fs::exists(dir_))
     {
         fs::create_directories(dir_);
     }
 
-    tree_ = CommitTree();
+    this->tree_ = CommitTree();
 
     loadCommitTreeFromFile();
     loadCurrentStateFromFile();
+}
+
+void VersionControlSystem::reset() noexcept
+{
+    this->level_ = 0;
+    this->currentCommitState_ = 1;
+    this->currentBranch_ = 1;
+    this->branchesCounter_ = 0;
+    this->children_.clear();
+
+    fs::remove_all(root_);
 }
 
 std::pair<const Commit*, bool> VersionControlSystem::commit(unsigned int money, 

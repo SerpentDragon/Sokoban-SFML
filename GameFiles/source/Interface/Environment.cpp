@@ -1,7 +1,5 @@
 #include "Environment.hpp"
 
-#include <iostream>
-
 Environment::Environment(std::shared_ptr<RenderWindow> window) noexcept 
     : window_(window), coins_(0), player_(window),
     levelText_("", gl::font, DR::levelTextSize),
@@ -16,6 +14,11 @@ Environment::Environment(std::shared_ptr<RenderWindow> window) noexcept
 
     coinsText_.setFillColor(gl::GOLD);
     coinsText_.setPosition(DR::drawingCoinsTextXPos, DR::drawingCoinsTextYPos);
+}
+
+void Environment::resetVCS() noexcept
+{
+    vcs.reset();
 }
 
 void Environment::setLevel(int level) noexcept 

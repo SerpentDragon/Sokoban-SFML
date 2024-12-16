@@ -30,6 +30,8 @@ public:
 
     void init(int) noexcept;
 
+    void reset() noexcept;
+
     std::pair<const Commit*, bool> commit(UI, 
         const std::vector<COORDINATE>&) noexcept;
 
@@ -59,6 +61,7 @@ private:
 
     std::size_t branchesCounter_;
 
+    std::string root_;
     std::string dir_;
     std::string treeFilename_;
     std::string stateFilename_;

@@ -53,6 +53,8 @@ void Interface::showMenu() noexcept
                 {
                     currentLevel_ = 0;
                     currentMode_ = MODE::ChooseLevelMode;
+                    // here we also need to reset our VCS
+                    environment_.resetVCS();
                     break;
                 }
             }
