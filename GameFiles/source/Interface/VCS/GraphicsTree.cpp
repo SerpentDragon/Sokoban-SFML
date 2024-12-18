@@ -1,5 +1,7 @@
 #include "GraphicsTree.hpp"
 
+#include <iostream>
+
 GraphicsTree::GraphicsTree(std::shared_ptr<RenderWindow> window, 
     const std::vector<Commit>& commits) noexcept : window_(window),
     currentState_(0)
@@ -121,9 +123,9 @@ void GraphicsTree::processTree() noexcept
 
 void GraphicsTree::calculatePositions() noexcept
 {
-    static int leftBranchXPos;
+    // static int leftBranchXPos;
 
-    leftBranchXPos = GT::zeroLevelXPos - (hierarchy_.size() / 2) * GT::branchInterval;
+    int leftBranchXPos = GT::zeroLevelXPos - (hierarchy_.size() / 2) * GT::branchInterval;
 
     if (tree_.empty()) return;
 
@@ -209,11 +211,6 @@ void GraphicsTree::addCommit(const Commit& commit) noexcept
 
 void GraphicsTree::displayTree() noexcept
 {
-    // OPTIMIZATION: it should only be called 
-    // when a player 'moves' tree on the screen
-    // or a new commit has been added
-    calculatePositions();
-
     for(auto line : lines_)
     {
         Vertex vtx[2] = { line.first , line.second };
@@ -224,6 +221,14 @@ void GraphicsTree::displayTree() noexcept
     {
         window_->draw(it->second);
     }
+}
+
+void GraphicsTree::moveTree(int dx, int dy) noexcept
+{
+    GT::zeroLevelXPos += dx;
+    GT::zeroLevelYPos += dy;
+
+    calculatePositions();
 }
 
 std::size_t GraphicsTree::commitIsPressed(int x, int y) noexcept

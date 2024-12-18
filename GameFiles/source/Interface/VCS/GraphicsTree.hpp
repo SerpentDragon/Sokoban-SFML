@@ -50,6 +50,8 @@ public:
 
     void displayTree() noexcept;
 
+    void moveTree(int, int) noexcept;
+
     std::size_t commitIsPressed(int, int) noexcept;
 
     void updateCurrentState(std::size_t) noexcept;

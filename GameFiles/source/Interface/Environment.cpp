@@ -1,5 +1,7 @@
 #include "Environment.hpp"
 
+#include <iostream>
+
 Environment::Environment(std::shared_ptr<RenderWindow> window) noexcept 
     : window_(window), coins_(0), player_(window),
     levelText_("", gl::font, DR::levelTextSize),
@@ -57,6 +59,8 @@ bool Environment::drawWorld() noexcept
     int count_pressed = 0; // is used to catch single press
     bool move_up = false, move_down = false;
     bool move_right = false, move_left = false;
+
+    Vector2i prevMousePos;
 
     while(window_->isOpen())
     {
@@ -122,6 +126,34 @@ bool Environment::drawWorld() noexcept
                     count_pressed = 0;
                     break;
                 } 
+                case Event::MouseButtonPressed:
+                {
+                    if (event.mouseButton.button == Mouse::Left)
+                    {
+                        prevMousePos = Mouse::getPosition(*window_);
+                    }
+
+                    [[fallthrough]];
+                }
+                case Event::MouseMoved:
+                {
+                    if (Mouse::isButtonPressed(Mouse::Left))
+                    {
+                        auto [x, y] = Mouse::getPosition(*window_);
+
+                        if(vcsWindow.insideWindow({ x, y}))
+                        {
+                            auto dx = x - prevMousePos.x;
+                            auto dy = y - prevMousePos.y;
+
+                            vcsWindow.moveTree(dx, dy);
+                        }
+
+                        prevMousePos = { x, y };
+                    }
+
+                    break;
+                }
             }
         }
 

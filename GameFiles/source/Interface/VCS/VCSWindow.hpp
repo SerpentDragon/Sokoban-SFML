@@ -31,11 +31,15 @@ public:
 
     void addCommit(const Commit&) noexcept;
 
-    void displayVCSWIndow() noexcept;
-
     std::size_t checkCommitIsPressed(int, int) noexcept;
 
     void updateCurrentState(std::size_t) noexcept;
+
+    void moveTree(int, int) noexcept;
+
+    void displayVCSWIndow() noexcept;
+
+    bool insideWindow(const Vector2i&) const noexcept;
 
 private:
 
