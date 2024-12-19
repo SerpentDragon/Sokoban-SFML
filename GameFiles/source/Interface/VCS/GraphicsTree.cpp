@@ -1,7 +1,5 @@
 #include "GraphicsTree.hpp"
 
-#include <iostream>
-
 GraphicsTree::GraphicsTree(std::shared_ptr<RenderWindow> window, 
     const std::vector<Commit>& commits) noexcept : window_(window),
     currentState_(0)
@@ -48,6 +46,8 @@ GraphicsTree::GraphicsTree(std::shared_ptr<RenderWindow> window,
         lines_[i].first.color = hierarchy_[commits_[i + 2].branch].color;
         lines_[i].second.color = lines_[i].first.color;
     }
+
+    calculatePositions();
 }
 
 void GraphicsTree::generateBranchesHierarchy(const std::vector<Commit>& commits) noexcept
@@ -123,8 +123,6 @@ void GraphicsTree::processTree() noexcept
 
 void GraphicsTree::calculatePositions() noexcept
 {
-    // static int leftBranchXPos;
-
     int leftBranchXPos = GT::zeroLevelXPos - (hierarchy_.size() / 2) * GT::branchInterval;
 
     if (tree_.empty()) return;
@@ -138,7 +136,7 @@ void GraphicsTree::calculatePositions() noexcept
         // setting current position for the commit
         tree_[i].setPosition(
             VCSWIN::VCSWindowXPos + leftBranchXPos + hierarchy_[commits_[i].branch].position * GT::branchInterval, 
-            VCSWIN::VCSWindowYPos + GT::zeroLevelYPos - commits_[i].level * GT::commitInterval);
+            VCSWIN::VCSWindowYPos + GT::zeroLevelYPos - static_cast<int>(commits_[i].level) * GT::commitInterval);
     }
 
     for(std::size_t i = 0; i < lines_.size(); i++)

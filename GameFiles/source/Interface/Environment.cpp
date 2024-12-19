@@ -1,7 +1,5 @@
 #include "Environment.hpp"
 
-#include <iostream>
-
 Environment::Environment(std::shared_ptr<RenderWindow> window) noexcept 
     : window_(window), coins_(0), player_(window),
     levelText_("", gl::font, DR::levelTextSize),
@@ -126,6 +124,24 @@ bool Environment::drawWorld() noexcept
                     count_pressed = 0;
                     break;
                 } 
+                case Event::MouseButtonReleased:
+                {
+                    if (event.mouseButton.button == Mouse::Left)
+                    {
+                        auto [x, y] = Mouse::getPosition(*window_);
+
+                        auto commit = vcsWindow.checkCommitIsPressed(x, y);
+
+                        if (commit)
+                        {
+                            auto commitState = vcs.setNewCurrentState(commit);
+                            
+                            player_.setObjects(commitState->coordinates_);
+                            coins_ = commitState->money_;
+                        }
+                    }
+                    break;
+                }
                 case Event::MouseButtonPressed:
                 {
                     if (event.mouseButton.button == Mouse::Left)
@@ -159,12 +175,12 @@ bool Environment::drawWorld() noexcept
 
         window_->clear();
 
+        displayVCSWindow();
+
         window_->draw(background_); 
         window_->draw(levelText_);
         window_->draw(coinsText_);
         window_->draw(world_["coin"]);
-
-        displayVCSWindow();
         
         drawMap(mapHeight, mapWidth, levelsMap[level_], offset1, offset2);
 
@@ -325,19 +341,4 @@ void Environment::drawMap(size_t height, size_t width,
 void Environment::displayVCSWindow() noexcept
 {
     vcsWindow.displayVCSWIndow();
-
-    if (Mouse::isButtonPressed(Mouse::Left))
-    {
-        auto [x, y] = Mouse::getPosition(*window_);
-
-        auto commit = vcsWindow.checkCommitIsPressed(x, y);
-
-        if (commit)
-        {
-            auto commitState = vcs.setNewCurrentState(commit);
-            
-            player_.setObjects(commitState->coordinates_);
-            coins_ = commitState->money_;
-        }
-    }
 }

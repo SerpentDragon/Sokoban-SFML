@@ -32,6 +32,8 @@ public:
 
 private:
 
+    using LINE = std::pair<Vertex, Vertex>;
+
     void generateBranchesHierarchy(const std::vector<Commit>&) noexcept;
 
     void defineBranchesDrawOrder(std::vector<std::size_t>&, std::size_t) noexcept;
@@ -41,7 +43,7 @@ private:
     void processTree() noexcept;
 
     void calculatePositions() noexcept;
-
+    
     static Color generateRandomColor() noexcept;
 
 public:
