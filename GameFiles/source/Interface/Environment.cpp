@@ -23,7 +23,10 @@ void Environment::resetVCS() noexcept
 
 void Environment::setLevel(int level) noexcept 
 {
-    level_ = level; 
+    level_ = level;
+
+    VCSWIN::GT::zeroLevelXPos = VCSWIN::GT::zeroLevelXPosINIT;
+    VCSWIN::GT::zeroLevelYPos = VCSWIN::GT::zeroLevelYPosINIT;
 
     vcs.init(level);
     vcsWindow.setCommits(vcs.getCommits());

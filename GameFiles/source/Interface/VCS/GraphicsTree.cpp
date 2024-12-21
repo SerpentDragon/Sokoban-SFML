@@ -71,8 +71,10 @@ void GraphicsTree::generateBranchesHierarchy(const std::vector<Commit>& commits)
         if(!it->second.empty())
         {
             // branch in which the commit in question is located
-            auto& branch = hierarchy_[commits[it->first].branch_].children;
-            branch.insert(branch.end(), it->second.begin(), it->second.end());
+            auto& children = hierarchy_[commits[it->first].branch_].children;
+            children.insert(children.end(), it->second.begin(), it->second.end());
+
+            hierarchy_[commits[it->first].branch_].commit = it->first;
         }
     }
 }
@@ -175,8 +177,30 @@ void GraphicsTree::addCommit(const Commit& commit) noexcept
     {
         if (!hierarchy_.empty())
         {
-            hierarchy_[commits_[cmti.parent].branch]
-                .children.emplace_back(cmti.branch);
+
+            hierarchy_[cmti.branch].commit = cmti.parent;
+
+            auto& children = hierarchy_[commits_[cmti.parent].branch].children;
+            if (children.empty())
+            {
+                children.emplace_back(cmti.branch);
+            }
+            else
+            {
+                for(auto it = children.cbegin(); it != children.cend(); it++)
+                {
+                    if (hierarchy_[*it].commit != cmti.parent 
+                        || it == children.cend() - 1)
+                    {
+                        children.insert(it, cmti.branch);
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            hierarchy_[commit.branch_].commit = 1;
         }
 
         defineBranchesDrawOrder();

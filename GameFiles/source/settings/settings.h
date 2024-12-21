@@ -163,6 +163,9 @@ namespace VCSWIN
 
         extern int zeroLevelYPos;
         extern int zeroLevelXPos;
+
+        extern const int zeroLevelYPosINIT;
+        extern const int zeroLevelXPosINIT;
     };
 }
 

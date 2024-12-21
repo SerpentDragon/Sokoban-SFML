@@ -69,6 +69,7 @@ private:
 
     struct BranchInfo
     {
+        std::size_t commit; // number of the commit which has created this branch
         std::vector<std::size_t> children; // list of 'child' branches
         Color color; // the color of the branch
         unsigned int position; // number of the branch, counting from the left side

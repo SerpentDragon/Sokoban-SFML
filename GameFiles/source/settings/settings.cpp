@@ -160,5 +160,8 @@ namespace VCSWIN
 
         int zeroLevelYPos = VCSWindowHeight - gl::size;
         int zeroLevelXPos = VCSWindowWidth / 2 - commitSize;
+
+        const int zeroLevelYPosINIT = zeroLevelYPos;
+        const int zeroLevelXPosINIT = zeroLevelXPos;
     }
 }
